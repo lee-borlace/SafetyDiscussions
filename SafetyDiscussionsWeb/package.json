@@ -1,0 +1,31 @@
+{
+  "name": "safety-discussions",
+  "version": "1.0.0",
+  "description": "Sample reactive SharePoint app to capture safety discussions.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leeroy79/SafetyDiscussions.git"
+  },
+  "author": "Lee Borlace",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leeroy79/SafetyDiscussions/issues"
+  },
+  "homepage": "https://github.com/leeroy79/SafetyDiscussions#readme",
+  "dependencies": {
+    "es6-promise": "^4.0.5",
+    "isomorphic-fetch": "^2.2.1",
+    "office-ui-fabric-core": "^6.0.0",
+    "office-ui-fabric-react": "^1.5.1",
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2",
+    "react-redux": "^5.0.2",
+    "redux": "^3.6.0",
+    "redux-logger": "^2.8.1",
+    "redux-thunk": "^2.2.0"
+  }
+}

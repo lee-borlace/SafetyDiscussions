@@ -16,12 +16,29 @@ It should also allow the employee to view a list of previous discussions they ha
 
 # Assumptions
 - SharePoint Online not on-premises
-- Being a proof of concept there are no unit tests. In reality there would be unit tests around React components, service layer etc.
+- Being a proof of concept, several simplifications :
+  - No unit tests. In reality there would be unit tests around React components, service layer etc.
+  - No specific considerations for auto-scaling / elasticity for server-side components.
 
 # Design Decisions
+Reactive considerations addressed as follows :
+- Responsive
+    - Provider-hosted app for maximum control over HTML rendered - don't want SP's UI in the way of being as reactive as possible.
+    - Office Fabric UI chosen (in conjunction with Bootstrap) as it is responsive (in terms of mobile vs tablet vs desktop layouts), provides an Office-themed UI, and provides various useful components.
+    - Client-heavy solution to minimise postbacks and maximise reactiveness - allows messages / spinners etc while data is fetched / written.
+    - React JS chosen as it is quick to load and is the core way of using Fabric UI.
+- Message-driven
+  - Not fully message-driven for this application's simple requirements. 
+  - Event-driven, but Redux used to dispatch actions.
+- Resilient
+  - Failure of API calls is built into Redux state so the app can degrade gracefully.
+  - Back-pressue from server back to client under heavy load not built into proof of concept.
+- Elastic
+  - Elastic server-side components not addressed in this proof of concept.
+
+Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
-- Provider-hosted app for maximum control over HTML rendered - don't want SP's UI in the way of being as reactive as possible.
-- Office Fabric UI chosen (in conjunction with Bootstrap) as it is responsive, provides an Office-themed UI, and provides various useful components.
-- Javascript-heavy solution to minimise postbacks and maximise reactiveness.
-- React JS chosen as it is lightweight and is the core way of using Fabric UI.
+- JS generated from Typescript for maximum maintainability and limiting bugs.
+
+
 
