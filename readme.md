@@ -18,15 +18,17 @@ It should also allow the employee to view a list of previous discussions they ha
 - SharePoint Online not on-premises
 - Being a proof of concept, several simplifications :
   - No unit tests. In reality there would be unit tests around React components, service layer etc.
-  - No specific considerations for auto-scaling / elasticity for server-side components.
+
 
 # Design Decisions
 Reactive considerations addressed as follows :
 - Responsive
     - Provider-hosted app for maximum control over HTML rendered - don't want SP's UI in the way of being as reactive as possible.
+    - First load will still be slow as it authenticates to SP.
     - Office Fabric UI chosen (in conjunction with Bootstrap) as it is responsive (in terms of mobile vs tablet vs desktop layouts), provides an Office-themed UI, and provides various useful components.
     - Client-heavy solution to minimise postbacks and maximise reactiveness - allows messages / spinners etc while data is fetched / written.
     - React JS chosen as it is quick to load and is the core way of using Fabric UI.
+    - Webpack for bundling and minifying JS and reducing JS load time.
 - Message-driven
   - Not fully message-driven for this application's simple requirements. 
   - Event-driven, but Redux used to dispatch actions.
@@ -40,5 +42,25 @@ Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
 - JS generated from Typescript for maximum maintainability and limiting bugs.
 
+# Prerequisites
+## General
+- Office 365 account
+- SharePoint Online Team Site to deploy to
+- Node JS
 
+## Globally-Installed NPM Packages
+- gulp
+
+## Visual Studio
+### Required Add-Ins
+- Office Developer Tools - https://www.visualstudio.com/vs/office-tools/
+- Task Runner Explorer - https://marketplace.visualstudio.com/items?itemName=MadsKristensen.TaskRunnerExplorer
+
+### Node
+Some Node modules can have an issue with the possibly older version of Node which Visual Studio uses by default. To get past this, in Visual Studio go to *Tools > Options > Projects and Solutions > External Web Tools* and re-order so that $(PATH) comes first. This will mean it will use the installed version of Node rather than what ships with Visual Studio (assuming you have Node in your path!)
+
+# Building the Solution
+1. Open a Node command prompt at\SafetyDiscussions\SafetyDiscussionsWeb.
+2. Run `npm install`.
+3. 
 
