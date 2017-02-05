@@ -191,8 +191,6 @@
     <Compile Include="TokenHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\bootstrap.css" />
-    <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\fabric.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -210,6 +208,7 @@
     <Content Include="Content\fabric-common\_i18n.scss" />
     <Content Include="Content\fabric-common\_semanticColorVariables.scss" />
     <Content Include="Content\fabric-common\_themeOverrides.scss" />
+    <TypeScriptCompile Include="app\components\AddDiscussion.tsx" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -238,6 +237,9 @@
     <Content Include="tsconfig.json" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="app\redux\actions\" />
+    <Folder Include="app\redux\containers\" />
+    <Folder Include="app\redux\reducers\" />
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
@@ -251,7 +253,10 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\appRoot.tsx" />
+    <TypeScriptCompile Include="app\components\MyDiscussions.tsx" />
     <TypeScriptCompile Include="app\hacky-typings\index.d.ts" />
+    <TypeScriptCompile Include="app\models\SafetyDiscussion.ts" />
+    <TypeScriptCompile Include="app\redux\state\AppState.ts" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />

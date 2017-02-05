@@ -4,11 +4,15 @@ import { Provider } from 'react-redux';
 import { createStore, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 
+import { AddDiscussion } from './components/AddDiscussion';
+
+
 // Polyfill Promise.
 import { polyfill } from 'es6-promise';
 polyfill();
 
 ReactDOM.render(
-    <div>Hello from React JS!</div>,
+    <AddDiscussion />,
     document.getElementById('reactRoot')
 );
+
