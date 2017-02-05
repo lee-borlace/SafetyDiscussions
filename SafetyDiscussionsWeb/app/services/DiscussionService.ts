@@ -7,7 +7,7 @@ export class DiscussionService {
     public SaveDiscussion(discussion: SafetyDiscussion): Promise<number> {
 
         return fetch(
-            "api/discussions/create",
+            "api/discussions/create" + window.location.search,
             {
                 credentials: 'include',
                 method: 'put',

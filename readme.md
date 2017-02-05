@@ -39,9 +39,10 @@ Being a proof of concept, several simplifications :
   - No unit tests. In reality there would be unit tests around React components, service layer etc.
   - Discussion location is single line of text. Beyond proof of concept would use managed metadata.
   - The app writes to a list in the app web. Real app would create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
-  - Rather than directly making API HTTP calls for Redux, these would be wrapped in a dependency-injectible / mockable service
+  - Hard-coded services in Typescript would be mockable / injectible interfaces in a real product.
   - Skipped a lot of code comments that would usually be present.
   - Would usually use Unity for dependency injection in MVC but have hard-coded for PoC.
+  - Web API controller to read / write to SP would usually go via a business layer rather than direct SP access.
 
 Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
@@ -75,3 +76,7 @@ Some Node modules can have an issue with the possibly older version of Node whic
 # Known Issues
 - Fabric UI DatePicker appears to have several bugs which I've not searched for workarounds for yet.
   - Doesn't let you disable it, so we hide it where we would usually disable it.
+
+  # TODO
+  - Date offset being passed from TS to .NET
+  - 

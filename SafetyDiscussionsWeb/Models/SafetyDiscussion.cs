@@ -13,6 +13,24 @@ namespace SafetyDiscussionsWeb.Models
 
         [JsonProperty("DiscussionDate")]
         public string DiscussionDateISOString { get; set; }
+
+        public DateTime? DiscussionDate
+        {
+            get
+            {
+                DateTime? retVal = null;
+
+                DateTime parsedDate;
+
+                if (DateTime.TryParse(DiscussionDateISOString, out parsedDate))
+                {
+                    retVal = parsedDate;
+                }
+
+                return retVal;
+            }
+        }
+
         public string DiscussionLocation { get; set; }
         public string DiscussedWith { get; set; }
         public string Subject { get; set; }

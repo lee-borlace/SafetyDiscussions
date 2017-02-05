@@ -6594,7 +6594,7 @@
 	const es6_promise_1 = __webpack_require__(98);
 	class DiscussionService {
 	    SaveDiscussion(discussion) {
-	        return fetch("api/discussions/create", {
+	        return fetch("api/discussions/create" + window.location.search, {
 	            credentials: 'include',
 	            method: 'put',
 	            body: JSON.stringify(discussion),
