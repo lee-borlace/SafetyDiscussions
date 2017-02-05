@@ -5,12 +5,14 @@ import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
 import { Discussion, FormMode } from './Discussion';
+import { SafetyDiscussion } from '../models/SafetyDiscussion';
 
 export interface IAddDiscussionProps {
     ShowDialog?: boolean;
     OnAddDiscussionClick?: () => void;
     OnSaveDiscussionClick?: () => void;
     OnCancelClick?: () => void;
+    Discussion?: SafetyDiscussion;
 }
 
 
@@ -34,13 +36,25 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, undefine
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
+                    <Discussion Discussion={this.props.Discussion} FormMode={FormMode.New} />
                     <DialogFooter>
-                        <Button buttonType={ButtonType.primary} onClick={this.props.OnSaveDiscussionClick}>Save</Button>
+                        <Button buttonType={ButtonType.primary} onClick={this.Save.bind(this)}>Save</Button>
                         <Button onClick={this.props.OnCancelClick}>Cancel</Button>
                     </DialogFooter>
                 </Dialog>
             </div>
         );
+    }
+
+
+    private HandleDiscussionChange(discussion: SafetyDiscussion) {
+        
+    }
+
+
+    private Save() {
+
+        this.props.OnSaveDiscussionClick();
     }
 
     

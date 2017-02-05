@@ -10,16 +10,21 @@ import { AddDiscussion, IAddDiscussionProps } from '../../components/AddDiscussi
 const mapStateToProps = (state: AppState): IAddDiscussionProps => {
    
     return {
-        ShowDialog: state.Discussion.DiscussionFormMode == DiscussionFormMode.New ? true : false
+        ShowDialog: state.Discussion.DiscussionFormMode == DiscussionFormMode.New ? true : false,
+        Discussion: null
     }
 }
 
 const mapDispatchToProps = (
     dispatch: (action: DiscussionAction) => void,
-    ownProps: any): IAddDiscussionProps => {
+    ownProps: IAddDiscussionProps): IAddDiscussionProps => {
     return {
         OnAddDiscussionClick: (): void => {
             dispatch(DiscussionActionCreator.CreateActionOpenNewDiscussionForm());     
+        },
+        OnSaveDiscussionClick: (): void => {
+            dispatch(DiscussionActionCreator.CreateActionCreateDiscussion(ownProps.Discussion));
+            console.log(ownProps.Discussion.DiscussionLocation);
         }
     };
 }
