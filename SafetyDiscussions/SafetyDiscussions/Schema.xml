@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<List xmlns:ows="Microsoft SharePoint" Title="Safety Discussions" FolderCreation="FALSE" Direction="$Resources:Direction;" Url="Lists/Safety Discussions" BaseType="0" xmlns="http://schemas.microsoft.com/sharepoint/">
+  <MetaData>
+    <ContentTypes>
+      
+      
+    <ContentType ID="0x0100779dc508f8094810aa2a176f0f902c40" Name="ListFieldsContentType"><FieldRefs><FieldRef ID="{fa564e0f-0c70-4ab9-b863-0177e6ddd247}" Name="Title" /><FieldRef ID="{51752ff4-e545-4e1c-a554-f72c148977d4}" Name="Observer" /><FieldRef ID="{362f8b4f-8fe7-4592-ab59-7dcbae2c36f1}" Name="DiscussionDate" /><FieldRef ID="{4d1e0feb-d5a8-4541-a61f-6b89816978b2}" Name="DiscussionLocation" /><FieldRef ID="{d45c7dcf-e4d3-4d22-9752-e87ed69ed7ac}" Name="DiscussedWith" /><FieldRef ID="{e2b9cd7e-1aac-4f18-bbb3-9fe340e20e65}" Name="Subject" /><FieldRef ID="{4b659038-9683-4369-aed5-0621ab8a62e1}" Name="Outcomes" /></FieldRefs></ContentType><ContentTypeRef ID="0x01">
+        <Folder TargetName="Item" />
+      </ContentTypeRef><ContentTypeRef ID="0x0120" /></ContentTypes>
+    <Fields>
+      
+    <Field ID="{fa564e0f-0c70-4ab9-b863-0177e6ddd247}" Type="Text" Name="Title" DisplayName="$Resources:core,Title;" Required="FALSE" SourceID="http://schemas.microsoft.com/sharepoint/v3" StaticName="Title" MaxLength="255" /><Field Name="Observer" ID="{51752ff4-e545-4e1c-a554-f72c148977d4}" DisplayName="Observer" Type="User" Required="TRUE" List="UserInfo" UserSelectionMode="PeopleOnly" UserSelectionScope="0" /><Field Name="DiscussionDate" ID="{362f8b4f-8fe7-4592-ab59-7dcbae2c36f1}" DisplayName="Discussion Date" Type="DateTime" Required="TRUE" Format="DateOnly" /><Field Name="DiscussionLocation" ID="{4d1e0feb-d5a8-4541-a61f-6b89816978b2}" DisplayName="Discussion Location" Type="Text" Required="TRUE" /><Field Name="DiscussedWith" ID="{d45c7dcf-e4d3-4d22-9752-e87ed69ed7ac}" DisplayName="Discussed With" Type="User" Required="TRUE" List="UserInfo" UserSelectionMode="PeopleOnly" UserSelectionScope="0" /><Field Name="Subject" ID="{e2b9cd7e-1aac-4f18-bbb3-9fe340e20e65}" DisplayName="Subject" Type="Note" Required="TRUE" RichText="FALSE" /><Field Name="Outcomes" ID="{4b659038-9683-4369-aed5-0621ab8a62e1}" DisplayName="Outcomes" Type="Note" Required="TRUE" RichText="FALSE" /></Fields>
+    <Views>
+      
+      
+    <View BaseViewID="0" Type="HTML" MobileView="TRUE" TabularView="FALSE">
+        <Toolbar Type="Standard" />
+        <XslLink Default="TRUE">main.xsl</XslLink>
+        <RowLimit Paged="TRUE">30</RowLimit>
+        <ViewFields>
+          
+        <FieldRef Name="LinkTitleNoMenu"></FieldRef></ViewFields>
+        <Query>
+          <OrderBy>
+            
+          <FieldRef Name="Modified" Ascending="FALSE"></FieldRef></OrderBy>
+        </Query>
+        <ParameterBindings>
+          <ParameterBinding Name="AddNewAnnouncement" Location="Resource(wss,addnewitem)" />
+          <ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" />
+          <ParameterBinding Name="NoAnnouncementsHowTo" Location="Resource(wss,noXinviewofY_ONET_HOME)" />
+        </ParameterBindings>
+      </View><View BaseViewID="1" Type="HTML" WebPartZoneID="Main" DisplayName="$Resources:core,objectiv_schema_mwsidcamlidC24;" DefaultView="TRUE" MobileView="TRUE" MobileDefaultView="TRUE" SetupPath="pages\viewpage.aspx" ImageUrl="/_layouts/15/images/generic.png?rev=23" Url="AllItems.aspx">
+        <Toolbar Type="Standard" />
+        <XslLink Default="TRUE">main.xsl</XslLink>
+        <JSLink>clienttemplates.js</JSLink>
+        <RowLimit Paged="TRUE">30</RowLimit>
+        <ViewFields>
+          
+        <FieldRef Name="LinkTitle"></FieldRef><FieldRef Name="Observer" /><FieldRef Name="DiscussionDate" /><FieldRef Name="DiscussionLocation" /><FieldRef Name="DiscussedWith" /><FieldRef Name="Subject" /><FieldRef Name="Outcomes" /></ViewFields>
+        <Query>
+          <OrderBy>
+            
+          <FieldRef Name="ID"></FieldRef></OrderBy>
+        </Query>
+        <ParameterBindings>
+          <ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" />
+          <ParameterBinding Name="NoAnnouncementsHowTo" Location="Resource(wss,noXinviewofY_DEFAULT)" />
+        </ParameterBindings>
+      </View></Views>
+    <Forms>
+      <Form Type="DisplayForm" Url="DispForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="EditForm" Url="EditForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+      <Form Type="NewForm" Url="NewForm.aspx" SetupPath="pages\form.aspx" WebPartZoneID="Main" />
+    </Forms>
+  </MetaData>
+</List>

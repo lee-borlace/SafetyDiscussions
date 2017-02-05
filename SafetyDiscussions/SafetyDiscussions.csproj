@@ -46,6 +46,15 @@
     <Content Include="AppIcon.png">
       <OpcRelationship>manifest-icon</OpcRelationship>
     </Content>
+    <Content Include="Features\Feature1\Feature1.Template.xml">
+      <DependentUpon>Feature1.feature</DependentUpon>
+    </Content>
+    <Content Include="Package\Package.Template.xml">
+      <DependentUpon>Package.package</DependentUpon>
+    </Content>
+    <Content Include="SafetyDiscussions\Elements.xml" />
+    <Content Include="SafetyDiscussions\SafetyDiscussionsInstance\Elements.xml" />
+    <Content Include="SafetyDiscussions\Schema.xml" />
   </ItemGroup>
   <ItemGroup>
     <AppManifestFile Include="AppManifest.xml">
@@ -65,6 +74,18 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="Features\Feature1\Feature1.feature">
+      <FeatureId>{0b12d5e3-23d3-48ce-b109-62e2af64b006}</FeatureId>
+    </None>
+    <None Include="Package\Package.package">
+      <PackageId>{df96d8e8-9d84-421d-8507-2fefcd8bc721}</PackageId>
+    </None>
+    <None Include="SafetyDiscussions\SafetyDiscussionsInstance\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{9eedeba8-e1d4-4ece-8394-180b8eee5b24}</SharePointProjectItemId>
+    </None>
+    <None Include="SafetyDiscussions\SharePointProjectItem.spdata">
+      <SharePointProjectItemId>{d791f3be-bc5e-4ebc-96c2-5416a671badc}</SharePointProjectItemId>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

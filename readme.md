@@ -16,9 +16,6 @@ It should also allow the employee to view a list of previous discussions they ha
 
 # Assumptions
 - SharePoint Online not on-premises
-- Being a proof of concept, several simplifications :
-  - No unit tests. In reality there would be unit tests around React components, service layer etc.
-
 
 # Design Decisions
 Reactive considerations addressed as follows :
@@ -38,9 +35,17 @@ Reactive considerations addressed as follows :
 - Elastic
   - Elastic server-side components not addressed in this proof of concept.
 
+Being a proof of concept, several simplifications :
+  - No unit tests. In reality there would be unit tests around React components, service layer etc.
+  - Discussion location is single line of text. Beyond proof of concept would use managed metadata.
+  - The app writes to a list in the app web. Real app would create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
+
 Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
 - JS generated from Typescript for maximum maintainability and limiting bugs.
+- SharePoint add-in rather than general Office 365 add-in as it is easy to provision required list.
+
+
 
 # Prerequisites
 ## General

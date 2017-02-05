@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.0.0.0" Id="ae3772a7-2a68-4060-98bd-982f6fcde70a" solutionId="ae3772a7-2a68-4060-98bd-982f6fcde70a" resetWebServer="false" sharePointProductVersion="16.0" name="SafetyDiscussions" xmlns="http://schemas.microsoft.com/VisualStudio/2008/SharePointTools/PackageModel">
+  <features>
+    <featureReference itemId="0b12d5e3-23d3-48ce-b109-62e2af64b006" />
+  </features>
+</package>
