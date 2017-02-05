@@ -51,13 +51,6 @@
 	// Polyfill Promise.
 	const es6_promise_1 = __webpack_require__(96);
 	es6_promise_1.polyfill();
-	//// Create the store.
-	//let store = createStore(
-	//    MainReducer,
-	//    applyMiddleware(
-	//        thunk, // lets us dispatch() functions
-	//    )
-	//);
 	ReactDOM.render(React.createElement(AddDiscussion_1.AddDiscussion, null), document.getElementById('reactRoot'));
 
 
@@ -94,7 +87,7 @@
 	        return (React.createElement("div", null,
 	            React.createElement(Button_1.Button, { description: 'Opens the dialog to create a discussion', onClick: this.showDialog.bind(this) }, "Add Safety Discussion"),
 	            React.createElement(Dialog_1.Dialog, { isOpen: this.state.showDialog, type: Dialog_1.DialogType.close, onDismiss: this.closeDialog.bind(this), title: 'Add Discussion', subText: 'Please enter the details for the safety discussion.', isBlocking: false, closeButtonAriaLabel: 'Close' },
-	                React.createElement(Discussion_1.Discussion, { FormMode: Discussion_1.FormMode.New, Discussion: null }))));
+	                React.createElement(Discussion_1.Discussion, { FormMode: Discussion_1.FormMode.New, Discussion: null, DialogClose: this.closeDialog.bind(this) }))));
 	    }
 	    showDialog() {
 	        this.setState({ showDialog: true });
@@ -3461,7 +3454,7 @@
 	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Please fill in all required information."),
 	                    React.createElement("br", null)),
 	            !this.state.IsSaving &&
-	                React.createElement(DatePicker_1.DatePicker, { placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: this.OnDateChanged.bind(this) }),
+	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DiscussionDate }),
 	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving }),
@@ -3469,7 +3462,7 @@
 	                React.createElement(Spinner_1.Spinner, { label: 'Saving discussion...' }),
 	            React.createElement(Dialog_1.DialogFooter, null,
 	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving }, "Save"),
-	                React.createElement(Button_1.Button, null, "Cancel"))));
+	                React.createElement(Button_1.Button, { onClick: this.props.DialogClose }, "Cancel"))));
 	    }
 	    Validate() {
 	        let valid = true;
@@ -3492,6 +3485,8 @@
 	            });
 	            let service = new DiscussionService_1.DiscussionService();
 	            service.SaveDiscussion(this.state.Discussion);
+	            console.log(this.state.Discussion);
+	            this.props.DialogClose();
 	        }
 	    }
 	    OnDateChanged(date) {

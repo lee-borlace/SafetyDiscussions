@@ -41,7 +41,7 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
-                    <Discussion FormMode={FormMode.New} Discussion={null} />
+                    <Discussion FormMode={FormMode.New} Discussion={null} DialogClose={this.closeDialog.bind(this)} />
                 </Dialog>
             </div>
         );

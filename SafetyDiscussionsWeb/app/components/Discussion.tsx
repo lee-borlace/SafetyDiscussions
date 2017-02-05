@@ -19,6 +19,7 @@ export enum FormMode {
 export interface IDiscussionProps {
     FormMode: FormMode;
     Discussion: SafetyDiscussion;
+    DialogClose: () => void;
 }
 
 export interface IDiscussionState {
@@ -116,9 +117,11 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
                 {!this.state.IsSaving &&
                     <DatePicker
+                        label='Discussion Date'
                         placeholder='Enter date of discussion'
                         strings={DayPickerStrings}
-                        onSelectDate={this.OnDateChanged.bind(this)}
+                        onSelectDate={date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null)}
+                        value={this.state.Discussion.DiscussionDate} // This is a required workaround to stop the field from getting cleared out when state updates.
                         />
                 }
                 <TextField
@@ -163,7 +166,10 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                     >
                         Save
                     </Button>
-                    <Button>Cancel</Button>
+                    <Button
+                        onClick={this.props.DialogClose}
+                        >Cancel
+                    </Button>
                 </DialogFooter>
             </div>
         );
@@ -205,6 +211,10 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
             let service: DiscussionService = new DiscussionService();
             service.SaveDiscussion(this.state.Discussion);
+
+            console.log(this.state.Discussion);
+
+            this.props.DialogClose();
         }
 
     }

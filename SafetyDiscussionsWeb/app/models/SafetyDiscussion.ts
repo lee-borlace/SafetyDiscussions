@@ -6,5 +6,5 @@
     public DiscussedWith?: string;
     public Subject?: string;
     public Outcomes?: string;
-
+    public Id?: number;
 }

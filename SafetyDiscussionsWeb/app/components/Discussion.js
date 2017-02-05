@@ -4,6 +4,8 @@ const Button_1 = require('office-ui-fabric-react/lib/Button');
 const TextField_1 = require('office-ui-fabric-react/lib/TextField');
 const DatePicker_1 = require('office-ui-fabric-react/lib/DatePicker');
 const Dialog_1 = require('office-ui-fabric-react/lib/Dialog');
+const MessageBar_1 = require('office-ui-fabric-react/lib/MessageBar');
+const Spinner_1 = require('office-ui-fabric-react/lib/Spinner');
 const SafetyDiscussion_1 = require('../models/SafetyDiscussion');
 const DiscussionService_1 = require('../services/DiscussionService');
 (function (FormMode) {
@@ -66,35 +68,50 @@ class Discussion extends React.Component {
         this.state = {
             Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
             IsSaving: false,
-            SaveClicked: false
+            IsValid: true
         };
     }
     // Main renderer.
     render() {
         return (React.createElement("div", null, 
-            React.createElement(DatePicker_1.DatePicker, {placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: this.OnDateChanged.bind(this)}), 
-            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
-            React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
-            React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
+            !this.state.IsValid &&
+                React.createElement("div", null, 
+                    React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Please fill in all required information."), 
+                    React.createElement("br", null)), 
+            !this.state.IsSaving &&
+                React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DiscussionDate}), 
+            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving}), 
+            React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving}), 
+            React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving}), 
+            this.state.IsSaving &&
+                React.createElement(Spinner_1.Spinner, {label: 'Saving discussion...'}), 
             React.createElement(Dialog_1.DialogFooter, null, 
-                React.createElement(Button_1.Button, {buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this)}, "Save"), 
-                React.createElement(Button_1.Button, null, "Cancel"))));
+                React.createElement(Button_1.Button, {buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving}, "Save"), 
+                React.createElement(Button_1.Button, {onClick: this.props.DialogClose}, "Cancel"))));
     }
-    GetErrorMessageRequired(value) {
-        if (!value) {
-            return 'Please specify a value';
+    Validate() {
+        let valid = true;
+        if (!this.state.Discussion.DiscussionDate ||
+            !this.state.Discussion.DiscussionLocation ||
+            !this.state.Discussion.Subject ||
+            !this.state.Discussion.Outcomes) {
+            valid = false;
         }
-        else {
-            return '';
-        }
+        this.setState({
+            IsValid: valid
+        });
+        return valid;
     }
     Save() {
-        this.setState({
-            SaveClicked: true,
-            IsSaving: false
-        });
-        let service = new DiscussionService_1.DiscussionService();
-        service.SaveDiscussion(this.state.Discussion);
+        var valid = this.Validate();
+        if (valid) {
+            this.setState({
+                IsSaving: true
+            });
+            let service = new DiscussionService_1.DiscussionService();
+            service.SaveDiscussion(this.state.Discussion);
+            console.log(this.state.Discussion);
+        }
     }
     OnDateChanged(date) {
         this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
