@@ -21,6 +21,16 @@ const Discussion = (state = {
                 Discussion: null,
                 DiscussionFormMode: DiscussionState_1.DiscussionFormMode.NA
             };
+        case DiscussionAction_1.OPEN_NEW_DISCUSSION_FORM:
+            return {
+                Discussions: [],
+                DiscussionsFetching: true,
+                FetchError: false,
+                DiscussionCreating: false,
+                DiscussionFetching: false,
+                Discussion: null,
+                DiscussionFormMode: DiscussionState_1.DiscussionFormMode.New
+            };
         default:
             return state;
     }

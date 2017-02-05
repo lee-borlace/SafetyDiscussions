@@ -2,6 +2,7 @@
 import { DiscussionState, DiscussionFormMode } from '../state/DiscussionState';
 
 import {
+    OPEN_NEW_DISCUSSION_FORM,
     CREATE_DISCUSSION,
     REQUEST_CREATE_DISCUSSION,
     RECEIVE_CREATE_DISCUSSION,
@@ -33,6 +34,18 @@ const Discussion = (
                 DiscussionFetching: false,
                 Discussion: null,
                 DiscussionFormMode: DiscussionFormMode.NA
+            }
+
+        case OPEN_NEW_DISCUSSION_FORM:
+
+            return {
+                Discussions: [],
+                DiscussionsFetching: true,
+                FetchError: false,
+                DiscussionCreating: false,
+                DiscussionFetching: false,
+                Discussion: null,
+                DiscussionFormMode: DiscussionFormMode.New
             }
 
         default:

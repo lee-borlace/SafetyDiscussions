@@ -7,6 +7,7 @@ import thunk from 'redux-thunk';
 import { AddDiscussion } from './components/AddDiscussion';
 import { MainReducer } from './redux/reducers/MainReducer';
 import { DiscussionActionCreator } from './redux/actions/DiscussionActionCreator';
+import { DiscussionContainer } from './redux/containers/DiscussionContainer';
 
 // Polyfill Promise.
 import { polyfill } from 'es6-promise';
@@ -23,7 +24,7 @@ let store = createStore(
 
 ReactDOM.render(
     <Provider store={store}>
-        <AddDiscussion />
+        <DiscussionContainer />
     </Provider>,
     document.getElementById('reactRoot')
 );

@@ -4,6 +4,7 @@ import { SafetyDiscussion } from '../../models/SafetyDiscussion';
 import { Action } from './Action';
 
 import {
+    OPEN_NEW_DISCUSSION_FORM,
     CREATE_DISCUSSION,
     REQUEST_CREATE_DISCUSSION,
     RECEIVE_CREATE_DISCUSSION,
@@ -19,6 +20,12 @@ export class DiscussionActionCreator {
         return {
             type: CREATE_DISCUSSION,
             Discussion: newDiscussion
+        }
+    }
+
+    public static CreateActionOpenNewDiscussionForm(): DiscussionAction {
+        return {
+            type: OPEN_NEW_DISCUSSION_FORM
         }
     }
    
