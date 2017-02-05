@@ -64,22 +64,37 @@ class Discussion extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion()
+            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
+            IsSaving: false,
+            SaveClicked: false
         };
     }
     // Main renderer.
     render() {
         return (React.createElement("div", null, 
             React.createElement(DatePicker_1.DatePicker, {placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: this.OnDateChanged.bind(this)}), 
-            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this)}), 
-            React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this)}), 
-            React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this)}), 
+            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
+            React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
+            React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), onGetErrorMessage: this.GetErrorMessageRequired.bind(this), deferredValidationTime: 500}), 
             React.createElement(Dialog_1.DialogFooter, null, 
                 React.createElement(Button_1.Button, {buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this)}, "Save"), 
                 React.createElement(Button_1.Button, null, "Cancel"))));
     }
+    GetErrorMessageRequired(value) {
+        if (!value) {
+            return 'Please specify a value';
+        }
+        else {
+            return '';
+        }
+    }
     Save() {
+        this.setState({
+            SaveClicked: true,
+            IsSaving: false
+        });
         let service = new DiscussionService_1.DiscussionService();
+        service.SaveDiscussion(this.state.Discussion);
     }
     OnDateChanged(date) {
         this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);

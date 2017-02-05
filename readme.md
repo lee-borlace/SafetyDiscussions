@@ -70,3 +70,5 @@ Some Node modules can have an issue with the possibly older version of Node whic
 2. Run `npm install`.
 3. 
 
+# Known Issues
+- Fabric UI doesn't let you disable a date picker so we hide it where we would usually disable it.

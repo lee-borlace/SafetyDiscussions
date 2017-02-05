@@ -5,6 +5,8 @@ import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { DatePicker } from 'office-ui-fabric-react/lib/DatePicker';
 import { DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
+import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
+import { Spinner, SpinnerType } from 'office-ui-fabric-react/lib/Spinner';
 
 import { SafetyDiscussion } from '../models/SafetyDiscussion';
 import { DiscussionService } from '../services/DiscussionService';
@@ -20,7 +22,10 @@ export interface IDiscussionProps {
 }
 
 export interface IDiscussionState {
-    Discussion: SafetyDiscussion;
+    Discussion?: SafetyDiscussion;
+    IsSaving?: boolean;
+    SaveClicked?: boolean;
+    IsValid?: boolean;
 }
 
 
@@ -84,7 +89,9 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         super(props);
 
         this.state = {
-            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion()
+            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion(),
+            IsSaving: false,
+            IsValid: true
         };
     }
 
@@ -93,12 +100,69 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
         return (
             <div>
-                <DatePicker placeholder='Enter date of discussion' strings={DayPickerStrings} onSelectDate={this.OnDateChanged.bind(this)} />
-                <TextField label='Location' required={true} placeholder='Enter location' onChanged={this.OnLocationChanged.bind(this)} />
-                <TextField label='Subject' required={true} multiline resizable={false} placeholder='Enter subject' onChanged={this.OnSubjectChanged.bind(this)} />
-                <TextField label='Outcome' required={true} multiline resizable={false} placeholder='Enter outcome' onChanged={this.OnOutcomeChanged.bind(this)}/>
+
+                {!this.state.IsValid &&
+
+                    <div>
+                        <MessageBar
+                            messageBarType={MessageBarType.error}
+                            >
+                            Please fill in all required information.
+                        </MessageBar>
+                        <br />
+                    </div>
+                }
+
+
+                {!this.state.IsSaving &&
+                    <DatePicker
+                        placeholder='Enter date of discussion'
+                        strings={DayPickerStrings}
+                        onSelectDate={this.OnDateChanged.bind(this)}
+                        />
+                }
+                <TextField
+                    label='Location'
+                    required={true}
+                    placeholder='Enter location'
+                    onChanged={this.OnLocationChanged.bind(this)}
+                    disabled={this.state.IsSaving}
+                    />
+
+                <TextField
+                    label='Subject'
+                    required={true}
+                    multiline
+                    resizable={false}
+                    placeholder='Enter subject'
+                    onChanged={this.OnSubjectChanged.bind(this)}
+                    disabled={this.state.IsSaving}
+                    />
+
+                <TextField
+                    label='Outcome'
+                    required={true}
+                    multiline
+                    resizable={false}
+                    placeholder='Enter outcome'
+                    onChanged={this.OnOutcomeChanged.bind(this)}
+                    disabled={this.state.IsSaving}
+                    />
+
+
+                {this.state.IsSaving &&
+
+                    <Spinner label='Saving discussion...' />
+                }
+
                 <DialogFooter>
-                    <Button buttonType={ButtonType.primary} onClick={this.Save.bind(this)}>Save</Button>
+                    <Button
+                        buttonType={ButtonType.primary}
+                        onClick={this.Save.bind(this)}
+                        disabled={this.state.IsSaving}
+                    >
+                        Save
+                    </Button>
                     <Button>Cancel</Button>
                 </DialogFooter>
             </div>
@@ -106,10 +170,42 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
     }
 
 
+
+    private Validate():boolean {
+
+        let valid: boolean = true;
+
+        if (
+            !this.state.Discussion.DiscussionDate ||
+            !this.state.Discussion.DiscussionLocation ||
+            !this.state.Discussion.Subject ||
+            !this.state.Discussion.Outcomes
+        ) {
+            valid = false;
+        }
+
+        this.setState({
+            IsValid: valid
+        });
+
+        return valid;
+    }
+
+
+
     private Save() {
 
-        let service: DiscussionService = new DiscussionService();
-        service.SaveDiscussion(this.state.Discussion);
+        var valid = this.Validate();
+
+        if (valid) {
+
+            this.setState({
+                IsSaving: true
+            });
+
+            let service: DiscussionService = new DiscussionService();
+            service.SaveDiscussion(this.state.Discussion);
+        }
 
     }
 
@@ -166,7 +262,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
             if (outcomes) {
                 updatedDiscussion.Outcomes = outcomes;
             }
-                      
+
 
             return {
                 Discussion: updatedDiscussion

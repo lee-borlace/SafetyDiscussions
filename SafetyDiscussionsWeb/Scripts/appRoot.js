@@ -49,7 +49,7 @@
 	const ReactDOM = __webpack_require__(2);
 	const AddDiscussion_1 = __webpack_require__(3);
 	// Polyfill Promise.
-	const es6_promise_1 = __webpack_require__(86);
+	const es6_promise_1 = __webpack_require__(96);
 	es6_promise_1.polyfill();
 	//// Create the store.
 	//let store = createStore(
@@ -3386,8 +3386,10 @@
 	const TextField_1 = __webpack_require__(50);
 	const DatePicker_1 = __webpack_require__(58);
 	const Dialog_1 = __webpack_require__(17);
-	const SafetyDiscussion_1 = __webpack_require__(84);
-	const DiscussionService_1 = __webpack_require__(85);
+	const MessageBar_1 = __webpack_require__(84);
+	const Spinner_1 = __webpack_require__(89);
+	const SafetyDiscussion_1 = __webpack_require__(94);
+	const DiscussionService_1 = __webpack_require__(95);
 	var FormMode;
 	(function (FormMode) {
 	    FormMode[FormMode["New"] = 0] = "New";
@@ -3446,23 +3448,51 @@
 	    constructor(props) {
 	        super(props);
 	        this.state = {
-	            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion()
+	            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
+	            IsSaving: false,
+	            IsValid: true
 	        };
 	    }
 	    // Main renderer.
 	    render() {
 	        return (React.createElement("div", null,
-	            React.createElement(DatePicker_1.DatePicker, { placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: this.OnDateChanged.bind(this) }),
-	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this) }),
-	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this) }),
-	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this) }),
+	            !this.state.IsValid &&
+	                React.createElement("div", null,
+	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Please fill in all required information."),
+	                    React.createElement("br", null)),
+	            !this.state.IsSaving &&
+	                React.createElement(DatePicker_1.DatePicker, { placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: this.OnDateChanged.bind(this) }),
+	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
+	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
+	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving }),
+	            this.state.IsSaving &&
+	                React.createElement(Spinner_1.Spinner, { label: 'Saving discussion...' }),
 	            React.createElement(Dialog_1.DialogFooter, null,
-	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this) }, "Save"),
+	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving }, "Save"),
 	                React.createElement(Button_1.Button, null, "Cancel"))));
 	    }
+	    Validate() {
+	        let valid = true;
+	        if (!this.state.Discussion.DiscussionDate ||
+	            !this.state.Discussion.DiscussionLocation ||
+	            !this.state.Discussion.Subject ||
+	            !this.state.Discussion.Outcomes) {
+	            valid = false;
+	        }
+	        this.setState({
+	            IsValid: valid
+	        });
+	        return valid;
+	    }
 	    Save() {
-	        let service = new DiscussionService_1.DiscussionService();
-	        service.SaveDiscussion(this.state.Discussion);
+	        var valid = this.Validate();
+	        if (valid) {
+	            this.setState({
+	                IsSaving: true
+	            });
+	            let service = new DiscussionService_1.DiscussionService();
+	            service.SaveDiscussion(this.state.Discussion);
+	        }
 	    }
 	    OnDateChanged(date) {
 	        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
@@ -6284,6 +6314,260 @@
 
 /***/ },
 /* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(85));
+	
+
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(86));
+	__export(__webpack_require__(88));
+	
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var Button_1 = __webpack_require__(4);
+	__webpack_require__(87);
+	var css_1 = __webpack_require__(7);
+	var MessageBar_Props_1 = __webpack_require__(88);
+	var object_1 = __webpack_require__(8);
+	var MessageBar = (function (_super) {
+	    __extends(MessageBar, _super);
+	    function MessageBar(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.ICON_MAP = (_a = {},
+	            _a[MessageBar_Props_1.MessageBarType.info] = 'Info',
+	            _a[MessageBar_Props_1.MessageBarType.warning] = 'Info',
+	            _a[MessageBar_Props_1.MessageBarType.error] = 'ErrorBadge',
+	            _a[MessageBar_Props_1.MessageBarType.blocked] = 'Blocked',
+	            _a[MessageBar_Props_1.MessageBarType.remove] = 'Blocked',
+	            _a[MessageBar_Props_1.MessageBarType.severeWarning] = 'Warning',
+	            _a[MessageBar_Props_1.MessageBarType.success] = 'Completed',
+	            _a);
+	        _this.state = {
+	            labelId: object_1.getId('MessageBar')
+	        };
+	        return _this;
+	        var _a;
+	    }
+	    MessageBar.prototype.render = function () {
+	        var isMultiline = this.props.isMultiline;
+	        return isMultiline ? this._renderMultiLine() : this._renderSingleLine();
+	    };
+	    MessageBar.prototype._getActionsDiv = function () {
+	        if (this.props.actions) {
+	            return this.props.isMultiline ?
+	                React.createElement("div", { className: 'ms-MessageBar-actions' },
+	                    " ",
+	                    this.props.actions,
+	                    " ") :
+	                React.createElement("div", { className: 'ms-MessageBar-actionsOneline' },
+	                    this._getDismissDiv(),
+	                    this.props.actions);
+	        }
+	        return null;
+	    };
+	    MessageBar.prototype._getClassName = function () {
+	        return css_1.css(this.props.className, 'ms-MessageBar', {
+	            'ms-MessageBar': this.props.messageBarType === MessageBar_Props_1.MessageBarType.info,
+	            'ms-MessageBar--error': this.props.messageBarType === MessageBar_Props_1.MessageBarType.error,
+	            'ms-MessageBar--blocked': (this.props.messageBarType === MessageBar_Props_1.MessageBarType.blocked) || (this.props.messageBarType === MessageBar_Props_1.MessageBarType.remove),
+	            'ms-MessageBar--severeWarning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.severeWarning,
+	            'ms-MessageBar--success': this.props.messageBarType === MessageBar_Props_1.MessageBarType.success,
+	            'ms-MessageBar--warning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.warning
+	        });
+	    };
+	    MessageBar.prototype._getDismissDiv = function () {
+	        if (this.props.onDismiss != null) {
+	            return React.createElement(Button_1.Button, { disabled: false, className: 'ms-MessageBar-dismissal', buttonType: Button_1.ButtonType.icon, onClick: this.props.onDismiss, icon: 'Cancel', ariaLabel: this.props.dismissButtonAriaLabel });
+	        }
+	        return null;
+	    };
+	    MessageBar.prototype._getIconSpan = function () {
+	        return React.createElement("div", { className: 'ms-MessageBar-icon' },
+	            React.createElement("i", { className: "ms-Icon ms-Icon--" + this.ICON_MAP[this.props.messageBarType] }));
+	    };
+	    MessageBar.prototype._getInnerTextClassName = function () {
+	        return this.props.onDismiss || this.props.actions ? 'ms-MessageBar-innerTextPadding' : 'ms-MessageBar-innerText';
+	    };
+	    MessageBar.prototype._renderMultiLine = function () {
+	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-multiline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
+	            React.createElement("div", { className: 'ms-MessageBar-content' },
+	                this._getIconSpan(),
+	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
+	                    this._getDismissDiv(),
+	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
+	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children)),
+	                    this._getActionsDiv()))));
+	    };
+	    MessageBar.prototype._renderSingleLine = function () {
+	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-singleline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
+	            React.createElement("div", { className: 'ms-MessageBar-content' },
+	                this._getIconSpan(),
+	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
+	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
+	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children))),
+	                this._getActionsDiv())));
+	    };
+	    return MessageBar;
+	}(React.Component));
+	MessageBar.defaultProps = {
+	    messageBarType: MessageBar_Props_1.MessageBarType.info,
+	    onDismiss: null,
+	    isMultiline: true,
+	};
+	exports.MessageBar = MessageBar;
+	
+
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-MessageBar{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;background-color:" }, { "theme": "infoBackground", "defaultValue": "#f4f4f4" }, { "rawString": ";color:" }, { "theme": "infoText", "defaultValue": "#333333" }, { "rawString": ";width:100%;box-sizing:border-box;display:-webkit-box;display:-ms-flexbox;display:flex;position:relative}.ms-MessageBar .ms-MessageBar-icon{color:" }, { "theme": "info", "defaultValue": "#767676" }, { "rawString": "}html[dir=ltr] .ms-MessageBar .ms-MessageBar-icon{padding-right:8px}html[dir=rtl] .ms-MessageBar .ms-MessageBar-icon{padding-left:8px}.ms-MessageBar .ms-Link{font-size:12px}.ms-MessageBar-icon,.ms-MessageBar-text{display:table-cell;vertical-align:top}.ms-MessageBar-icon{font-size:16px;min-width:16px;min-height:16px;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar-text{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;min-width:0;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar.ms-MessageBar--warning{background-color:" }, { "theme": "warningBackground", "defaultValue": "#fff4ce" }, { "rawString": ";color:" }, { "theme": "warningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning{background-color:" }, { "theme": "severeWarningBackground", "defaultValue": "#fed9cc" }, { "rawString": ";color:" }, { "theme": "severeWarningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning .ms-MessageBar-icon{color:" }, { "theme": "severeWarning", "defaultValue": "#d83b01" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success{background-color:" }, { "theme": "successBackground", "defaultValue": "#dff6dd" }, { "rawString": ";color:" }, { "theme": "successText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success .ms-MessageBar-icon{color:" }, { "theme": "green", "defaultValue": "#107c10" }, { "rawString": "}.ms-MessageBar-content{padding:16px;display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;box-sizing:border-box}.ms-MessageBar-actionables{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;width:100%;min-width:0}.ms-MessageBar-actionables>.ms-MessageBar-dismissal{right:0;top:0;position:absolute!important}.ms-MessageBar-actions,.ms-MessageBar-actionsOneline{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ms-MessageBar-actionsOneline{position:relative}.ms-MessageBar-dismissal{min-width:0}.ms-MessageBar-dismissal::-moz-focus-inner{border:0}.ms-MessageBar-dismissal{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-MessageBar-dismissal:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}html[dir=ltr] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-right:-8px}html[dir=rtl] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-left:-8px}.ms-MessageBar+.ms-MessageBar{margin-bottom:6px}html[dir=ltr] .ms-MessageBar-innerTextPadding{padding-right:24px}html[dir=rtl] .ms-MessageBar-innerTextPadding{padding-left:24px}html[dir=ltr] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=ltr] .ms-MessageBar-innerTextPadding span{padding-right:4px}html[dir=rtl] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=rtl] .ms-MessageBar-innerTextPadding span{padding-left:4px}.ms-MessageBar-multiline>.ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-icon{-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerText,.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerTextPadding{max-height:1.3em;line-height:1.3em;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap}.ms-MessageBar-singleline .ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.ms-MessageBar .ms-Icon--Cancel{font-size:14px}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 88 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var MessageBarType;
+	(function (MessageBarType) {
+	    /** Info styled MessageBar */
+	    MessageBarType[MessageBarType["info"] = 0] = "info";
+	    /** Error styled MessageBar */
+	    MessageBarType[MessageBarType["error"] = 1] = "error";
+	    /** Blocked styled MessageBar */
+	    MessageBarType[MessageBarType["blocked"] = 2] = "blocked";
+	    /** SevereWarning styled MessageBar */
+	    MessageBarType[MessageBarType["severeWarning"] = 3] = "severeWarning";
+	    /** Success styled MessageBar */
+	    MessageBarType[MessageBarType["success"] = 4] = "success";
+	    /** Warning styled MessageBar */
+	    MessageBarType[MessageBarType["warning"] = 5] = "warning";
+	    /**
+	     * @deprecated
+	     * Deprecated at v0.48.0, to be removed at >= v1.0.0. Use 'blocked' instead.
+	     */
+	    MessageBarType[MessageBarType["remove"] = 6] = "remove";
+	})(MessageBarType = exports.MessageBarType || (exports.MessageBarType = {}));
+	
+
+
+/***/ },
+/* 89 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(90));
+	
+
+
+/***/ },
+/* 90 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(91));
+	__export(__webpack_require__(92));
+	
+
+
+/***/ },
+/* 91 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var Spinner_Props_1 = __webpack_require__(92);
+	var css_1 = __webpack_require__(7);
+	__webpack_require__(93);
+	var Spinner = (function (_super) {
+	    __extends(Spinner, _super);
+	    function Spinner() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    Spinner.prototype.render = function () {
+	        var _a = this.props, type = _a.type, label = _a.label, className = _a.className;
+	        return (React.createElement("div", { className: css_1.css('ms-Spinner', className) },
+	            React.createElement("div", { className: css_1.css('ms-Spinner-circle', { 'ms-Spinner--normal': type === Spinner_Props_1.SpinnerType.normal }, { 'ms-Spinner--large': type === Spinner_Props_1.SpinnerType.large }) }),
+	            label && (React.createElement("div", { className: 'ms-Spinner-label' }, label))));
+	    };
+	    return Spinner;
+	}(React.Component));
+	Spinner.defaultProps = {
+	    type: Spinner_Props_1.SpinnerType.normal
+	};
+	exports.Spinner = Spinner;
+	
+
+
+/***/ },
+/* 92 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var SpinnerType;
+	(function (SpinnerType) {
+	    SpinnerType[SpinnerType["normal"] = 0] = "normal";
+	    SpinnerType[SpinnerType["large"] = 1] = "large";
+	})(SpinnerType = exports.SpinnerType || (exports.SpinnerType = {}));
+	
+
+
+/***/ },
+/* 93 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": "@-webkit-keyframes ms-Spinner-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes ms-Spinner-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.ms-Spinner>.ms-Spinner-circle{margin:auto;box-sizing:border-box;border-radius:50%;width:100%;height:100%;border:1.5px solid " }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";border-top-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";-webkit-animation:ms-Spinner-spin 1.3s infinite cubic-bezier(.53,.21,.29,.67);animation:ms-Spinner-spin 1.3s infinite cubic-bezier(.53,.21,.29,.67)}.ms-Spinner>.ms-Spinner-circle.ms-Spinner--normal{width:20px;height:20px}.ms-Spinner>.ms-Spinner-circle.ms-Spinner--large{width:28px;height:28px}.ms-Spinner>.ms-Spinner-label{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";margin-top:10px;text-align:center}@media screen and (-ms-high-contrast:active){.ms-Spinner>.ms-Spinner-circle{border-top-style:none}}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 94 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6293,11 +6577,11 @@
 
 
 /***/ },
-/* 85 */
+/* 95 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const es6_promise_1 = __webpack_require__(86);
+	const es6_promise_1 = __webpack_require__(96);
 	class DiscussionService {
 	    SaveDiscussion(discussion) {
 	        return new es6_promise_1.Promise((resolve, reject) => {
@@ -6309,7 +6593,7 @@
 
 
 /***/ },
-/* 86 */
+/* 96 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/* WEBPACK VAR INJECTION */(function(process, global) {/*!
@@ -6448,7 +6732,7 @@
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(87);
+	    var vertx = __webpack_require__(97);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -7472,7 +7756,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), (function() { return this; }())))
 
 /***/ },
-/* 87 */
+/* 97 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
