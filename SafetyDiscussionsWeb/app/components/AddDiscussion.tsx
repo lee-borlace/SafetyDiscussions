@@ -42,7 +42,7 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
-                    <DiscussionContainer FormMode={FormMode.New} />
+                    <DiscussionContainer />
                     <DialogFooter>
                         <Button buttonType={ButtonType.primary} onClick={this.closeDialog.bind(this)}>Save</Button>
                         <Button onClick={this.closeDialog.bind(this)}>Cancel</Button>
