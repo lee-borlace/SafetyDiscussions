@@ -49,7 +49,7 @@
 	const ReactDOM = __webpack_require__(2);
 	const AddDiscussion_1 = __webpack_require__(3);
 	// Polyfill Promise.
-	const es6_promise_1 = __webpack_require__(49);
+	const es6_promise_1 = __webpack_require__(84);
 	es6_promise_1.polyfill();
 	ReactDOM.render(React.createElement(AddDiscussion_1.AddDiscussion, null), document.getElementById('reactRoot'));
 
@@ -74,6 +74,7 @@
 	const React = __webpack_require__(1);
 	const Button_1 = __webpack_require__(4);
 	const Dialog_1 = __webpack_require__(17);
+	const DiscussionForm_1 = __webpack_require__(49);
 	class AddDiscussion extends React.Component {
 	    constructor() {
 	        super();
@@ -86,7 +87,7 @@
 	        return (React.createElement("div", null,
 	            React.createElement(Button_1.Button, { description: 'Opens the dialog to create a discussion', onClick: this.showDialog.bind(this) }, "Add Safety Discussion"),
 	            React.createElement(Dialog_1.Dialog, { isOpen: this.state.showDialog, type: Dialog_1.DialogType.close, onDismiss: this.closeDialog.bind(this), title: 'Add Discussion', subText: 'Please enter the details for the safety discussion.', isBlocking: false, closeButtonAriaLabel: 'Close' },
-	                "Form goes here...",
+	                React.createElement(DiscussionForm_1.DiscussionForm, { FormMode: DiscussionForm_1.FormMode.New }),
 	                React.createElement(Dialog_1.DialogFooter, null,
 	                    React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.closeDialog.bind(this) }, "Save"),
 	                    React.createElement(Button_1.Button, { onClick: this.closeDialog.bind(this) }, "Cancel")))));
@@ -3375,6 +3376,2850 @@
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+	const React = __webpack_require__(1);
+	const TextField_1 = __webpack_require__(50);
+	const DatePicker_1 = __webpack_require__(58);
+	var FormMode;
+	(function (FormMode) {
+	    FormMode[FormMode["New"] = 0] = "New";
+	    FormMode[FormMode["Edit"] = 1] = "Edit";
+	})(FormMode = exports.FormMode || (exports.FormMode = {}));
+	const DayPickerStrings = {
+	    months: [
+	        'January',
+	        'February',
+	        'March',
+	        'April',
+	        'May',
+	        'June',
+	        'July',
+	        'August',
+	        'September',
+	        'October',
+	        'November',
+	        'December'
+	    ],
+	    shortMonths: [
+	        'Jan',
+	        'Feb',
+	        'Mar',
+	        'Apr',
+	        'May',
+	        'Jun',
+	        'Jul',
+	        'Aug',
+	        'Sep',
+	        'Oct',
+	        'Nov',
+	        'Dec'
+	    ],
+	    days: [
+	        'Sunday',
+	        'Monday',
+	        'Tuesday',
+	        'Wednesday',
+	        'Thursday',
+	        'Friday',
+	        'Saturday'
+	    ],
+	    shortDays: [
+	        'S',
+	        'M',
+	        'T',
+	        'W',
+	        'T',
+	        'F',
+	        'S'
+	    ],
+	    goToToday: 'Go to today'
+	};
+	class DiscussionForm extends React.Component {
+	    constructor() {
+	        super();
+	        this.state = {};
+	    }
+	    // Main renderer.
+	    render() {
+	        return (React.createElement("div", null,
+	            React.createElement(DatePicker_1.DatePicker, { placeholder: 'Enter date of discussion', strings: DayPickerStrings }),
+	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location' }),
+	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject' }),
+	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome' })));
+	    }
+	}
+	exports.DiscussionForm = DiscussionForm;
+
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(51));
+	
+
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(52));
+	
+
+
+/***/ },
+/* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var Label_1 = __webpack_require__(53);
+	var Utilities_1 = __webpack_require__(22);
+	__webpack_require__(57);
+	var TextField = (function (_super) {
+	    __extends(TextField, _super);
+	    function TextField(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this._id = Utilities_1.getId('TextField');
+	        _this._descriptionId = Utilities_1.getId('TextFieldDescription');
+	        _this._async = new Utilities_1.Async(_this);
+	        _this.state = {
+	            value: props.value || props.defaultValue || '',
+	            isFocused: false,
+	            errorMessage: ''
+	        };
+	        _this._onInputChange = _this._onInputChange.bind(_this);
+	        _this._onFocus = _this._onFocus.bind(_this);
+	        _this._onBlur = _this._onBlur.bind(_this);
+	        _this._delayedValidate = _this._async.debounce(_this._validate, _this.props.deferredValidationTime);
+	        _this._lastValidation = 0;
+	        _this._willMountTriggerValidation = false;
+	        return _this;
+	    }
+	    Object.defineProperty(TextField.prototype, "value", {
+	        /**
+	         * Gets the current value of the text field.
+	         */
+	        get: function () {
+	            return this.state.value;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    TextField.prototype.componentWillMount = function () {
+	        this._willMountTriggerValidation = true;
+	        this._validate(this.state.value);
+	    };
+	    TextField.prototype.componentDidMount = function () {
+	        this._isMounted = true;
+	        this._adjustInputHeight();
+	    };
+	    TextField.prototype.componentWillReceiveProps = function (newProps) {
+	        var onBeforeChange = this.props.onBeforeChange;
+	        if (newProps.value !== undefined && newProps.value !== this.state.value) {
+	            if (onBeforeChange) {
+	                onBeforeChange(newProps.value);
+	            }
+	            this.setState({
+	                value: newProps.value,
+	                errorMessage: ''
+	            });
+	            this._delayedValidate(newProps.value);
+	        }
+	    };
+	    TextField.prototype.componentWillUnmount = function () {
+	        this._async.dispose();
+	        this._isMounted = false;
+	    };
+	    TextField.prototype.render = function () {
+	        var _a = this.props, disabled = _a.disabled, required = _a.required, multiline = _a.multiline, underlined = _a.underlined, label = _a.label, description = _a.description, iconClass = _a.iconClass, className = _a.className;
+	        var isFocused = this.state.isFocused;
+	        var errorMessage = this._errorMessage;
+	        var textFieldClassName = Utilities_1.css('ms-TextField', className, {
+	            'is-required': required,
+	            'is-disabled': disabled,
+	            'is-active': isFocused,
+	            'ms-TextField--multiline': multiline,
+	            'ms-TextField--underlined': underlined
+	        });
+	        return (React.createElement("div", { className: textFieldClassName },
+	            label && React.createElement(Label_1.Label, { htmlFor: this._id }, label),
+	            iconClass && React.createElement("i", { className: iconClass }),
+	            multiline ? this._renderTextArea() : this._renderInput(),
+	            errorMessage && React.createElement("div", { "aria-live": 'assertive', className: 'ms-u-screenReaderOnly', "data-automation-id": 'error-message' }, errorMessage),
+	            (description || errorMessage) &&
+	                React.createElement("span", { id: this._descriptionId },
+	                    description && React.createElement("span", { className: 'ms-TextField-description' }, description),
+	                    errorMessage && React.createElement("p", { className: 'ms-TextField-errorMessage ms-u-slideDownIn20' }, errorMessage))));
+	    };
+	    /**
+	     * Sets focus on the text field
+	     */
+	    TextField.prototype.focus = function () {
+	        if (this._field) {
+	            this._field.focus();
+	        }
+	    };
+	    /**
+	     * Selects the text field
+	     */
+	    TextField.prototype.select = function () {
+	        if (this._field) {
+	            this._field.select();
+	        }
+	    };
+	    /**
+	     * Sets the selection start of the text field to a specified value
+	     */
+	    TextField.prototype.setSelectionStart = function (value) {
+	        if (this._field) {
+	            this._field.selectionStart = value;
+	        }
+	    };
+	    /**
+	     * Sets the selection end of the text field to a specified value
+	     */
+	    TextField.prototype.setSelectionEnd = function (value) {
+	        if (this._field) {
+	            this._field.selectionEnd = value;
+	        }
+	    };
+	    TextField.prototype._onFocus = function (ev) {
+	        if (this.props.onFocus) {
+	            this.props.onFocus(ev);
+	        }
+	        this.setState({ isFocused: true });
+	    };
+	    TextField.prototype._onBlur = function (ev) {
+	        if (this.props.onBlur) {
+	            this.props.onBlur(ev);
+	        }
+	        this.setState({ isFocused: false });
+	    };
+	    Object.defineProperty(TextField.prototype, "_fieldClassName", {
+	        get: function () {
+	            var errorMessage = this._errorMessage;
+	            var textFieldClassName;
+	            if (this.props.multiline && !this.props.resizable) {
+	                textFieldClassName = 'ms-TextField-field ms-TextField-field--unresizable';
+	            }
+	            else {
+	                textFieldClassName = 'ms-TextField-field';
+	            }
+	            return Utilities_1.css(textFieldClassName, this.props.inputClassName, {
+	                'ms-TextField-invalid': !!errorMessage
+	            });
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(TextField.prototype, "_errorMessage", {
+	        get: function () {
+	            var errorMessage = this.state.errorMessage;
+	            if (!errorMessage) {
+	                errorMessage = this.props.errorMessage;
+	            }
+	            return errorMessage;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    TextField.prototype._renderTextArea = function () {
+	        var _this = this;
+	        var textAreaProps = Utilities_1.getNativeProps(this.props, Utilities_1.textAreaProperties, ['defaultValue']);
+	        return (React.createElement("textarea", __assign({}, textAreaProps, { id: this._id, ref: function (c) { return _this._field = c; }, value: this.state.value, onChange: this._onInputChange, className: this._fieldClassName, "aria-label": this.props.ariaLabel, "aria-describedby": this._descriptionId, "aria-invalid": !!this.state.errorMessage, onFocus: this._onFocus, onBlur: this._onBlur })));
+	    };
+	    TextField.prototype._renderInput = function () {
+	        var _this = this;
+	        var inputProps = Utilities_1.getNativeProps(this.props, Utilities_1.inputProperties, ['defaultValue']);
+	        return (React.createElement("input", __assign({ type: 'text' }, inputProps, { id: this._id, ref: function (c) { return _this._field = c; }, value: this.state.value, onChange: this._onInputChange, className: this._fieldClassName, "aria-label": this.props.ariaLabel, "aria-describedby": this._descriptionId, "aria-invalid": !!this.state.errorMessage, onFocus: this._onFocus, onBlur: this._onBlur })));
+	    };
+	    TextField.prototype._onInputChange = function (event) {
+	        var element = event.target;
+	        var value = element.value;
+	        this.setState({
+	            value: value,
+	            errorMessage: ''
+	        }, this._adjustInputHeight);
+	        this._willMountTriggerValidation = false;
+	        this._delayedValidate(value);
+	        var onBeforeChange = this.props.onBeforeChange;
+	        onBeforeChange(value);
+	    };
+	    TextField.prototype._validate = function (value) {
+	        var _this = this;
+	        // In case of _validate called multi-times during executing validate logic with promise return.
+	        if (this._latestValidateValue === value) {
+	            return;
+	        }
+	        this._latestValidateValue = value;
+	        var onGetErrorMessage = this.props.onGetErrorMessage;
+	        var result = onGetErrorMessage(value || '');
+	        if (result !== undefined) {
+	            if (typeof result === 'string') {
+	                this.setState({
+	                    errorMessage: result
+	                });
+	                this._notifyAfterValidate(value, result);
+	            }
+	            else {
+	                var currentValidation_1 = ++this._lastValidation;
+	                result.then(function (errorMessage) {
+	                    if (_this._isMounted && currentValidation_1 === _this._lastValidation) {
+	                        _this.setState({ errorMessage: errorMessage });
+	                    }
+	                    _this._notifyAfterValidate(value, errorMessage);
+	                });
+	            }
+	        }
+	        else {
+	            this._notifyAfterValidate(value, '');
+	        }
+	    };
+	    TextField.prototype._notifyAfterValidate = function (value, errorMessage) {
+	        if (!this._willMountTriggerValidation && value === this.state.value) {
+	            var onNotifyValidationResult = this.props.onNotifyValidationResult;
+	            onNotifyValidationResult(errorMessage, value);
+	            if (!errorMessage) {
+	                var onChanged = this.props.onChanged;
+	                onChanged(value);
+	            }
+	        }
+	        else {
+	            this._willMountTriggerValidation = false;
+	        }
+	    };
+	    TextField.prototype._adjustInputHeight = function () {
+	        if (this._field && this.props.autoAdjustHeight && this.props.multiline) {
+	            var textField = this._field;
+	            textField.style.height = '';
+	            var scrollHeight = textField.scrollHeight + 2; // +2 to avoid vertical scroll bars
+	            textField.style.height = scrollHeight + 'px';
+	        }
+	    };
+	    return TextField;
+	}(React.Component));
+	TextField.defaultProps = {
+	    multiline: false,
+	    resizable: true,
+	    autoAdjustHeight: false,
+	    underlined: false,
+	    onChanged: function () { },
+	    onBeforeChange: function () { },
+	    onNotifyValidationResult: function () { },
+	    onGetErrorMessage: function () { return undefined; },
+	    deferredValidationTime: 200,
+	    errorMessage: ''
+	};
+	exports.TextField = TextField;
+	
+
+
+/***/ },
+/* 53 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(54));
+	
+
+
+/***/ },
+/* 54 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(55));
+	
+
+
+/***/ },
+/* 55 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var Utilities_1 = __webpack_require__(22);
+	__webpack_require__(56);
+	var Label = (function (_super) {
+	    __extends(Label, _super);
+	    function Label() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    Label.prototype.render = function () {
+	        var _a = this.props, disabled = _a.disabled, required = _a.required, children = _a.children, className = _a.className;
+	        return (React.createElement("label", __assign({}, Utilities_1.getNativeProps(this.props, Utilities_1.divProperties), { className: Utilities_1.css('ms-Label', className, {
+	                'is-disabled': disabled,
+	                'is-required': required
+	            }) }), children));
+	    };
+	    return Label;
+	}(React.Component));
+	exports.Label = Label;
+	
+
+
+/***/ },
+/* 56 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 57 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-size:14px;font-weight:400;margin-bottom:8px}.ms-TextField .ms-Label{font-size:14px;font-weight:400}.ms-TextField.is-disabled .ms-TextField-field{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField.is-disabled::-webkit-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled::-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-ms-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-required .ms-Label::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-webkit-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-ms-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField-field{box-sizing:border-box;margin:0;padding:0;box-shadow:none;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;border:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";border-radius:0;font-weight:400;font-size:14px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:32px;padding:0 12px 0 12px;width:100%;outline:0;text-overflow:ellipsis}html[dir=rtl] .ms-TextField-field{padding:0 12px 0 12px}.ms-TextField-field:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}.ms-TextField-field:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#37006E}}.ms-TextField-field[disabled]{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField-field::-webkit-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field::-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-ms-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-description{color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": ";font-size:11px}.ms-TextField.ms-TextField--underlined{border-bottom:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";display:table;width:100%}.ms-TextField.ms-TextField--underlined:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined:hover{border-color:#37006E}}.ms-TextField.ms-TextField--underlined:active,.ms-TextField.ms-TextField--underlined:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField.ms-TextField--underlined .ms-Label{font-size:14px;display:table-cell;vertical-align:top;padding-top:9px;height:32px;width:1%;white-space:nowrap}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{margin-right:8px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{margin-left:8px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}.ms-TextField.ms-TextField--underlined .ms-TextField-field{border:0;display:table-cell;padding-top:8px;padding-bottom:3px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:right}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--underlined .ms-TextField-field:active,.ms-TextField.ms-TextField--underlined .ms-TextField-field:focus,.ms-TextField.ms-TextField--underlined .ms-TextField-field:hover{outline:0}.ms-TextField.ms-TextField--underlined.is-disabled{border-bottom-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-Label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-TextField-field{background-color:transparent;color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined.is-active{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined.is-active{border-color:#37006E}}.ms-TextField.ms-TextField--multiline .ms-TextField-field{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:400;line-height:17px;min-height:60px;height:auto;padding-top:6px;overflow:auto}.ms-TextField-errorMessage{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": ";margin:0;padding-top:5px}.ms-TextField-invalid,.ms-TextField-invalid:focus,.ms-TextField-invalid:hover{border-color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": "}.ms-u-screenReaderOnly{position:absolute;text-indent:-9999px;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;border:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:0}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--multiline .ms-TextField-field.ms-TextField-field--unresizable{resize:none}.ms-TextField-hidden{display:none}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(59));
+	
+
+
+/***/ },
+/* 59 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(60));
+	
+
+
+/***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var Calendar_1 = __webpack_require__(61);
+	var Callout_1 = __webpack_require__(73);
+	var DirectionalHint_1 = __webpack_require__(77);
+	var TextField_1 = __webpack_require__(50);
+	var Utilities_1 = __webpack_require__(22);
+	__webpack_require__(83);
+	var DatePicker = (function (_super) {
+	    __extends(DatePicker, _super);
+	    function DatePicker(props) {
+	        var _this = _super.call(this) || this;
+	        var formatDate = props.formatDate, value = props.value;
+	        _this.state = {
+	            selectedDate: value || new Date(),
+	            formattedDate: (formatDate && value) ? formatDate(value) : '',
+	            isDatePickerShown: false,
+	            errorMessage: null
+	        };
+	        _this._preventFocusOpeningPicker = false;
+	        return _this;
+	    }
+	    DatePicker.prototype.componentWillReceiveProps = function (nextProps) {
+	        var formatDate = nextProps.formatDate, isRequired = nextProps.isRequired, strings = nextProps.strings, value = nextProps.value;
+	        var errorMessage = (isRequired && !value) ? (strings.isRequiredErrorMessage || '*') : null;
+	        this.setState({
+	            selectedDate: value || new Date(),
+	            formattedDate: (formatDate && value) ? formatDate(value) : '',
+	            errorMessage: errorMessage
+	        });
+	    };
+	    DatePicker.prototype.render = function () {
+	        var _this = this;
+	        var rootClass = 'ms-DatePicker';
+	        var _a = this.props, firstDayOfWeek = _a.firstDayOfWeek, strings = _a.strings, label = _a.label, isRequired = _a.isRequired, ariaLabel = _a.ariaLabel, placeholder = _a.placeholder, allowTextInput = _a.allowTextInput;
+	        var _b = this.state, isDatePickerShown = _b.isDatePickerShown, formattedDate = _b.formattedDate, selectedDate = _b.selectedDate, errorMessage = _b.errorMessage;
+	        return (React.createElement("div", { className: rootClass, ref: 'root' },
+	            React.createElement("div", { ref: function (c) { return _this._datepicker = c; } },
+	                React.createElement(TextField_1.TextField, { ariaLabel: ariaLabel, "aria-haspopup": 'true', required: isRequired, onKeyDown: this._onTextFieldKeyDown, onFocus: this._onTextFieldFocus, onBlur: this._onTextFieldBlur, onClick: this._onTextFieldClick, onChanged: this._onTextFieldChanged, errorMessage: errorMessage, label: label, placeholder: placeholder, iconClass: Utilities_1.css('ms-Icon ms-Icon--Calendar', label ? 'ms-DatePicker-event--with-label' : 'ms-DatePicker-event--without-label'), readOnly: !allowTextInput, value: formattedDate, ref: 'textField' })),
+	            isDatePickerShown && (React.createElement(Callout_1.Callout, { isBeakVisible: false, className: 'ms-DatePicker-callout', gapSpace: 0, doNotLayer: false, targetElement: this._datepicker, directionalHint: DirectionalHint_1.DirectionalHint.bottomLeftEdge, onDismiss: this._calendarDismissed, onPositioned: this._onCalloutPositioned },
+	                React.createElement(Calendar_1.Calendar, { onSelectDate: this._onSelectDate, onDismiss: this._calendarDismissed, isMonthPickerVisible: this.props.isMonthPickerVisible, value: selectedDate, firstDayOfWeek: firstDayOfWeek, strings: strings, ref: this._resolveRef('_calendar') })))));
+	    };
+	    DatePicker.prototype._onSelectDate = function (date) {
+	        var _a = this.props, formatDate = _a.formatDate, onSelectDate = _a.onSelectDate;
+	        this.setState({
+	            selectedDate: date,
+	            isDatePickerShown: false,
+	            formattedDate: formatDate && date ? formatDate(date) : '',
+	        });
+	        if (onSelectDate) {
+	            onSelectDate(date);
+	        }
+	    };
+	    ;
+	    DatePicker.prototype._onCalloutPositioned = function () {
+	        this._calendar.focus();
+	    };
+	    DatePicker.prototype._onTextFieldFocus = function (ev) {
+	        if (!this.props.allowTextInput) {
+	            if (!this._preventFocusOpeningPicker) {
+	                this._showDatePickerPopup();
+	            }
+	            else {
+	                this._preventFocusOpeningPicker = false;
+	            }
+	        }
+	    };
+	    ;
+	    DatePicker.prototype._onTextFieldBlur = function (ev) {
+	        this._validateTextInput();
+	    };
+	    ;
+	    DatePicker.prototype._onTextFieldChanged = function (newValue) {
+	        if (this.props.allowTextInput) {
+	            if (this.state.isDatePickerShown) {
+	                this._dismissDatePickerPopup();
+	            }
+	            var _a = this.props, isRequired = _a.isRequired, value = _a.value, strings = _a.strings;
+	            this.setState({
+	                errorMessage: (isRequired && !value) ? (strings.isRequiredErrorMessage || '*') : null,
+	                formattedDate: newValue
+	            });
+	        }
+	    };
+	    DatePicker.prototype._onTextFieldKeyDown = function (ev) {
+	        switch (ev.which) {
+	            case Utilities_1.KeyCodes.enter:
+	                ev.preventDefault();
+	                ev.stopPropagation();
+	                if (!this.state.isDatePickerShown) {
+	                    this._showDatePickerPopup();
+	                }
+	                else {
+	                    // When DatePicker allows input date string directly,
+	                    // it is expected to hit another enter to close the popup
+	                    if (this.props.allowTextInput) {
+	                        this._dismissDatePickerPopup();
+	                    }
+	                }
+	                break;
+	            case Utilities_1.KeyCodes.escape:
+	                this._handleEscKey(ev);
+	                break;
+	            default:
+	                break;
+	        }
+	    };
+	    ;
+	    DatePicker.prototype._onTextFieldClick = function (ev) {
+	        if (!this.state.isDatePickerShown) {
+	            this._showDatePickerPopup();
+	        }
+	        else {
+	            if (this.props.allowTextInput) {
+	                this.setState({
+	                    isDatePickerShown: false
+	                });
+	            }
+	        }
+	    };
+	    DatePicker.prototype._showDatePickerPopup = function () {
+	        if (!this.state.isDatePickerShown) {
+	            this._preventFocusOpeningPicker = true;
+	            this._focusOnSelectedDateOnUpdate = true;
+	            this.setState({
+	                isDatePickerShown: true,
+	                navigatedDate: this.state.selectedDate,
+	                errorMessage: ''
+	            });
+	        }
+	    };
+	    DatePicker.prototype._dismissDatePickerPopup = function () {
+	        if (this.state.isDatePickerShown) {
+	            this.setState({
+	                isDatePickerShown: false
+	            });
+	            this._validateTextInput();
+	        }
+	    };
+	    /**
+	     * Callback for closing the calendar callout
+	     */
+	    DatePicker.prototype._calendarDismissed = function () {
+	        this._preventFocusOpeningPicker = true;
+	        this._dismissDatePickerPopup();
+	    };
+	    DatePicker.prototype._handleEscKey = function (ev) {
+	        this._calendarDismissed();
+	    };
+	    DatePicker.prototype._validateTextInput = function () {
+	        var _a = this.props, isRequired = _a.isRequired, allowTextInput = _a.allowTextInput, strings = _a.strings, formatDate = _a.formatDate, parseDateFromString = _a.parseDateFromString, onSelectDate = _a.onSelectDate;
+	        var inputValue = this.state.formattedDate;
+	        // Do validation only if DatePicker's popup is dismissed
+	        if (this.state.isDatePickerShown) {
+	            return;
+	        }
+	        // Check when DatePicker is a required field but has NO input value
+	        if (isRequired && !inputValue) {
+	            this.setState({
+	                // Since fabic react doesn't have loc support yet
+	                // use the symbol '*' to represent error message
+	                errorMessage: strings.isRequiredErrorMessage || '*'
+	            });
+	            return;
+	        }
+	        if (allowTextInput) {
+	            var date = null;
+	            if (inputValue) {
+	                date = parseDateFromString(inputValue);
+	                if (!date) {
+	                    this.setState({
+	                        errorMessage: strings.invalidInputErrorMessage || '*'
+	                    });
+	                }
+	                else {
+	                    this.setState({
+	                        selectedDate: date,
+	                        formattedDate: formatDate && date ? formatDate(date) : '',
+	                        errorMessage: ''
+	                    });
+	                }
+	            }
+	            else {
+	                // No input date string shouldn't be an error if field is not required
+	                this.setState({
+	                    errorMessage: ''
+	                });
+	            }
+	            // Execute onSelectDate callback
+	            if (onSelectDate) {
+	                // If no input date string or input date string is invalid
+	                // date variable will be null, callback should expect null value for this case
+	                onSelectDate(date);
+	            }
+	        }
+	    };
+	    return DatePicker;
+	}(Utilities_1.BaseComponent));
+	DatePicker.defaultProps = {
+	    allowTextInput: false,
+	    formatDate: function (date) {
+	        if (date) {
+	            return date.toDateString();
+	        }
+	        return '';
+	    },
+	    parseDateFromString: function (dateStr) {
+	        var date = Date.parse(dateStr);
+	        if (date) {
+	            return new Date(date);
+	        }
+	        return null;
+	    },
+	    firstDayOfWeek: Calendar_1.DayOfWeek.Sunday,
+	    isRequired: false,
+	    isMonthPickerVisible: true,
+	    strings: null
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onSelectDate", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onCalloutPositioned", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onTextFieldFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onTextFieldBlur", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onTextFieldChanged", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onTextFieldKeyDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_onTextFieldClick", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_dismissDatePickerPopup", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_calendarDismissed", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_handleEscKey", null);
+	__decorate([
+	    Utilities_1.autobind
+	], DatePicker.prototype, "_validateTextInput", null);
+	exports.DatePicker = DatePicker;
+	
+
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(62));
+	
+
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(63));
+	__export(__webpack_require__(64));
+	
+
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var Calendar_Props_1 = __webpack_require__(64);
+	var CalendarDay_1 = __webpack_require__(65);
+	var CalendarMonth_1 = __webpack_require__(71);
+	var Utilities_1 = __webpack_require__(22);
+	__webpack_require__(72);
+	var Calendar = (function (_super) {
+	    __extends(Calendar, _super);
+	    function Calendar(props) {
+	        var _this = _super.call(this) || this;
+	        var currentDate = props.value && !isNaN(props.value.getTime()) ?
+	            props.value
+	            : new Date();
+	        _this.state = {
+	            selectedDate: currentDate,
+	            navigatedDate: currentDate
+	        };
+	        _this._focusOnUpdate = false;
+	        return _this;
+	    }
+	    Calendar.prototype.componentWillReceiveProps = function (nextProps) {
+	        var value = nextProps.value;
+	        this.setState({
+	            selectedDate: value || new Date()
+	        });
+	    };
+	    Calendar.prototype.componentDidUpdate = function () {
+	        if (this._focusOnUpdate) {
+	            this.refs.dayPicker.focus();
+	            this._focusOnUpdate = false;
+	        }
+	    };
+	    Calendar.prototype.render = function () {
+	        var rootClass = 'ms-DatePicker';
+	        var _a = this.props, firstDayOfWeek = _a.firstDayOfWeek, strings = _a.strings;
+	        var _b = this.state, selectedDate = _b.selectedDate, navigatedDate = _b.navigatedDate;
+	        return (React.createElement("div", { className: rootClass, ref: 'root' },
+	            React.createElement("div", { className: 'ms-DatePicker-picker ms-DatePicker-picker--opened ms-DatePicker-picker--focused ' + (this.props.isMonthPickerVisible ? 'is-monthPickerVisible' : '') },
+	                React.createElement("div", { className: 'ms-DatePicker-holder', onKeyDown: this._onDatePickerPopupKeyDown },
+	                    React.createElement("div", { className: 'ms-DatePicker-frame' },
+	                        React.createElement("div", { className: 'ms-DatePicker-wrap' },
+	                            React.createElement(CalendarDay_1.CalendarDay, { selectedDate: selectedDate, navigatedDate: navigatedDate, onSelectDate: this._onSelectDate, onNavigateDate: this._onNavigateDate, firstDayOfWeek: firstDayOfWeek, strings: strings, ref: 'dayPicker' }),
+	                            React.createElement(CalendarMonth_1.CalendarMonth, { navigatedDate: navigatedDate, strings: strings, onNavigateDate: this._onNavigateDate }),
+	                            React.createElement("span", { className: 'ms-DatePicker-goToday js-goToday', onClick: this._onGotoToday, onKeyDown: this._onGotoTodayKeyDown, tabIndex: 0 }, strings.goToToday)))))));
+	    };
+	    Calendar.prototype.focus = function () {
+	        if (this.refs.dayPicker) {
+	            this.refs.dayPicker.focus();
+	        }
+	    };
+	    Calendar.prototype._navigateDay = function (date) {
+	        this.setState({
+	            navigatedDate: date
+	        });
+	    };
+	    Calendar.prototype._onNavigateDate = function (date, focusOnNavigatedDay) {
+	        this._navigateDay(date);
+	        this._focusOnUpdate = focusOnNavigatedDay;
+	    };
+	    Calendar.prototype._onSelectDate = function (date) {
+	        var onSelectDate = this.props.onSelectDate;
+	        this.setState({
+	            selectedDate: date
+	        });
+	        if (onSelectDate) {
+	            onSelectDate(date);
+	        }
+	    };
+	    ;
+	    Calendar.prototype._onGotoToday = function () {
+	        this._navigateDay(new Date());
+	        this._focusOnUpdate = true;
+	    };
+	    ;
+	    Calendar.prototype._onGotoTodayKeyDown = function (ev) {
+	        if (ev.which === Utilities_1.KeyCodes.enter) {
+	            ev.preventDefault();
+	            this._onGotoToday();
+	        }
+	    };
+	    ;
+	    Calendar.prototype._onDatePickerPopupKeyDown = function (ev) {
+	        switch (ev.which) {
+	            case Utilities_1.KeyCodes.enter:
+	                ev.preventDefault();
+	                break;
+	            case Utilities_1.KeyCodes.backspace:
+	                ev.preventDefault();
+	                break;
+	            case Utilities_1.KeyCodes.escape:
+	                this._handleEscKey(ev);
+	                break;
+	            default:
+	                break;
+	        }
+	    };
+	    Calendar.prototype._handleEscKey = function (ev) {
+	        if (this.props.onDismiss() != null) {
+	            this.props.onDismiss();
+	        }
+	    };
+	    return Calendar;
+	}(Utilities_1.BaseComponent));
+	Calendar.defaultProps = {
+	    onSelectDate: null,
+	    onDismiss: null,
+	    isMonthPickerVisible: true,
+	    value: null,
+	    firstDayOfWeek: Calendar_Props_1.DayOfWeek.Sunday,
+	    strings: null
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_navigateDay", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_onNavigateDate", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_onSelectDate", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_onGotoToday", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_onGotoTodayKeyDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_onDatePickerPopupKeyDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], Calendar.prototype, "_handleEscKey", null);
+	exports.Calendar = Calendar;
+	
+
+
+/***/ },
+/* 64 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var DayOfWeek;
+	(function (DayOfWeek) {
+	    DayOfWeek[DayOfWeek["Sunday"] = 0] = "Sunday";
+	    DayOfWeek[DayOfWeek["Monday"] = 1] = "Monday";
+	    DayOfWeek[DayOfWeek["Tuesday"] = 2] = "Tuesday";
+	    DayOfWeek[DayOfWeek["Wednesday"] = 3] = "Wednesday";
+	    DayOfWeek[DayOfWeek["Thursday"] = 4] = "Thursday";
+	    DayOfWeek[DayOfWeek["Friday"] = 5] = "Friday";
+	    DayOfWeek[DayOfWeek["Saturday"] = 6] = "Saturday";
+	})(DayOfWeek = exports.DayOfWeek || (exports.DayOfWeek = {}));
+	
+
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var css_1 = __webpack_require__(7);
+	var FocusZone_1 = __webpack_require__(66);
+	var KeyCodes_1 = __webpack_require__(23);
+	var DateMath_1 = __webpack_require__(70);
+	var rtl_1 = __webpack_require__(28);
+	var object_1 = __webpack_require__(8);
+	var DAYS_IN_WEEK = 7;
+	var CalendarDay = (function (_super) {
+	    __extends(CalendarDay, _super);
+	    function CalendarDay(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.state = {
+	            activeDescendantId: object_1.getId('DatePickerDay-active'),
+	            weeks: _this._getWeeks(props.navigatedDate, props.selectedDate)
+	        };
+	        _this._onSelectNextMonth = _this._onSelectNextMonth.bind(_this);
+	        _this._onSelectPrevMonth = _this._onSelectPrevMonth.bind(_this);
+	        return _this;
+	    }
+	    CalendarDay.prototype.componentWillReceiveProps = function (nextProps) {
+	        this.setState({
+	            weeks: this._getWeeks(nextProps.navigatedDate, nextProps.selectedDate)
+	        });
+	    };
+	    CalendarDay.prototype.render = function () {
+	        var _this = this;
+	        var _a = this.state, activeDescendantId = _a.activeDescendantId, weeks = _a.weeks;
+	        var _b = this.props, firstDayOfWeek = _b.firstDayOfWeek, strings = _b.strings, navigatedDate = _b.navigatedDate, onSelectDate = _b.onSelectDate;
+	        var selectDayCallbacks = {};
+	        weeks.map(function (week, index) { return week.map(function (day) { return selectDayCallbacks[day.key] = onSelectDate.bind(_this, day.originalDate); }); });
+	        return (React.createElement("div", { className: 'ms-DatePicker-dayPicker' },
+	            React.createElement("div", { className: 'ms-DatePicker-header' },
+	                React.createElement("div", { className: 'ms-DatePicker-month' }, strings.months[navigatedDate.getMonth()]),
+	                React.createElement("div", { className: 'ms-DatePicker-year' }, navigatedDate.getFullYear())),
+	            React.createElement("div", { className: 'ms-DatePicker-monthComponents' },
+	                React.createElement("div", { className: 'ms-DatePicker-navContainer' },
+	                    React.createElement("span", { className: 'ms-DatePicker-prevMonth js-prevMonth', onClick: this._onSelectPrevMonth, onKeyDown: this._onKeyDown.bind(this, this._onSelectPrevMonth), tabIndex: 0 },
+	                        React.createElement("i", { className: css_1.css('ms-Icon', { 'ms-Icon--ChevronLeft': !rtl_1.getRTL(), 'ms-Icon--ChevronRight': rtl_1.getRTL() }) })),
+	                    React.createElement("span", { className: 'ms-DatePicker-nextMonth js-nextMonth', onClick: this._onSelectNextMonth, onKeyDown: this._onKeyDown.bind(this, this._onSelectNextMonth), tabIndex: 0 },
+	                        React.createElement("i", { className: css_1.css('ms-Icon', { 'ms-Icon--ChevronLeft': rtl_1.getRTL(), 'ms-Icon--ChevronRight': !rtl_1.getRTL() }) }))),
+	                React.createElement("div", { className: 'ms-DatePicker-headerToggleView js-showMonthPicker' })),
+	            React.createElement(FocusZone_1.FocusZone, null,
+	                React.createElement("table", { className: 'ms-DatePicker-table', role: 'grid', "aria-readonly": 'true', "aria-multiselectable": 'false', "aria-activedescendant": activeDescendantId },
+	                    React.createElement("thead", null,
+	                        React.createElement("tr", null, strings.shortDays.map(function (val, index) {
+	                            return React.createElement("th", { className: 'ms-DatePicker-weekday', scope: 'col', key: index, title: strings.days[(index + firstDayOfWeek) % DAYS_IN_WEEK] }, strings.shortDays[(index + firstDayOfWeek) % DAYS_IN_WEEK]);
+	                        }))),
+	                    React.createElement("tbody", null, weeks.map(function (week, weekIndex) {
+	                        return React.createElement("tr", { key: weekIndex }, week.map(function (day, dayIndex) {
+	                            return React.createElement("td", { role: 'presentation', key: day.key },
+	                                React.createElement("div", { className: css_1.css('ms-DatePicker-day', {
+	                                        'ms-DatePicker-day--infocus': day.isInMonth,
+	                                        'ms-DatePicker-day--outfocus': !day.isInMonth,
+	                                        'ms-DatePicker-day--today': day.isToday,
+	                                        'ms-DatePicker-day--highlighted': day.isSelected
+	                                    }), role: 'gridcell', onClick: selectDayCallbacks[day.key], onKeyDown: function (ev) {
+	                                        return _this._navigateMonthEdge(ev, day.originalDate, weekIndex, dayIndex);
+	                                    }, "aria-selected": day.isSelected, id: DateMath_1.compareDates(navigatedDate, day.originalDate) ? activeDescendantId : null, "data-is-focusable": true, ref: DateMath_1.compareDates(navigatedDate, day.originalDate) ? 'navigatedDay' : null, key: DateMath_1.compareDates(navigatedDate, day.originalDate) ? 'navigatedDay' : null }, day.date));
+	                        }));
+	                    }))))));
+	    };
+	    CalendarDay.prototype.focus = function () {
+	        if (this.refs.navigatedDay) {
+	            this.refs.navigatedDay.tabIndex = 0;
+	            this.refs.navigatedDay.focus();
+	        }
+	    };
+	    CalendarDay.prototype._navigateMonthEdge = function (ev, date, weekIndex, dayIndex) {
+	        if (weekIndex === 0 && ev.which === KeyCodes_1.KeyCodes.up) {
+	            this.props.onNavigateDate(DateMath_1.addWeeks(date, -1), true);
+	            ev.preventDefault();
+	        }
+	        else if (weekIndex === (this.state.weeks.length - 1) && ev.which === KeyCodes_1.KeyCodes.down) {
+	            this.props.onNavigateDate(DateMath_1.addWeeks(date, 1), true);
+	            ev.preventDefault();
+	        }
+	        else if (dayIndex === 0 && ev.which === rtl_1.getRTLSafeKeyCode(KeyCodes_1.KeyCodes.left)) {
+	            this.props.onNavigateDate(DateMath_1.addDays(date, -1), true);
+	            ev.preventDefault();
+	        }
+	        else if (dayIndex === (DAYS_IN_WEEK - 1) && ev.which === rtl_1.getRTLSafeKeyCode(KeyCodes_1.KeyCodes.right)) {
+	            this.props.onNavigateDate(DateMath_1.addDays(date, 1), true);
+	            ev.preventDefault();
+	        }
+	    };
+	    CalendarDay.prototype._onKeyDown = function (callback, ev) {
+	        if (ev.which === KeyCodes_1.KeyCodes.enter) {
+	            callback();
+	        }
+	    };
+	    CalendarDay.prototype._onSelectNextMonth = function () {
+	        this.props.onNavigateDate(DateMath_1.addMonths(this.props.navigatedDate, 1), false);
+	    };
+	    CalendarDay.prototype._onSelectPrevMonth = function () {
+	        this.props.onNavigateDate(DateMath_1.addMonths(this.props.navigatedDate, -1), false);
+	    };
+	    CalendarDay.prototype._getWeeks = function (navigatedDate, selectedDate) {
+	        var firstDayOfWeek = this.props.firstDayOfWeek;
+	        var date = new Date(navigatedDate.getFullYear(), navigatedDate.getMonth(), 1);
+	        var today = new Date();
+	        var weeks = [];
+	        var week;
+	        // Cycle the date backwards to get to the first day of the week.
+	        while (date.getDay() !== firstDayOfWeek) {
+	            date.setDate(date.getDate() - 1);
+	        }
+	        // a flag to indicate whether all days of the week are in the month
+	        var isAllDaysOfWeekOutOfMonth = false;
+	        for (var weekIndex = 0; !isAllDaysOfWeekOutOfMonth; weekIndex++) {
+	            week = [];
+	            isAllDaysOfWeekOutOfMonth = true;
+	            for (var dayIndex = 0; dayIndex < DAYS_IN_WEEK; dayIndex++) {
+	                var dayInfo = {
+	                    key: date.toString(),
+	                    date: date.getDate(),
+	                    originalDate: new Date(date.toString()),
+	                    isInMonth: date.getMonth() === navigatedDate.getMonth(),
+	                    isToday: DateMath_1.compareDates(today, date),
+	                    isSelected: DateMath_1.compareDates(selectedDate, date)
+	                };
+	                week.push(dayInfo);
+	                if (dayInfo.isInMonth) {
+	                    isAllDaysOfWeekOutOfMonth = false;
+	                }
+	                date.setDate(date.getDate() + 1);
+	            }
+	            if (!isAllDaysOfWeekOutOfMonth) {
+	                weeks.push(week);
+	            }
+	        }
+	        return weeks;
+	    };
+	    return CalendarDay;
+	}(React.Component));
+	exports.CalendarDay = CalendarDay;
+	
+
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(67));
+	
+
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(68));
+	__export(__webpack_require__(69));
+	
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var FocusZone_Props_1 = __webpack_require__(69);
+	var Utilities_1 = __webpack_require__(22);
+	var focus_1 = __webpack_require__(29);
+	var IS_FOCUSABLE_ATTRIBUTE = 'data-is-focusable';
+	var IS_ENTER_DISABLED_ATTRIBUTE = 'data-disable-click-on-enter';
+	var FOCUSZONE_ID_ATTRIBUTE = 'data-focuszone-id';
+	var TABINDEX = 'tabindex';
+	var _allInstances = {};
+	var ALLOWED_INPUT_TYPES = ['text', 'number', 'password', 'email', 'tel', 'url', 'search'];
+	var FocusZone = (function (_super) {
+	    __extends(FocusZone, _super);
+	    function FocusZone(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this._id = Utilities_1.getId('FocusZone');
+	        _allInstances[_this._id] = _this;
+	        _this._focusAlignment = {
+	            left: 0,
+	            top: 0
+	        };
+	        return _this;
+	    }
+	    FocusZone.prototype.componentDidMount = function () {
+	        var windowElement = this.refs.root.ownerDocument.defaultView;
+	        var parentElement = Utilities_1.getParent(this.refs.root);
+	        while (parentElement &&
+	            parentElement !== document.body &&
+	            parentElement.nodeType === 1) {
+	            if (focus_1.isElementFocusZone(parentElement)) {
+	                this._isInnerZone = true;
+	                break;
+	            }
+	            parentElement = Utilities_1.getParent(parentElement);
+	        }
+	        this._events.on(windowElement, 'keydown', this._onKeyDownCapture, true);
+	        // Assign initial tab indexes so that we can set initial focus as appropriate.
+	        this._updateTabIndexes();
+	        if (this.props.defaultActiveElement) {
+	            this._activeElement = Utilities_1.getDocument().querySelector(this.props.defaultActiveElement);
+	        }
+	    };
+	    FocusZone.prototype.componentWillUnmount = function () {
+	        delete _allInstances[this._id];
+	    };
+	    FocusZone.prototype.render = function () {
+	        var _a = this.props, rootProps = _a.rootProps, ariaLabelledBy = _a.ariaLabelledBy, className = _a.className;
+	        return (React.createElement("div", __assign({}, rootProps, { className: Utilities_1.css('ms-FocusZone', className), ref: 'root', "data-focuszone-id": this._id, "aria-labelledby": ariaLabelledBy, onKeyDown: this._onKeyDown, onFocus: this._onFocus }, { onMouseDownCapture: this._onMouseDown }), this.props.children));
+	    };
+	    /**
+	     * Sets focus to the first tabbable item in the zone.
+	     * @returns True if focus could be set to an active element, false if no operation was taken.
+	     */
+	    FocusZone.prototype.focus = function () {
+	        if (this._activeElement && Utilities_1.elementContains(this.refs.root, this._activeElement)) {
+	            this._activeElement.focus();
+	            return true;
+	        }
+	        else {
+	            var firstChild = this.refs.root.firstChild;
+	            return this.focusElement(focus_1.getNextElement(this.refs.root, firstChild, true));
+	        }
+	    };
+	    /**
+	     * Sets focus to a specific child element within the zone. This can be used in conjunction with
+	     * onBeforeFocus to created delayed focus scenarios (like animate the scroll position to the correct
+	     * location and then focus.)
+	     * @param {HTMLElement} element The child element within the zone to focus.
+	     * @returns True if focus could be set to an active element, false if no operation was taken.
+	     */
+	    FocusZone.prototype.focusElement = function (element) {
+	        var onBeforeFocus = this.props.onBeforeFocus;
+	        if (onBeforeFocus && !onBeforeFocus(element)) {
+	            return false;
+	        }
+	        if (element) {
+	            if (this._activeElement) {
+	                this._activeElement.tabIndex = -1;
+	            }
+	            this._activeElement = element;
+	            if (element) {
+	                if (!this._focusAlignment) {
+	                    this._setFocusAlignment(element, true, true);
+	                }
+	                this._activeElement.tabIndex = 0;
+	                element.focus();
+	                return true;
+	            }
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._onFocus = function (ev) {
+	        var onActiveElementChanged = this.props.onActiveElementChanged;
+	        if (this._isImmediateDescendantOfZone(ev.target)) {
+	            this._activeElement = ev.target;
+	            this._setFocusAlignment(this._activeElement);
+	        }
+	        else {
+	            var parentElement = ev.target;
+	            while (parentElement && parentElement !== this.refs.root) {
+	                if (focus_1.isElementTabbable(parentElement) && this._isImmediateDescendantOfZone(parentElement)) {
+	                    this._activeElement = parentElement;
+	                    break;
+	                }
+	                parentElement = Utilities_1.getParent(parentElement);
+	            }
+	        }
+	        if (onActiveElementChanged) {
+	            onActiveElementChanged(this._activeElement, ev);
+	        }
+	    };
+	    /**
+	     * Handle global tab presses so that we can patch tabindexes on the fly.
+	     */
+	    FocusZone.prototype._onKeyDownCapture = function (ev) {
+	        if (ev.which === Utilities_1.KeyCodes.tab) {
+	            this._updateTabIndexes();
+	        }
+	    };
+	    FocusZone.prototype._onMouseDown = function (ev) {
+	        var disabled = this.props.disabled;
+	        if (disabled) {
+	            return;
+	        }
+	        var target = ev.target;
+	        var path = [];
+	        while (target && target !== this.refs.root) {
+	            path.push(target);
+	            target = Utilities_1.getParent(target);
+	        }
+	        while (path.length) {
+	            target = path.pop();
+	            if (focus_1.isElementFocusZone(target)) {
+	                break;
+	            }
+	            else if (target && focus_1.isElementTabbable(target)) {
+	                target.tabIndex = 0;
+	                this._setFocusAlignment(target, true, true);
+	            }
+	        }
+	    };
+	    /**
+	     * Handle the keystrokes.
+	     */
+	    FocusZone.prototype._onKeyDown = function (ev) {
+	        var _a = this.props, direction = _a.direction, disabled = _a.disabled, isInnerZoneKeystroke = _a.isInnerZoneKeystroke;
+	        if (disabled) {
+	            return;
+	        }
+	        if (isInnerZoneKeystroke &&
+	            this._isImmediateDescendantOfZone(ev.target) &&
+	            isInnerZoneKeystroke(ev)) {
+	            // Try to focus
+	            var innerZone = this._getFirstInnerZone();
+	            if (!innerZone || !innerZone.focus()) {
+	                return;
+	            }
+	        }
+	        else {
+	            switch (ev.which) {
+	                case Utilities_1.KeyCodes.left:
+	                    if (direction !== FocusZone_Props_1.FocusZoneDirection.vertical && this._moveFocusLeft()) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.right:
+	                    if (direction !== FocusZone_Props_1.FocusZoneDirection.vertical && this._moveFocusRight()) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.up:
+	                    if (direction !== FocusZone_Props_1.FocusZoneDirection.horizontal && this._moveFocusUp()) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.down:
+	                    if (direction !== FocusZone_Props_1.FocusZoneDirection.horizontal && this._moveFocusDown()) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.home:
+	                    var firstChild = this.refs.root.firstChild;
+	                    if (this.focusElement(focus_1.getNextElement(this.refs.root, firstChild, true))) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.end:
+	                    var lastChild = this.refs.root.lastChild;
+	                    if (this.focusElement(focus_1.getPreviousElement(this.refs.root, lastChild, true, true, true))) {
+	                        break;
+	                    }
+	                    return;
+	                case Utilities_1.KeyCodes.enter:
+	                    if (this._tryInvokeClickForFocusable(ev.target)) {
+	                        break;
+	                    }
+	                    return;
+	                default:
+	                    return;
+	            }
+	        }
+	        ev.preventDefault();
+	        ev.stopPropagation();
+	    };
+	    /**
+	     * Walk up the dom try to find a focusable element.
+	     */
+	    FocusZone.prototype._tryInvokeClickForFocusable = function (target) {
+	        do {
+	            if (target.tagName === 'BUTTON' || target.tagName === 'A') {
+	                return false;
+	            }
+	            if (this._isImmediateDescendantOfZone(target) &&
+	                target.getAttribute(IS_FOCUSABLE_ATTRIBUTE) === 'true' &&
+	                target.getAttribute(IS_ENTER_DISABLED_ATTRIBUTE) !== 'true') {
+	                Utilities_1.EventGroup.raise(target, 'click', null, true);
+	                return true;
+	            }
+	            target = Utilities_1.getParent(target);
+	        } while (target !== this.refs.root);
+	        return false;
+	    };
+	    /**
+	     * Traverse to find first child zone.
+	     */
+	    FocusZone.prototype._getFirstInnerZone = function (rootElement) {
+	        rootElement = rootElement || this._activeElement || this.refs.root;
+	        var child = rootElement.firstElementChild;
+	        while (child) {
+	            if (focus_1.isElementFocusZone(child)) {
+	                return _allInstances[child.getAttribute(FOCUSZONE_ID_ATTRIBUTE)];
+	            }
+	            var match = this._getFirstInnerZone(child);
+	            if (match) {
+	                return match;
+	            }
+	            child = child.nextElementSibling;
+	        }
+	        return null;
+	    };
+	    FocusZone.prototype._moveFocus = function (isForward, getDistanceFromCenter, ev) {
+	        var element = this._activeElement;
+	        var candidateDistance = -1;
+	        var candidateElement;
+	        var changedFocus = false;
+	        var isBidirectional = this.props.direction === FocusZone_Props_1.FocusZoneDirection.bidirectional;
+	        if (!element) {
+	            return false;
+	        }
+	        if (this._isElementInput(element)) {
+	            if (!this._shouldInputLoseFocus(element, isForward)) {
+	                return false;
+	            }
+	        }
+	        var activeRect = isBidirectional ? element.getBoundingClientRect() : null;
+	        do {
+	            element = isForward ?
+	                focus_1.getNextElement(this.refs.root, element) :
+	                focus_1.getPreviousElement(this.refs.root, element);
+	            if (isBidirectional) {
+	                if (element) {
+	                    var targetRect = element.getBoundingClientRect();
+	                    var elementDistance = getDistanceFromCenter(activeRect, targetRect);
+	                    if (elementDistance > -1 && (candidateDistance === -1 || elementDistance < candidateDistance)) {
+	                        candidateDistance = elementDistance;
+	                        candidateElement = element;
+	                    }
+	                    if (candidateDistance >= 0 && elementDistance < 0) {
+	                        break;
+	                    }
+	                }
+	            }
+	            else {
+	                candidateElement = element;
+	                break;
+	            }
+	        } while (element);
+	        // Focus the closest candidate
+	        if (candidateElement && candidateElement !== this._activeElement) {
+	            changedFocus = true;
+	            this.focusElement(candidateElement);
+	        }
+	        else if (this.props.isCircularNavigation) {
+	            if (isForward) {
+	                return this.focusElement(focus_1.getNextElement(this.refs.root, this.refs.root.firstElementChild, true));
+	            }
+	            else {
+	                return this.focusElement(focus_1.getPreviousElement(this.refs.root, this.refs.root.lastElementChild, true, true, true));
+	            }
+	        }
+	        return changedFocus;
+	    };
+	    FocusZone.prototype._moveFocusDown = function () {
+	        var targetTop = -1;
+	        var leftAlignment = this._focusAlignment.left;
+	        if (this._moveFocus(true, function (activeRect, targetRect) {
+	            var distance = -1;
+	            // ClientRect values can be floats that differ by very small fractions of a decimal.
+	            // If the difference between top and bottom are within a pixel then we should treat
+	            // them as equivalent by using Math.floor. For instance 5.2222 and 5.222221 should be equivalent,
+	            // but without Math.Floor they will be handled incorrectly.
+	            var targetRectTop = Math.floor(targetRect.top);
+	            var activeRectBottom = Math.floor(activeRect.bottom);
+	            if ((targetTop === -1 && targetRectTop >= activeRectBottom) ||
+	                (targetRectTop === targetTop)) {
+	                targetTop = targetRectTop;
+	                if (leftAlignment >= targetRect.left && leftAlignment <= (targetRect.left + targetRect.width)) {
+	                    distance = 0;
+	                }
+	                else {
+	                    distance = Math.abs((targetRect.left + (targetRect.width / 2)) - leftAlignment);
+	                }
+	            }
+	            return distance;
+	        })) {
+	            this._setFocusAlignment(this._activeElement, false, true);
+	            return true;
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._moveFocusUp = function () {
+	        var targetTop = -1;
+	        var leftAlignment = this._focusAlignment.left;
+	        if (this._moveFocus(false, function (activeRect, targetRect) {
+	            var distance = -1;
+	            // ClientRect values can be floats that differ by very small fractions of a decimal.
+	            // If the difference between top and bottom are within a pixel then we should treat
+	            // them as equivalent by using Math.floor. For instance 5.2222 and 5.222221 should be equivalent,
+	            // but without Math.Floor they will be handled incorrectly.
+	            var targetRectBottom = Math.floor(targetRect.bottom);
+	            var targetRectTop = Math.floor(targetRect.top);
+	            var activeRectTop = Math.floor(activeRect.top);
+	            if ((targetTop === -1 && targetRectBottom <= activeRectTop) ||
+	                (targetRectTop === targetTop)) {
+	                targetTop = targetRectTop;
+	                if (leftAlignment >= targetRect.left && leftAlignment <= (targetRect.left + targetRect.width)) {
+	                    distance = 0;
+	                }
+	                else {
+	                    distance = Math.abs((targetRect.left + (targetRect.width / 2)) - leftAlignment);
+	                }
+	            }
+	            return distance;
+	        })) {
+	            this._setFocusAlignment(this._activeElement, false, true);
+	            return true;
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._moveFocusLeft = function () {
+	        var _this = this;
+	        var targetTop = -1;
+	        var topAlignment = this._focusAlignment.top;
+	        if (this._moveFocus(Utilities_1.getRTL(), function (activeRect, targetRect) {
+	            var distance = -1;
+	            if ((targetTop === -1 &&
+	                targetRect.right <= activeRect.right &&
+	                (_this.props.direction === FocusZone_Props_1.FocusZoneDirection.horizontal || targetRect.top === activeRect.top)) ||
+	                (targetRect.top === targetTop)) {
+	                targetTop = targetRect.top;
+	                distance = Math.abs((targetRect.top + (targetRect.height / 2)) - topAlignment);
+	            }
+	            return distance;
+	        })) {
+	            this._setFocusAlignment(this._activeElement, true, false);
+	            return true;
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._moveFocusRight = function () {
+	        var _this = this;
+	        var targetTop = -1;
+	        var topAlignment = this._focusAlignment.top;
+	        if (this._moveFocus(!Utilities_1.getRTL(), function (activeRect, targetRect) {
+	            var distance = -1;
+	            if ((targetTop === -1 &&
+	                targetRect.left >= activeRect.left &&
+	                (_this.props.direction === FocusZone_Props_1.FocusZoneDirection.horizontal || targetRect.top === activeRect.top)) ||
+	                (targetRect.top === targetTop)) {
+	                targetTop = targetRect.top;
+	                distance = Math.abs((targetRect.top + (targetRect.height / 2)) - topAlignment);
+	            }
+	            return distance;
+	        })) {
+	            this._setFocusAlignment(this._activeElement, true, false);
+	            return true;
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._setFocusAlignment = function (element, isHorizontal, isVertical) {
+	        if (this.props.direction === FocusZone_Props_1.FocusZoneDirection.bidirectional &&
+	            (!this._focusAlignment || isHorizontal || isVertical)) {
+	            var rect = element.getBoundingClientRect();
+	            var left = rect.left + (rect.width / 2);
+	            var top_1 = rect.top + (rect.height / 2);
+	            if (!this._focusAlignment) {
+	                this._focusAlignment = { left: left, top: top_1 };
+	            }
+	            if (isHorizontal) {
+	                this._focusAlignment.left = left;
+	            }
+	            if (isVertical) {
+	                this._focusAlignment.top = top_1;
+	            }
+	        }
+	    };
+	    FocusZone.prototype._isImmediateDescendantOfZone = function (element) {
+	        var parentElement = Utilities_1.getParent(element);
+	        while (parentElement && parentElement !== this.refs.root && parentElement !== document.body) {
+	            if (focus_1.isElementFocusZone(parentElement)) {
+	                return false;
+	            }
+	            parentElement = Utilities_1.getParent(parentElement);
+	        }
+	        return true;
+	    };
+	    FocusZone.prototype._updateTabIndexes = function (element) {
+	        if (!element) {
+	            element = this.refs.root;
+	            if (this._activeElement && !Utilities_1.elementContains(element, this._activeElement)) {
+	                this._activeElement = null;
+	            }
+	        }
+	        var childNodes = element.children;
+	        for (var childIndex = 0; childNodes && childIndex < childNodes.length; childIndex++) {
+	            var child = childNodes[childIndex];
+	            if (!focus_1.isElementFocusZone(child)) {
+	                if (focus_1.isElementTabbable(child)) {
+	                    if (this.props.disabled) {
+	                        child.setAttribute(TABINDEX, '-1');
+	                    }
+	                    else if (!this._isInnerZone && (!this._activeElement || this._activeElement === child)) {
+	                        this._activeElement = child;
+	                        if (child.getAttribute(TABINDEX) !== '0') {
+	                            child.setAttribute(TABINDEX, '0');
+	                        }
+	                    }
+	                    else if (child.getAttribute(TABINDEX) !== '-1') {
+	                        child.setAttribute(TABINDEX, '-1');
+	                    }
+	                }
+	                else if (child.tagName === 'svg' && child.getAttribute('focusable') !== 'false') {
+	                    // Disgusting IE hack. Sad face.
+	                    child.setAttribute('focusable', 'false');
+	                }
+	                this._updateTabIndexes(child);
+	            }
+	        }
+	    };
+	    FocusZone.prototype._isElementInput = function (element) {
+	        if (element && element.tagName && element.tagName.toLowerCase() === 'input') {
+	            return true;
+	        }
+	        return false;
+	    };
+	    FocusZone.prototype._shouldInputLoseFocus = function (element, isForward) {
+	        if (element &&
+	            element.type &&
+	            ALLOWED_INPUT_TYPES.indexOf(element.type.toLowerCase()) > -1) {
+	            var selectionStart = element.selectionStart;
+	            var selectionEnd = element.selectionEnd;
+	            var isRangeSelected = selectionStart !== selectionEnd;
+	            var inputValue = element.value;
+	            // We shouldn't lose focus in the following cases:
+	            // 1. There is range selected.
+	            // 2. When selection start is larger than 0 and it is backward.
+	            // 3. when selection start is not the end of lenght and it is forward.
+	            if (isRangeSelected ||
+	                (selectionStart > 0 && !isForward) ||
+	                (selectionStart !== inputValue.length && isForward)) {
+	                return false;
+	            }
+	        }
+	        return true;
+	    };
+	    return FocusZone;
+	}(Utilities_1.BaseComponent));
+	FocusZone.defaultProps = {
+	    isCircularNavigation: false,
+	    direction: FocusZone_Props_1.FocusZoneDirection.bidirectional
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], FocusZone.prototype, "_onFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], FocusZone.prototype, "_onMouseDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], FocusZone.prototype, "_onKeyDown", null);
+	exports.FocusZone = FocusZone;
+	
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var FocusZoneDirection;
+	(function (FocusZoneDirection) {
+	    /** Only react to up/down arrows. */
+	    FocusZoneDirection[FocusZoneDirection["vertical"] = 0] = "vertical";
+	    /** Only react to left/right arrows. */
+	    FocusZoneDirection[FocusZoneDirection["horizontal"] = 1] = "horizontal";
+	    /** React to all arrows. */
+	    FocusZoneDirection[FocusZoneDirection["bidirectional"] = 2] = "bidirectional";
+	})(FocusZoneDirection = exports.FocusZoneDirection || (exports.FocusZoneDirection = {}));
+	
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var DAYS_IN_WEEK = 7;
+	var MONTHS_IN_YEAR = 12;
+	/**
+	 * Returns a date offset from the given date by the specified number of days.
+	 * @param {Date} date - The origin date
+	 * @param {number} days - The number of days to offset. 'days' can be negative.
+	 * @return {Date} A new Date object offset from the origin date by the given number of days
+	 */
+	function addDays(date, days) {
+	    var result = new Date(date.getTime());
+	    result.setDate(result.getDate() + days);
+	    return result;
+	}
+	exports.addDays = addDays;
+	/**
+	 * Returns a date offset from the given date by the specified number of weeks.
+	 * @param {Date} date - The origin date
+	 * @param {number} weeks - The number of weeks to offset. 'weeks' can be negative.
+	 * @return {Date} A new Date object offset from the origin date by the given number of weeks
+	 */
+	function addWeeks(date, weeks) {
+	    return addDays(date, weeks * DAYS_IN_WEEK);
+	}
+	exports.addWeeks = addWeeks;
+	/**
+	 * Returns a date offset from the given date by the specified number of months.
+	 * The method tries to preserve the day-of-month; however, if the new month does not have enough days
+	 * to contain the original day-of-month, we'll use the last day of the new month.
+	 * @param {Date} date - The origin date
+	 * @param {number} months - The number of months to offset. 'months' can be negative.
+	 * @return {Date} A new Date object offset from the origin date by the given number of months
+	 */
+	function addMonths(date, months) {
+	    var result = new Date(date.getTime());
+	    var newMonth = result.getMonth() + months;
+	    result.setMonth(newMonth);
+	    // We want to maintain the same day-of-month, but that may not be possible if the new month doesn't have enough days.
+	    // Loop until we back up to a day the new month has.
+	    // (Weird modulo math is due to Javascript's treatment of negative numbers in modulo)
+	    if (result.getMonth() !== ((newMonth % MONTHS_IN_YEAR) + MONTHS_IN_YEAR) % MONTHS_IN_YEAR) {
+	        result = addDays(result, -result.getDate());
+	    }
+	    return result;
+	}
+	exports.addMonths = addMonths;
+	/**
+	 * Returns a date offset from the given date by the specified number of years.
+	 * The method tries to preserve the day-of-month; however, if the new month does not have enough days
+	 * to contain the original day-of-month, we'll use the last day of the new month.
+	 * @param {Date} date - The origin date
+	 * @param {number} years - The number of years to offset. 'years' can be negative.
+	 * @return {Date} A new Date object offset from the origin date by the given number of years
+	 */
+	function addYears(date, years) {
+	    var result = new Date(date.getTime());
+	    result.setFullYear(date.getFullYear() + years);
+	    // We want to maintain the same day-of-month, but that may not be possible if the new month doesn't have enough days.
+	    // Loop until we back up to a day the new month has.
+	    // (Weird modulo math is due to Javascript's treatment of negative numbers in modulo)
+	    if (result.getMonth() !== ((date.getMonth() % MONTHS_IN_YEAR) + MONTHS_IN_YEAR) % MONTHS_IN_YEAR) {
+	        result = addDays(result, -result.getDate());
+	    }
+	    return result;
+	}
+	exports.addYears = addYears;
+	/**
+	 * Returns a date that is a copy of the given date, aside from the month changing to the given month.
+	 *  The method tries to preserve the day-of-month; however, if the new month does not have enough days
+	 * to contain the original day-of-month, we'll use the last day of the new month.
+	 * @param {Date} date - The origin date
+	 * @param {number} month - The 0-based index of the month to set on the date.
+	 * @return {Date} A new Date object with the given month set.
+	 */
+	function setMonth(date, month) {
+	    return addMonths(date, month - date.getMonth());
+	}
+	exports.setMonth = setMonth;
+	/**
+	 * Compares two dates, and returns true if the two dates (not accounting for time-of-day) are equal.
+	 * @return {boolean} True if the two dates represent the same date (regardless of time-of-day), false otherwise.
+	 */
+	function compareDates(date1, date2) {
+	    return (date1.getFullYear() === date2.getFullYear()
+	        && date1.getMonth() === date2.getMonth()
+	        && date1.getDate() === date2.getDate());
+	}
+	exports.compareDates = compareDates;
+	
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var FocusZone_1 = __webpack_require__(66);
+	var KeyCodes_1 = __webpack_require__(23);
+	var DateMath_1 = __webpack_require__(70);
+	var rtl_1 = __webpack_require__(28);
+	var css_1 = __webpack_require__(7);
+	var CalendarMonth = (function (_super) {
+	    __extends(CalendarMonth, _super);
+	    function CalendarMonth(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this._selectMonthCallbacks = [];
+	        props.strings.shortMonths.map(function (month, index) {
+	            _this._selectMonthCallbacks[index] = _this._onSelectMonth.bind(_this, index);
+	        });
+	        _this._onSelectNextYear = _this._onSelectNextYear.bind(_this);
+	        _this._onSelectPrevYear = _this._onSelectPrevYear.bind(_this);
+	        _this._onSelectMonth = _this._onSelectMonth.bind(_this);
+	        return _this;
+	    }
+	    CalendarMonth.prototype.render = function () {
+	        var _this = this;
+	        var _a = this.props, navigatedDate = _a.navigatedDate, strings = _a.strings;
+	        return (React.createElement("div", { className: 'ms-DatePicker-monthPicker' },
+	            React.createElement("div", { className: 'ms-DatePicker-header' },
+	                React.createElement("div", { className: 'ms-DatePicker-yearComponents ms-DatePicker-navContainer' },
+	                    React.createElement("span", { className: 'ms-DatePicker-prevYear js-prevYear', onClick: this._onSelectPrevYear, onKeyDown: this._onKeyDown.bind(this, this._onSelectPrevYear), tabIndex: 0 },
+	                        React.createElement("i", { className: css_1.css('ms-Icon', { 'ms-Icon--ChevronLeft': !rtl_1.getRTL(), 'ms-Icon--ChevronRight': rtl_1.getRTL() }) })),
+	                    React.createElement("span", { className: 'ms-DatePicker-nextYear js-nextYear', onClick: this._onSelectNextYear, onKeyDown: this._onKeyDown.bind(this, this._onSelectNextYear), tabIndex: 0 },
+	                        React.createElement("i", { className: css_1.css('ms-Icon', { 'ms-Icon--ChevronLeft': rtl_1.getRTL(), 'ms-Icon--ChevronRight': !rtl_1.getRTL() }) }))),
+	                React.createElement("div", { className: 'ms-DatePicker-currentYear js-showYearPicker' }, navigatedDate.getFullYear())),
+	            React.createElement(FocusZone_1.FocusZone, null,
+	                React.createElement("div", { className: 'ms-DatePicker-optionGrid' }, strings.shortMonths.map(function (month, index) {
+	                    return (React.createElement("span", { className: 'ms-DatePicker-monthOption', key: index, onClick: _this._selectMonthCallbacks[index], "data-is-focusable": true }, month));
+	                })))));
+	    };
+	    CalendarMonth.prototype._onKeyDown = function (callback, ev) {
+	        if (ev.which === KeyCodes_1.KeyCodes.enter) {
+	            callback();
+	        }
+	    };
+	    CalendarMonth.prototype._onSelectNextYear = function () {
+	        var _a = this.props, navigatedDate = _a.navigatedDate, onNavigateDate = _a.onNavigateDate;
+	        onNavigateDate(DateMath_1.addYears(navigatedDate, 1), false);
+	    };
+	    ;
+	    CalendarMonth.prototype._onSelectPrevYear = function () {
+	        var _a = this.props, navigatedDate = _a.navigatedDate, onNavigateDate = _a.onNavigateDate;
+	        onNavigateDate(DateMath_1.addYears(navigatedDate, -1), false);
+	    };
+	    ;
+	    CalendarMonth.prototype._onSelectMonth = function (newMonth) {
+	        var _a = this.props, navigatedDate = _a.navigatedDate, onNavigateDate = _a.onNavigateDate;
+	        onNavigateDate(DateMath_1.setMonth(navigatedDate, newMonth), true);
+	    };
+	    return CalendarMonth;
+	}(React.Component));
+	exports.CalendarMonth = CalendarMonth;
+	
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-DatePicker{box-sizing:border-box;margin:0;padding:0;box-shadow:none;margin-bottom:17px}.ms-DatePicker-picker{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";font-size:14px;position:relative}html[dir=ltr] .ms-DatePicker-picker{text-align:left}html[dir=rtl] .ms-DatePicker-picker{text-align:right}.ms-DatePicker-holder{-webkit-overflow-scrolling:touch;box-sizing:border-box;background:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";min-width:300px;display:none}.ms-DatePicker-picker.ms-DatePicker-picker--opened .ms-DatePicker-holder{-webkit-animation-name:fadeIn,slideDownIn10;animation-name:fadeIn,slideDownIn10;-webkit-animation-duration:167ms;-moz-animation-duration:167ms;-ms-animation-duration:167ms;-o-animation-duration:167ms;-webkit-animation-timing-function:cubic-bezier(.1,.25,.75,.9);animation-timing-function:cubic-bezier(.1,.25,.75,.9);-webkit-animation-fill-mode:both;animation-fill-mode:both;box-sizing:border-box;display:block}.ms-DatePicker-picker--opened{position:relative}.ms-DatePicker-frame{padding:1px}.ms-DatePicker-wrap{margin:-1px;padding:9px}.ms-DatePicker-dayPicker{display:block;margin-bottom:30px}.ms-DatePicker-header{height:40px;line-height:44px}.ms-DatePicker-month,.ms-DatePicker-year{display:inline-block;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:21px;font-weight:100;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";margin-top:-1px}.ms-DatePicker-month:hover,.ms-DatePicker-year:hover{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";cursor:pointer}html[dir=ltr] .ms-DatePicker-month{margin-left:15px}html[dir=rtl] .ms-DatePicker-month{margin-right:15px}html[dir=ltr] .ms-DatePicker-year{margin-left:15px}html[dir=rtl] .ms-DatePicker-year{margin-right:15px}.ms-DatePicker-table{text-align:center;border-collapse:collapse;border-spacing:0;table-layout:fixed;font-size:inherit}.ms-DatePicker-table td{margin:0;padding:0}.ms-DatePicker-table td:hover{outline:1px solid transparent}.ms-DatePicker-day,.ms-DatePicker-weekday{width:40px;height:40px;padding:0;line-height:40px;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-DatePicker-day--today{position:relative;background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.ms-DatePicker-day--disabled:before{border-top-color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-DatePicker-day--outfocus{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": ";font-weight:400}.ms-DatePicker-day--infocus:hover,.ms-DatePicker-day--outfocus:hover{cursor:pointer;color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";background:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-DatePicker-day--highlighted:hover,.ms-DatePicker-picker--focused .ms-DatePicker-day--highlighted{cursor:pointer;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-day--highlighted.ms-DatePicker-day--disabled,.ms-DatePicker-day--highlighted.ms-DatePicker-day--disabled:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-DatePicker-monthPicker,.ms-DatePicker-yearPicker{display:none}.ms-DatePicker-monthComponents{position:absolute;top:9px}html[dir=ltr] .ms-DatePicker-monthComponents{right:9px}html[dir=rtl] .ms-DatePicker-monthComponents{left:9px}html[dir=ltr] .ms-DatePicker-monthComponents{left:9px}html[dir=rtl] .ms-DatePicker-monthComponents{right:9px}.ms-DatePicker-decadeComponents,.ms-DatePicker-yearComponents{position:absolute;top:-2px}html[dir=ltr] .ms-DatePicker-decadeComponents,html[dir=ltr] .ms-DatePicker-yearComponents{right:10px}html[dir=rtl] .ms-DatePicker-decadeComponents,html[dir=rtl] .ms-DatePicker-yearComponents{left:10px}.ms-DatePicker-nextDecade,.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevDecade,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{width:40px;height:40px;display:block;text-align:center;line-height:40px;text-align:center;font-size:16px;color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";position:relative;top:2px}html[dir=ltr] .ms-DatePicker-nextDecade,html[dir=ltr] .ms-DatePicker-nextMonth,html[dir=ltr] .ms-DatePicker-nextYear,html[dir=ltr] .ms-DatePicker-prevDecade,html[dir=ltr] .ms-DatePicker-prevMonth,html[dir=ltr] .ms-DatePicker-prevYear{margin-left:10px}html[dir=rtl] .ms-DatePicker-nextDecade,html[dir=rtl] .ms-DatePicker-nextMonth,html[dir=rtl] .ms-DatePicker-nextYear,html[dir=rtl] .ms-DatePicker-prevDecade,html[dir=rtl] .ms-DatePicker-prevMonth,html[dir=rtl] .ms-DatePicker-prevYear{margin-right:10px}.ms-DatePicker-nextDecade:hover,.ms-DatePicker-nextMonth:hover,.ms-DatePicker-nextYear:hover,.ms-DatePicker-prevDecade:hover,.ms-DatePicker-prevMonth:hover,.ms-DatePicker-prevYear:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#212121" }, { "rawString": ";cursor:pointer;outline:1px solid transparent}.ms-DatePicker-headerToggleView{height:40px;position:absolute;top:0;width:140px;cursor:pointer}html[dir=ltr] .ms-DatePicker-headerToggleView{left:0}html[dir=rtl] .ms-DatePicker-headerToggleView{right:0}.ms-DatePicker-currentDecade,.ms-DatePicker-currentYear{display:block;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:21px;font-weight:100;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:40px;line-height:42px}html[dir=ltr] .ms-DatePicker-currentDecade,html[dir=ltr] .ms-DatePicker-currentYear{margin-left:15px}html[dir=rtl] .ms-DatePicker-currentDecade,html[dir=rtl] .ms-DatePicker-currentYear{margin-right:15px}.ms-DatePicker-currentYear{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-currentYear:hover{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";cursor:pointer}.ms-DatePicker-optionGrid{position:relative;height:210px;width:280px;margin:10px 0 30px 5px}html[dir=rtl] .ms-DatePicker-optionGrid{margin:10px 5px 30px 0}.ms-DatePicker-monthOption,.ms-DatePicker-yearOption{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";width:60px;height:60px;line-height:60px;cursor:pointer;margin:0 10px 10px 0;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:13px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";text-align:center}html[dir=ltr] .ms-DatePicker-monthOption,html[dir=ltr] .ms-DatePicker-yearOption{float:left}html[dir=rtl] .ms-DatePicker-monthOption,html[dir=rtl] .ms-DatePicker-yearOption{float:right}html[dir=rtl] .ms-DatePicker-monthOption,html[dir=rtl] .ms-DatePicker-yearOption{margin:0 0 10px 10px}.ms-DatePicker-monthOption:hover,.ms-DatePicker-yearOption:hover{background-color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";outline:1px solid transparent}.ms-DatePicker-monthOption.is-highlighted,.ms-DatePicker-yearOption.is-highlighted{background-color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-DatePicker-goToday{bottom:9px;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";cursor:pointer;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:13px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:30px;line-height:30px;padding:0 10px;position:absolute}html[dir=ltr] .ms-DatePicker-goToday{right:9px}html[dir=rtl] .ms-DatePicker-goToday{left:9px}.ms-DatePicker-goToday:hover{outline:1px solid transparent}.ms-DatePicker.is-pickingYears .ms-DatePicker-dayPicker,.ms-DatePicker.is-pickingYears .ms-DatePicker-monthComponents{display:none}.ms-DatePicker.is-pickingYears .ms-DatePicker-monthPicker{display:none}.ms-DatePicker.is-pickingYears .ms-DatePicker-yearPicker{display:block}@media (min-width:460px){.ms-DatePicker-header{height:30px;line-height:28px}.ms-DatePicker-day,.ms-DatePicker-weekday{width:30px;height:30px;line-height:28px;font-weight:600;font-size:12px}.ms-DatePicker-monthComponents{width:210px}.ms-DatePicker-nextDecade,.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevDecade,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{font-size:12px;width:24px;height:24px;line-height:24px}.ms-DatePicker-holder{min-width:240px}.ms-DatePicker-month,.ms-DatePicker-year{font-weight:300}.ms-DatePicker-month,.ms-DatePicker-year{font-size:17px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-DatePicker-month:hover,.ms-DatePicker-year:hover{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";cursor:default}.is-monthPickerVisible .ms-DatePicker-dayPicker{margin:-10px 0;padding:10px 0}.is-monthPickerVisible .ms-DatePicker-dayPicker{box-sizing:border-box;width:220px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-dayPicker{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-dayPicker{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.is-monthPickerVisible .ms-DatePicker-holder{width:440px}.is-monthPickerVisible .ms-DatePicker-monthPicker{display:block}.is-monthPickerVisible .ms-DatePicker-monthPicker,.is-monthPickerVisible .ms-DatePicker-yearPicker{top:9px;position:absolute}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-monthPicker,html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-yearPicker{left:238px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-monthPicker,html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-yearPicker{right:238px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-month{margin-left:12px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-month{margin-right:12px}.is-monthPickerVisible .ms-DatePicker-optionGrid{width:200px;height:auto;margin:10px 0 0 0}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-optionGrid{margin:10px 0 0 0}.is-monthPickerVisible .ms-DatePicker-toggleMonthView{display:none}.is-monthPickerVisible .ms-DatePicker-currentDecade,.is-monthPickerVisible .ms-DatePicker-currentYear{font-size:17px;margin:0;height:30px;line-height:26px;padding:0 10px;display:inline-block}.is-monthPickerVisible .ms-DatePicker-monthOption,.is-monthPickerVisible .ms-DatePicker-yearOption{width:40px;height:40px;line-height:38px;font-size:12px;margin:0 10px 10px 0}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-monthOption,html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-yearOption{margin:0 0 10px 10px}.is-monthPickerVisible .ms-DatePicker-monthOption:hover,.is-monthPickerVisible .ms-DatePicker-yearOption:hover{outline:1px solid transparent}.is-monthPickerVisible .ms-DatePicker-goToday{box-sizing:border-box;font-size:12px;height:30px;line-height:30px;padding:0 10px;top:199px;width:210px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-goToday{right:10px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-goToday{left:10px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-goToday{text-align:right}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-goToday{text-align:left}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-dayPicker,.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-monthComponents{display:block}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-monthPicker{display:none}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-yearPicker{display:block}}@media (max-width:459px){.ms-DatePicker.is-pickingMonths .ms-DatePicker-dayPicker,.ms-DatePicker.is-pickingMonths .ms-DatePicker-monthComponents{display:none}.ms-DatePicker.is-pickingMonths .ms-DatePicker-monthPicker{display:block}}.ms-DatePicker-wrap div:focus,.ms-DatePicker-wrap span:focus{outline:1px solid " }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-goToday{width:auto}.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{display:inline-block}html[dir=ltr] .ms-DatePicker-navContainer{float:right}html[dir=rtl] .ms-DatePicker-navContainer{float:left}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(74));
+	
+
+
+/***/ },
+/* 74 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(75));
+	__export(__webpack_require__(77));
+	
+
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var CalloutContent_1 = __webpack_require__(76);
+	var Layer_1 = __webpack_require__(35);
+	var Callout = (function (_super) {
+	    __extends(Callout, _super);
+	    function Callout(props) {
+	        return _super.call(this, props) || this;
+	    }
+	    Callout.prototype.render = function () {
+	        var content = (React.createElement(CalloutContent_1.CalloutContent, __assign({}, this.props)));
+	        return this.props.doNotLayer ? content : (React.createElement(Layer_1.Layer, null, content));
+	    };
+	    return Callout;
+	}(React.Component));
+	exports.Callout = Callout;
+	
+
+
+/***/ },
+/* 76 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	/* tslint:disable:no-unused-variable */
+	var React = __webpack_require__(1);
+	var DirectionalHint_1 = __webpack_require__(77);
+	var Utilities_1 = __webpack_require__(22);
+	var positioning_1 = __webpack_require__(78);
+	var focus_1 = __webpack_require__(29);
+	var Utilities_2 = __webpack_require__(22);
+	var Popup_1 = __webpack_require__(81);
+	var BaseComponent_1 = __webpack_require__(12);
+	__webpack_require__(82);
+	var BEAK_ORIGIN_POSITION = { top: 0, left: 0 };
+	var OFF_SCREEN_STYLE = { opacity: 0 };
+	var BORDER_WIDTH = 1;
+	var SPACE_FROM_EDGE = 8;
+	var CalloutContent = (function (_super) {
+	    __extends(CalloutContent, _super);
+	    function CalloutContent(props) {
+	        var _this = _super.call(this, props, { 'beakStyle': 'beakWidth' }) || this;
+	        _this._didSetInitialFocus = false;
+	        _this.state = {
+	            positions: null,
+	            slideDirectionalClassName: null,
+	            calloutElementRect: null
+	        };
+	        _this._positionAttempts = 0;
+	        return _this;
+	    }
+	    CalloutContent.prototype.componentDidUpdate = function () {
+	        this._setInitialFocus();
+	        this._updatePosition();
+	    };
+	    CalloutContent.prototype.componentWillMount = function () {
+	        var target = this.props.targetElement ? this.props.targetElement : this.props.target;
+	        this._setTargetWindowAndElement(target);
+	    };
+	    CalloutContent.prototype.componentWillUpdate = function (newProps) {
+	        if (newProps.targetElement !== this.props.targetElement || newProps.target !== this.props.target) {
+	            var newTarget = newProps.targetElement ? newProps.targetElement : newProps.target;
+	            this._setTargetWindowAndElement(newTarget);
+	        }
+	    };
+	    CalloutContent.prototype.componentDidMount = function () {
+	        this._onComponentDidMount();
+	    };
+	    CalloutContent.prototype.render = function () {
+	        // If there is no target window then we are likely in server side rendering and we should not render anything.
+	        if (!this._targetWindow) {
+	            return null;
+	        }
+	        var _a = this.props, className = _a.className, target = _a.target, targetElement = _a.targetElement, isBeakVisible = _a.isBeakVisible, beakStyle = _a.beakStyle, children = _a.children, beakWidth = _a.beakWidth;
+	        var _b = this.state, positions = _b.positions, slideDirectionalClassName = _b.slideDirectionalClassName;
+	        var beakStyleWidth = beakWidth;
+	        // This is here to support the old way of setting the beak size until version 1.0.0.
+	        // beakStyle is now deprecated and will be be removed at version 1.0.0
+	        if (beakStyle === 'ms-Callout-smallbeak') {
+	            beakStyleWidth = 16;
+	        }
+	        var beakReactStyle = {
+	            top: positions && positions.beakPosition ? positions.beakPosition.top : BEAK_ORIGIN_POSITION.top,
+	            left: positions && positions.beakPosition ? positions.beakPosition.left : BEAK_ORIGIN_POSITION.left,
+	            height: beakStyleWidth,
+	            width: beakStyleWidth
+	        };
+	        var contentMaxHeight = this._getMaxHeight();
+	        var beakVisible = isBeakVisible && (!!targetElement || !!target);
+	        var content = (React.createElement("div", { ref: this._resolveRef('_hostElement'), className: 'ms-Callout-container' },
+	            React.createElement("div", { className: Utilities_1.css('ms-Callout', className, slideDirectionalClassName ? "ms-u-" + slideDirectionalClassName : ''), style: positions ? positions.calloutPosition : OFF_SCREEN_STYLE, ref: this._resolveRef('_calloutElement') },
+	                beakVisible ? (React.createElement("div", { className: 'ms-Callout-beak', style: beakReactStyle })) : (null),
+	                beakVisible ?
+	                    (React.createElement("div", { className: 'ms-Callout-beakCurtain' })) :
+	                    (null),
+	                React.createElement(Popup_1.Popup, { className: 'ms-Callout-main', onDismiss: this.dismiss, shouldRestoreFocus: true, style: { maxHeight: contentMaxHeight } }, children))));
+	        return content;
+	    };
+	    CalloutContent.prototype.dismiss = function (ev) {
+	        var onDismiss = this.props.onDismiss;
+	        if (onDismiss) {
+	            onDismiss(ev);
+	        }
+	    };
+	    CalloutContent.prototype._dismissOnScroll = function (ev) {
+	        if (this.state.positions) {
+	            this._dismissOnLostFocus(ev);
+	        }
+	    };
+	    CalloutContent.prototype._dismissOnLostFocus = function (ev) {
+	        var target = ev.target;
+	        var clickedOutsideCallout = this._hostElement && !Utilities_1.elementContains(this._hostElement, target);
+	        if ((!this._target && clickedOutsideCallout) ||
+	            ev.target !== this._targetWindow &&
+	                clickedOutsideCallout &&
+	                (this._target.stopPropagation ||
+	                    (!this._target || (target !== this._target && !Utilities_1.elementContains(this._target, target))))) {
+	            this.dismiss(ev);
+	        }
+	    };
+	    CalloutContent.prototype._setInitialFocus = function () {
+	        if (this.props.setInitialFocus && !this._didSetInitialFocus && this.state.positions) {
+	            this._didSetInitialFocus = true;
+	            focus_1.focusFirstChild(this._calloutElement);
+	        }
+	    };
+	    CalloutContent.prototype._onComponentDidMount = function () {
+	        var _this = this;
+	        // This is added so the callout will dismiss when the window is scrolled
+	        // but not when something inside the callout is scrolled. The delay seems
+	        // to be required to avoid React firing an async focus event in IE from
+	        // the target changing focus quickly prior to rendering the callout.
+	        this._async.setTimeout(function () {
+	            _this._events.on(_this._targetWindow, 'scroll', _this._dismissOnScroll, true);
+	            _this._events.on(_this._targetWindow, 'resize', _this.dismiss, true);
+	            _this._events.on(_this._targetWindow, 'focus', _this._dismissOnLostFocus, true);
+	            _this._events.on(_this._targetWindow, 'click', _this._dismissOnLostFocus, true);
+	        }, 0);
+	        if (this.props.onLayerMounted) {
+	            this.props.onLayerMounted();
+	        }
+	        this._updatePosition();
+	    };
+	    CalloutContent.prototype._updatePosition = function () {
+	        var positions = this.state.positions;
+	        var hostElement = this._hostElement;
+	        var calloutElement = this._calloutElement;
+	        if (hostElement && calloutElement) {
+	            var currentProps = void 0;
+	            currentProps = Utilities_2.assign(currentProps, this.props);
+	            currentProps.bounds = this._getBounds();
+	            // Temporary to be removed when targetElement is removed. Currently deprecated.
+	            if (this.props.targetElement) {
+	                currentProps.targetElement = this._target;
+	            }
+	            else {
+	                currentProps.target = this._target;
+	            }
+	            var newPositions = positioning_1.getRelativePositions(currentProps, hostElement, calloutElement);
+	            // Set the new position only when the positions are not exists or one of the new callout positions are different.
+	            // The position should not change if the position is within 2 decimal places.
+	            if ((!positions && newPositions) ||
+	                (positions && newPositions && this._arePositionsEqual(positions, newPositions)
+	                    && this._positionAttempts < 5)) {
+	                // We should not reposition the callout more than a few times, if it is then the content is likely resizing
+	                // and we should stop trying to reposition to prevent a stack overflow.
+	                this._positionAttempts++;
+	                this.setState({
+	                    positions: newPositions
+	                });
+	            }
+	            else {
+	                this._positionAttempts = 0;
+	                if (this.props.onPositioned) {
+	                    this.props.onPositioned();
+	                }
+	            }
+	        }
+	    };
+	    CalloutContent.prototype._getBounds = function () {
+	        if (!this._bounds) {
+	            var currentBounds = this.props.bounds;
+	            if (!currentBounds) {
+	                currentBounds = {
+	                    top: 0 + SPACE_FROM_EDGE,
+	                    left: 0 + SPACE_FROM_EDGE,
+	                    right: this._targetWindow.innerWidth - SPACE_FROM_EDGE,
+	                    bottom: this._targetWindow.innerHeight - SPACE_FROM_EDGE,
+	                    width: this._targetWindow.innerWidth - SPACE_FROM_EDGE * 2,
+	                    height: this._targetWindow.innerHeight - SPACE_FROM_EDGE * 2
+	                };
+	            }
+	            this._bounds = currentBounds;
+	        }
+	        return this._bounds;
+	    };
+	    CalloutContent.prototype._getMaxHeight = function () {
+	        if (!this._maxHeight) {
+	            this._maxHeight = this._getBounds().height - BORDER_WIDTH * 2;
+	        }
+	        return this._maxHeight;
+	    };
+	    CalloutContent.prototype._arePositionsEqual = function (positions, newPosition) {
+	        if (positions.calloutPosition.top.toFixed(2) !== newPosition.calloutPosition.top.toFixed(2)) {
+	            return false;
+	        }
+	        if (positions.calloutPosition.left.toFixed(2) !== newPosition.calloutPosition.left.toFixed(2)) {
+	            return false;
+	        }
+	        if (positions.beakPosition.top.toFixed(2) !== newPosition.beakPosition.top.toFixed(2)) {
+	            return false;
+	        }
+	        if (positions.beakPosition.top.toFixed(2) !== newPosition.beakPosition.top.toFixed(2)) {
+	            return false;
+	        }
+	        return true;
+	    };
+	    CalloutContent.prototype._setTargetWindowAndElement = function (target) {
+	        if (target) {
+	            if (typeof target === 'string') {
+	                var currentDoc = Utilities_1.getDocument();
+	                this._target = currentDoc ? currentDoc.querySelector(target) : null;
+	                this._targetWindow = Utilities_1.getWindow();
+	            }
+	            else if (target.stopPropagation) {
+	                this._target = target;
+	                this._targetWindow = Utilities_1.getWindow(target.toElement);
+	            }
+	            else {
+	                var targetElement = target;
+	                this._target = target;
+	                this._targetWindow = Utilities_1.getWindow(targetElement);
+	            }
+	        }
+	        else {
+	            this._targetWindow = Utilities_1.getWindow();
+	        }
+	    };
+	    return CalloutContent;
+	}(BaseComponent_1.BaseComponent));
+	CalloutContent.defaultProps = {
+	    isBeakVisible: true,
+	    beakWidth: 16,
+	    gapSpace: 16,
+	    directionalHint: DirectionalHint_1.DirectionalHint.bottomAutoEdge
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], CalloutContent.prototype, "dismiss", null);
+	__decorate([
+	    Utilities_1.autobind
+	], CalloutContent.prototype, "_setInitialFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], CalloutContent.prototype, "_onComponentDidMount", null);
+	exports.CalloutContent = CalloutContent;
+	
+
+
+/***/ },
+/* 77 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var DirectionalHint;
+	(function (DirectionalHint) {
+	    /**
+	     * Appear above the target element, with the left edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["topLeftEdge"] = 0] = "topLeftEdge";
+	    /**
+	     * Appear above the target element, with the centers of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["topCenter"] = 1] = "topCenter";
+	    /**
+	     * Appear above the target element, with the right edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["topRightEdge"] = 2] = "topRightEdge";
+	    /**
+	     * Appear above the target element, aligning with the target element such that the callout tends toward the center of the screen.
+	     */
+	    DirectionalHint[DirectionalHint["topAutoEdge"] = 3] = "topAutoEdge";
+	    /**
+	     * Appear below the target element, with the left edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["bottomLeftEdge"] = 4] = "bottomLeftEdge";
+	    /**
+	     * Appear below the target element, with the centers of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["bottomCenter"] = 5] = "bottomCenter";
+	    /**
+	     * Appear below the target element, with the right edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["bottomRightEdge"] = 6] = "bottomRightEdge";
+	    /**
+	     * Appear below the target element, aligning with the target element such that the callout tends toward the center of the screen.
+	     */
+	    DirectionalHint[DirectionalHint["bottomAutoEdge"] = 7] = "bottomAutoEdge";
+	    /**
+	     * Appear to the left of the target element, with the top edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["leftTopEdge"] = 8] = "leftTopEdge";
+	    /**
+	     * Appear to the left of the target element, with the centers of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["leftCenter"] = 9] = "leftCenter";
+	    /**
+	     * Appear to the left of the target element, with the bottom edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["leftBottomEdge"] = 10] = "leftBottomEdge";
+	    /**
+	     * Appear to the right of the target element, with the top edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["rightTopEdge"] = 11] = "rightTopEdge";
+	    /**
+	     * Appear to the right of the target element, with the centers of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["rightCenter"] = 12] = "rightCenter";
+	    /**
+	     * Appear to the right of the target element, with the bottom edges of the callout and target aligning.
+	     */
+	    DirectionalHint[DirectionalHint["rightBottomEdge"] = 13] = "rightBottomEdge";
+	})(DirectionalHint = exports.DirectionalHint || (exports.DirectionalHint = {}));
+	
+
+
+/***/ },
+/* 78 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var DirectionalHint_1 = __webpack_require__(77);
+	var Rectangle_1 = __webpack_require__(79);
+	var scroll_1 = __webpack_require__(80);
+	var object_1 = __webpack_require__(8);
+	var RectangleEdge;
+	(function (RectangleEdge) {
+	    RectangleEdge[RectangleEdge["top"] = 0] = "top";
+	    RectangleEdge[RectangleEdge["bottom"] = 1] = "bottom";
+	    RectangleEdge[RectangleEdge["left"] = 2] = "left";
+	    RectangleEdge[RectangleEdge["right"] = 3] = "right";
+	})(RectangleEdge = exports.RectangleEdge || (exports.RectangleEdge = {}));
+	var SLIDE_ANIMATIONS = (_a = {},
+	    _a[RectangleEdge.top] = 'slideUpIn20',
+	    _a[RectangleEdge.bottom] = 'slideDownIn20',
+	    _a[RectangleEdge.left] = 'slideLeftIn20',
+	    _a[RectangleEdge.right] = 'slideRightIn20',
+	    _a);
+	var PositionData = (function () {
+	    function PositionData(calloutDirection, targetDirection, calloutPercent, targetPercent, beakPercent, isAuto) {
+	        this.calloutDirection = calloutDirection;
+	        this.targetDirection = targetDirection;
+	        this.calloutPercent = calloutPercent;
+	        this.targetPercent = targetPercent;
+	        this.beakPercent = beakPercent;
+	        this.isAuto = isAuto;
+	    }
+	    return PositionData;
+	}());
+	exports.PositionData = PositionData;
+	// Currently the beakPercent is set to 50 for all positions meaning that it should tend to the center of the target
+	var DirectionalDictionary = (_b = {},
+	    _b[DirectionalHint_1.DirectionalHint.topLeftEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.top, 0, 0, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.topCenter] = new PositionData(RectangleEdge.bottom, RectangleEdge.top, 50, 50, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.topRightEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.top, 100, 100, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.topAutoEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.top, 0, 0, 50, true),
+	    _b[DirectionalHint_1.DirectionalHint.bottomLeftEdge] = new PositionData(RectangleEdge.top, RectangleEdge.bottom, 0, 0, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.bottomCenter] = new PositionData(RectangleEdge.top, RectangleEdge.bottom, 50, 50, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.bottomRightEdge] = new PositionData(RectangleEdge.top, RectangleEdge.bottom, 100, 100, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.bottomAutoEdge] = new PositionData(RectangleEdge.top, RectangleEdge.bottom, 0, 0, 50, true),
+	    _b[DirectionalHint_1.DirectionalHint.leftTopEdge] = new PositionData(RectangleEdge.right, RectangleEdge.left, 0, 0, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.leftCenter] = new PositionData(RectangleEdge.right, RectangleEdge.left, 50, 50, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.leftBottomEdge] = new PositionData(RectangleEdge.right, RectangleEdge.left, 100, 100, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.rightTopEdge] = new PositionData(RectangleEdge.left, RectangleEdge.right, 0, 0, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.rightCenter] = new PositionData(RectangleEdge.left, RectangleEdge.right, 50, 50, 50, false),
+	    _b[DirectionalHint_1.DirectionalHint.rightBottomEdge] = new PositionData(RectangleEdge.left, RectangleEdge.right, 100, 100, 50, false),
+	    _b);
+	var CoverDictionary = (_c = {},
+	    _c[DirectionalHint_1.DirectionalHint.topLeftEdge] = new PositionData(RectangleEdge.top, RectangleEdge.top, 0, 0, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.topCenter] = new PositionData(RectangleEdge.top, RectangleEdge.top, 50, 50, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.topRightEdge] = new PositionData(RectangleEdge.top, RectangleEdge.top, 100, 100, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.topAutoEdge] = new PositionData(RectangleEdge.top, RectangleEdge.top, 0, 0, 50, true),
+	    _c[DirectionalHint_1.DirectionalHint.bottomLeftEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.bottom, 0, 0, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.bottomCenter] = new PositionData(RectangleEdge.bottom, RectangleEdge.bottom, 50, 50, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.bottomRightEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.bottom, 100, 100, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.bottomAutoEdge] = new PositionData(RectangleEdge.bottom, RectangleEdge.bottom, 0, 0, 50, true),
+	    _c[DirectionalHint_1.DirectionalHint.leftTopEdge] = new PositionData(RectangleEdge.left, RectangleEdge.left, 0, 0, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.leftCenter] = new PositionData(RectangleEdge.left, RectangleEdge.left, 50, 50, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.leftBottomEdge] = new PositionData(RectangleEdge.left, RectangleEdge.left, 100, 100, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.rightTopEdge] = new PositionData(RectangleEdge.right, RectangleEdge.right, 0, 0, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.rightCenter] = new PositionData(RectangleEdge.right, RectangleEdge.right, 50, 50, 50, false),
+	    _c[DirectionalHint_1.DirectionalHint.rightBottomEdge] = new PositionData(RectangleEdge.right, RectangleEdge.right, 100, 100, 50, false),
+	    _c);
+	var OppositeEdgeDictionary = (_d = {},
+	    _d[RectangleEdge.top] = RectangleEdge.bottom,
+	    _d[RectangleEdge.bottom] = RectangleEdge.top,
+	    _d[RectangleEdge.right] = RectangleEdge.left,
+	    _d[RectangleEdge.left] = RectangleEdge.right,
+	    _d);
+	function getRelativePositions(props, hostElement, calloutElement) {
+	    var beakWidth = !props.isBeakVisible ? 0 : props.beakWidth;
+	    var borderWidth = positioningFunctions._getBorderSize(calloutElement);
+	    var gap = positioningFunctions._calculateActualBeakWidthInPixels(beakWidth) / 2 + (props.gapSpace ? props.gapSpace : 0);
+	    var boundingRect = props.bounds ?
+	        positioningFunctions._getRectangleFromIRect(props.bounds) :
+	        new Rectangle_1.default(0, window.innerWidth - scroll_1.getScrollbarWidth(), 0, window.innerHeight);
+	    var targetRect = props.target ? positioningFunctions._getTargetRect(boundingRect, props.target) : positioningFunctions._getTargetRectDEPRECATED(boundingRect, props.targetElement, props.creationEvent, props.targetPoint, props.useTargetPoint);
+	    var positionData = positioningFunctions._getPositionData(props.directionalHint, targetRect, boundingRect, props.coverTarget);
+	    var positionedCallout = positioningFunctions._positionCalloutWithinBounds(positioningFunctions._getRectangleFromHTMLElement(calloutElement), targetRect, boundingRect, positionData, gap, props.coverTarget);
+	    var beakPositioned = positioningFunctions._positionBeak(beakWidth, positionedCallout, targetRect, borderWidth);
+	    var finalizedCallout = positioningFunctions._finalizeCalloutPosition(positionedCallout.calloutRectangle, hostElement);
+	    return {
+	        calloutPosition: { top: finalizedCallout.top, left: finalizedCallout.left },
+	        beakPosition: { top: beakPositioned.top, left: beakPositioned.left, display: 'block' },
+	        directionalClassName: SLIDE_ANIMATIONS[positionedCallout.targetEdge],
+	        submenuDirection: positionedCallout.calloutEdge === RectangleEdge.right ? DirectionalHint_1.DirectionalHint.leftBottomEdge : DirectionalHint_1.DirectionalHint.rightBottomEdge
+	    };
+	}
+	exports.getRelativePositions = getRelativePositions;
+	var positioningFunctions;
+	(function (positioningFunctions) {
+	    function _getTargetRect(bounds, target) {
+	        var targetRectangle;
+	        if (target.preventDefault) {
+	            var ev = target;
+	            targetRectangle = new Rectangle_1.default(ev.clientX, ev.clientX, ev.clientY, ev.clientY);
+	        }
+	        else {
+	            targetRectangle = _getRectangleFromHTMLElement(target);
+	        }
+	        if (!_isRectangleWithinBounds(targetRectangle, bounds)) {
+	            var outOfBounds = _getOutOfBoundsEdges(targetRectangle, bounds);
+	            for (var _i = 0, outOfBounds_1 = outOfBounds; _i < outOfBounds_1.length; _i++) {
+	                var direction = outOfBounds_1[_i];
+	                targetRectangle[RectangleEdge[direction]] = bounds[RectangleEdge[direction]];
+	            }
+	        }
+	        return targetRectangle;
+	    }
+	    positioningFunctions._getTargetRect = _getTargetRect;
+	    function _getTargetRectDEPRECATED(bounds, targetElement, ev, targetPoint, isTargetPoint) {
+	        var targetRectangle;
+	        if (isTargetPoint) {
+	            if (targetPoint) {
+	                targetRectangle = new Rectangle_1.default(targetPoint.x, targetPoint.x, targetPoint.y, targetPoint.y);
+	            }
+	            else {
+	                targetRectangle = new Rectangle_1.default(ev.clientX, ev.clientX, ev.clientY, ev.clientY);
+	            }
+	        }
+	        else {
+	            if (!targetElement) {
+	                if (ev && ev.target) {
+	                    targetRectangle = _getRectangleFromHTMLElement(ev.target);
+	                }
+	                targetRectangle = new Rectangle_1.default();
+	            }
+	            else {
+	                targetRectangle = _getRectangleFromHTMLElement(targetElement);
+	            }
+	        }
+	        if (!_isRectangleWithinBounds(targetRectangle, bounds)) {
+	            var outOfBounds = _getOutOfBoundsEdges(targetRectangle, bounds);
+	            for (var _i = 0, outOfBounds_2 = outOfBounds; _i < outOfBounds_2.length; _i++) {
+	                var direction = outOfBounds_2[_i];
+	                targetRectangle[RectangleEdge[direction]] = bounds[RectangleEdge[direction]];
+	            }
+	        }
+	        return targetRectangle;
+	    }
+	    positioningFunctions._getTargetRectDEPRECATED = _getTargetRectDEPRECATED;
+	    function _getRectangleFromHTMLElement(element) {
+	        var clientRect = element.getBoundingClientRect();
+	        return new Rectangle_1.default(clientRect.left, clientRect.right, clientRect.top, clientRect.bottom);
+	    }
+	    positioningFunctions._getRectangleFromHTMLElement = _getRectangleFromHTMLElement;
+	    function _positionCalloutWithinBounds(calloutRectangle, targetRectangle, boundingRectangle, directionalInfo, gap, coverTarget) {
+	        if (gap === void 0) { gap = 0; }
+	        var estimatedRectangle = _moveRectangleToAnchorRectangle(calloutRectangle, directionalInfo.calloutDirection, directionalInfo.calloutPercent, targetRectangle, directionalInfo.targetDirection, directionalInfo.targetPercent, gap);
+	        if (_isRectangleWithinBounds(estimatedRectangle, boundingRectangle)) {
+	            return { calloutRectangle: estimatedRectangle, calloutEdge: directionalInfo.calloutDirection, targetEdge: directionalInfo.targetDirection, alignPercent: directionalInfo.calloutPercent, beakPercent: directionalInfo.beakPercent };
+	        }
+	        else {
+	            return _getBestRectangleFitWithinBounds(estimatedRectangle, targetRectangle, boundingRectangle, directionalInfo, gap, coverTarget);
+	        }
+	    }
+	    positioningFunctions._positionCalloutWithinBounds = _positionCalloutWithinBounds;
+	    function _getBestRectangleFitWithinBounds(estimatedPosition, targetRectangle, boundingRectangle, directionalInfo, gap, coverTarget) {
+	        var callout = {
+	            calloutRectangle: estimatedPosition,
+	            calloutEdge: directionalInfo.calloutDirection,
+	            targetEdge: directionalInfo.targetDirection,
+	            alignPercent: directionalInfo.calloutPercent,
+	            beakPercent: directionalInfo.beakPercent
+	        };
+	        // If it can't possibly fit within the bounds just put it into it's initial position.
+	        if (!_canRectangleFitWithinBounds(estimatedPosition, boundingRectangle)) {
+	            return callout;
+	        }
+	        if (!coverTarget) {
+	            callout = _flipRectangleToFit(callout, targetRectangle, directionalInfo.targetPercent, boundingRectangle, gap);
+	        }
+	        var outOfBounds = _getOutOfBoundsEdges(callout.calloutRectangle, boundingRectangle);
+	        for (var _i = 0, outOfBounds_3 = outOfBounds; _i < outOfBounds_3.length; _i++) {
+	            var direction = outOfBounds_3[_i];
+	            callout.calloutRectangle = _alignEdgeToCoordinate(callout.calloutRectangle, boundingRectangle[RectangleEdge[direction]], direction);
+	            var adjustedPercent = _recalculateMatchingPercents(callout.calloutRectangle, callout.targetEdge, targetRectangle, callout.targetEdge, directionalInfo.targetPercent);
+	            callout.alignPercent = adjustedPercent;
+	        }
+	        return callout;
+	    }
+	    positioningFunctions._getBestRectangleFitWithinBounds = _getBestRectangleFitWithinBounds;
+	    function _positionBeak(beakWidth, callout, targetRectangle, border) {
+	        var calloutRect = new Rectangle_1.default(0, callout.calloutRectangle.width - border * 2, 0, callout.calloutRectangle.height - border * 2);
+	        var beakRectangle = new Rectangle_1.default(0, beakWidth, 0, beakWidth);
+	        var recalculatedPercent = _recalculateMatchingPercents(callout.calloutRectangle, callout.calloutEdge, targetRectangle, callout.targetEdge, callout.beakPercent);
+	        var estimatedTargetPoint = _getPointOnEdgeFromPercent(calloutRect, callout.calloutEdge, recalculatedPercent);
+	        return _finalizeBeakPosition(beakRectangle, callout, estimatedTargetPoint, border);
+	    }
+	    positioningFunctions._positionBeak = _positionBeak;
+	    function _finalizeBeakPosition(beakRectangle, callout, estimatedTargetPoint, border) {
+	        var beakPixelSize = _calculateActualBeakWidthInPixels(beakRectangle.width) / 2;
+	        var innerRect = null;
+	        var beakPoint = { x: beakRectangle.width / 2, y: beakRectangle.width / 2 };
+	        if (callout.calloutEdge === RectangleEdge.bottom || callout.calloutEdge === RectangleEdge.top) {
+	            innerRect = new Rectangle_1.default(beakPixelSize, callout.calloutRectangle.width - beakPixelSize - border * 2, 0, callout.calloutRectangle.height - border * 2);
+	        }
+	        else {
+	            innerRect = new Rectangle_1.default(0, callout.calloutRectangle.width - border * 2, beakPixelSize, callout.calloutRectangle.height - beakPixelSize - border * 2);
+	        }
+	        var finalPoint = _getClosestPointOnEdgeToPoint(innerRect, callout.calloutEdge, estimatedTargetPoint);
+	        return _movePointOnRectangleToPoint(beakRectangle, beakPoint, finalPoint);
+	    }
+	    positioningFunctions._finalizeBeakPosition = _finalizeBeakPosition;
+	    function _getRectangleFromIRect(rect) {
+	        return new Rectangle_1.default(rect.left, rect.right, rect.top, rect.bottom);
+	    }
+	    positioningFunctions._getRectangleFromIRect = _getRectangleFromIRect;
+	    function _finalizeCalloutPosition(calloutRectangle, hostElement) {
+	        var hostRect = _getRectangleFromHTMLElement(hostElement);
+	        var topPosition = calloutRectangle.top - hostRect.top;
+	        var leftPosition = calloutRectangle.left - hostRect.left;
+	        return new Rectangle_1.default(leftPosition, leftPosition + calloutRectangle.width, topPosition, topPosition + calloutRectangle.height);
+	    }
+	    positioningFunctions._finalizeCalloutPosition = _finalizeCalloutPosition;
+	    /**
+	     * Finds the percent on the recalculateRect that matches the percent on the target rect based on position.
+	     */
+	    function _recalculateMatchingPercents(recalculateRect, rectangleEdge, targetRect, targetEdge, targetPercent) {
+	        var targetPoint = _getPointOnEdgeFromPercent(targetRect, targetEdge, targetPercent);
+	        var adjustedPoint = _getClosestPointOnEdgeToPoint(recalculateRect, rectangleEdge, targetPoint);
+	        var adjustedPercent = _getPercentOfEdgeFromPoint(recalculateRect, rectangleEdge, adjustedPoint);
+	        if (adjustedPercent > 100) {
+	            adjustedPercent = 100;
+	        }
+	        else if (adjustedPercent < 0) {
+	            adjustedPercent = 0;
+	        }
+	        return adjustedPercent;
+	    }
+	    positioningFunctions._recalculateMatchingPercents = _recalculateMatchingPercents;
+	    function _canRectangleFitWithinBounds(rect, boundingRect) {
+	        if (rect.width > boundingRect.width || rect.height > boundingRect.height) {
+	            return false;
+	        }
+	        return true;
+	    }
+	    positioningFunctions._canRectangleFitWithinBounds = _canRectangleFitWithinBounds;
+	    function _isRectangleWithinBounds(rect, boundingRect) {
+	        if (rect.top < boundingRect.top) {
+	            return false;
+	        }
+	        if (rect.bottom > boundingRect.bottom) {
+	            return false;
+	        }
+	        if (rect.left < boundingRect.left) {
+	            return false;
+	        }
+	        if (rect.right > boundingRect.right) {
+	            return false;
+	        }
+	        return true;
+	    }
+	    positioningFunctions._isRectangleWithinBounds = _isRectangleWithinBounds;
+	    /**
+	     * Gets all of the edges of a rectangle that are outside of the given bounds.
+	     * If there are no out of bounds edges it returns an empty array.
+	     */
+	    function _getOutOfBoundsEdges(rect, boundingRect) {
+	        var outOfBounds = new Array();
+	        if (rect.top < boundingRect.top) {
+	            outOfBounds.push(RectangleEdge.top);
+	        }
+	        if (rect.bottom > boundingRect.bottom) {
+	            outOfBounds.push(RectangleEdge.bottom);
+	        }
+	        if (rect.left < boundingRect.left) {
+	            outOfBounds.push(RectangleEdge.left);
+	        }
+	        if (rect.right > boundingRect.right) {
+	            outOfBounds.push(RectangleEdge.right);
+	        }
+	        return outOfBounds;
+	    }
+	    positioningFunctions._getOutOfBoundsEdges = _getOutOfBoundsEdges;
+	    /**
+	     * Returns a point on a edge that is x% of the way down it.
+	     */
+	    function _getPointOnEdgeFromPercent(rect, direction, percentOfRect) {
+	        var startPoint;
+	        var endPoint;
+	        switch (direction) {
+	            case RectangleEdge.top:
+	                startPoint = { x: rect.left, y: rect.top };
+	                endPoint = { x: rect.right, y: rect.top };
+	                break;
+	            case RectangleEdge.left:
+	                startPoint = { x: rect.left, y: rect.top };
+	                endPoint = { x: rect.left, y: rect.bottom };
+	                break;
+	            case RectangleEdge.right:
+	                startPoint = { x: rect.right, y: rect.top };
+	                endPoint = { x: rect.right, y: rect.bottom };
+	                break;
+	            case RectangleEdge.bottom:
+	                startPoint = { x: rect.left, y: rect.bottom };
+	                endPoint = { x: rect.right, y: rect.bottom };
+	                break;
+	            default:
+	                startPoint = { x: 0, y: 0 };
+	                endPoint = { x: 0, y: 0 };
+	                break;
+	        }
+	        return _calculatePointPercentAlongLine(startPoint, endPoint, percentOfRect);
+	    }
+	    positioningFunctions._getPointOnEdgeFromPercent = _getPointOnEdgeFromPercent;
+	    /**
+	     * Gets the percent down an edge that a point appears.
+	     */
+	    function _getPercentOfEdgeFromPoint(rect, direction, valueOnEdge) {
+	        switch (direction) {
+	            case RectangleEdge.top:
+	            case RectangleEdge.bottom:
+	                return rect.width !== 0 ? (valueOnEdge.x - rect.left) / rect.width * 100 : 100;
+	            case RectangleEdge.left:
+	            case RectangleEdge.right:
+	                return rect.height !== 0 ? (valueOnEdge.y - rect.top) / rect.height * 100 : 100;
+	        }
+	    }
+	    positioningFunctions._getPercentOfEdgeFromPoint = _getPercentOfEdgeFromPoint;
+	    /**
+	     * Percent is based on distance from left to right or up to down. 0% would be left most, 100% would be right most.
+	     */
+	    function _calculatePointPercentAlongLine(startPoint, endPoint, percent) {
+	        var x = startPoint.x + ((endPoint.x - startPoint.x) * percent / 100);
+	        var y = startPoint.y + ((endPoint.y - startPoint.y) * percent / 100);
+	        return { x: x, y: y };
+	    }
+	    positioningFunctions._calculatePointPercentAlongLine = _calculatePointPercentAlongLine;
+	    function _moveTopLeftOfRectangleToPoint(rect, destination) {
+	        return new Rectangle_1.default(destination.x, destination.x + rect.width, destination.y, destination.y + rect.height);
+	    }
+	    positioningFunctions._moveTopLeftOfRectangleToPoint = _moveTopLeftOfRectangleToPoint;
+	    /**
+	     * Aligns the given edge to the target coordinate.
+	     */
+	    function _alignEdgeToCoordinate(rect, coordinate, direction) {
+	        switch (direction) {
+	            case RectangleEdge.top:
+	                return _moveTopLeftOfRectangleToPoint(rect, { x: rect.left, y: coordinate });
+	            case RectangleEdge.bottom:
+	                return _moveTopLeftOfRectangleToPoint(rect, { x: rect.left, y: coordinate - rect.height });
+	            case RectangleEdge.left:
+	                return _moveTopLeftOfRectangleToPoint(rect, { x: coordinate, y: rect.top });
+	            case RectangleEdge.right:
+	                return _moveTopLeftOfRectangleToPoint(rect, { x: coordinate - rect.width, y: rect.top });
+	        }
+	        return new Rectangle_1.default();
+	    }
+	    positioningFunctions._alignEdgeToCoordinate = _alignEdgeToCoordinate;
+	    /**
+	     * Moves a point on a given rectangle to the target point. Does not change the rectangles orientation.
+	     */
+	    function _movePointOnRectangleToPoint(rect, rectanglePoint, targetPoint) {
+	        var leftCornerXDifference = rectanglePoint.x - rect.left;
+	        var leftCornerYDifference = rectanglePoint.y - rect.top;
+	        return _moveTopLeftOfRectangleToPoint(rect, { x: targetPoint.x - leftCornerXDifference, y: targetPoint.y - leftCornerYDifference });
+	    }
+	    positioningFunctions._movePointOnRectangleToPoint = _movePointOnRectangleToPoint;
+	    /**
+	     * Moves the given rectangle a certain number of pixels in the given direction;
+	     */
+	    function _moveRectangleInDirection(rect, moveDistance, direction) {
+	        var xModifier = 0;
+	        var yModifier = 0;
+	        switch (direction) {
+	            case RectangleEdge.top:
+	                yModifier = moveDistance * -1;
+	                break;
+	            case RectangleEdge.left:
+	                xModifier = moveDistance * -1;
+	                break;
+	            case RectangleEdge.right:
+	                xModifier = moveDistance;
+	                break;
+	            case RectangleEdge.bottom:
+	                yModifier = moveDistance;
+	                break;
+	        }
+	        return _moveTopLeftOfRectangleToPoint(rect, { x: rect.left + xModifier, y: rect.top + yModifier });
+	    }
+	    positioningFunctions._moveRectangleInDirection = _moveRectangleInDirection;
+	    /**
+	     * Moves the given rectangle to an anchor rectangle.
+	     */
+	    function _moveRectangleToAnchorRectangle(rect, rectSide, rectPercent, anchorRect, anchorSide, anchorPercent, gap) {
+	        if (gap === void 0) { gap = 0; }
+	        var rectTargetPoint = _getPointOnEdgeFromPercent(rect, rectSide, rectPercent);
+	        var anchorTargetPoint = _getPointOnEdgeFromPercent(anchorRect, anchorSide, anchorPercent);
+	        var positionedRect = _movePointOnRectangleToPoint(rect, rectTargetPoint, anchorTargetPoint);
+	        return _moveRectangleInDirection(positionedRect, gap, anchorSide);
+	    }
+	    positioningFunctions._moveRectangleToAnchorRectangle = _moveRectangleToAnchorRectangle;
+	    /**
+	     * Gets the closet point on an edge to the given point.
+	     */
+	    function _getClosestPointOnEdgeToPoint(rect, edge, point) {
+	        switch (edge) {
+	            case RectangleEdge.top:
+	            case RectangleEdge.bottom:
+	                var x = void 0;
+	                if (point.x > rect.right) {
+	                    x = rect.right;
+	                }
+	                else if (point.x < rect.left) {
+	                    x = rect.left;
+	                }
+	                else {
+	                    x = point.x;
+	                }
+	                return { x: x, y: rect[RectangleEdge[edge]] };
+	            case RectangleEdge.left:
+	            case RectangleEdge.right:
+	                var y = void 0;
+	                if (point.y > rect.bottom) {
+	                    y = rect.bottom;
+	                }
+	                else if (point.y < rect.top) {
+	                    y = rect.top;
+	                }
+	                else {
+	                    y = point.y;
+	                }
+	                return { x: rect[RectangleEdge[edge]], y: y };
+	        }
+	    }
+	    positioningFunctions._getClosestPointOnEdgeToPoint = _getClosestPointOnEdgeToPoint;
+	    // Since the beak is rotated 45 degrees the actual height/width is the length of the diagonal.
+	    // We still want to position the beak based on it's midpoint which does not change. It will
+	    // be at (beakwidth / 2, beakwidth / 2)
+	    function _calculateActualBeakWidthInPixels(beakWidth) {
+	        return Math.sqrt(beakWidth * beakWidth * 2);
+	    }
+	    positioningFunctions._calculateActualBeakWidthInPixels = _calculateActualBeakWidthInPixels;
+	    function _getBorderSize(element) {
+	        var styles = getComputedStyle(element, null);
+	        var topBorder = parseFloat(styles.borderTopWidth);
+	        var bottomBorder = parseFloat(styles.borderBottomWidth);
+	        var leftBorder = parseFloat(styles.borderLeftWidth);
+	        var rightBorder = parseFloat(styles.borderRightWidth);
+	        // If any of the borders are NaN default to 0
+	        if (isNaN(topBorder) || isNaN(bottomBorder) || isNaN(leftBorder) || isNaN(rightBorder)) {
+	            return 0;
+	        }
+	        // If all of the borders are the same size, any value;
+	        if (topBorder === bottomBorder && bottomBorder === leftBorder && leftBorder === rightBorder) {
+	            return topBorder;
+	        }
+	        // If the borders do not agree, return 0
+	        return 0;
+	    }
+	    positioningFunctions._getBorderSize = _getBorderSize;
+	    function _getPositionData(direction, target, boundingRect, coverTarget) {
+	        var directionalInfo = coverTarget ? CoverDictionary[direction] : DirectionalDictionary[direction];
+	        if (directionalInfo.isAuto) {
+	            var center = _getPointOnEdgeFromPercent(target, directionalInfo.targetDirection, 50);
+	            if (center.x <= boundingRect.width / 2) {
+	                directionalInfo.calloutPercent = 0;
+	                directionalInfo.targetPercent = 0;
+	            }
+	            else {
+	                directionalInfo.calloutPercent = 100;
+	                directionalInfo.targetPercent = 100;
+	            }
+	        }
+	        return directionalInfo;
+	    }
+	    positioningFunctions._getPositionData = _getPositionData;
+	    function _flipRectangleToFit(callout, targetRect, targetPercent, boundingRect, gap) {
+	        var directions = [RectangleEdge.left, RectangleEdge.right, RectangleEdge.top, RectangleEdge.bottom];
+	        var currentEdge = callout.targetEdge;
+	        // Make a copy to presever the original positioning.
+	        var positionedCallout = object_1.assign({}, callout);
+	        // Keep switching sides until one is found with enough space. If all sides don't fit then return the unmodified callout.
+	        for (var i = 0; i < 4; i++) {
+	            var outOfBounds = _getOutOfBoundsEdges(positionedCallout.calloutRectangle, boundingRect);
+	            var index = outOfBounds.indexOf(currentEdge);
+	            var oppositeEdge = OppositeEdgeDictionary[currentEdge];
+	            if (index > -1) {
+	                directions.splice(directions.indexOf(currentEdge), 1);
+	                currentEdge = directions.indexOf(oppositeEdge) > -1 ? oppositeEdge : directions.slice(-1)[0];
+	                positionedCallout.calloutEdge = OppositeEdgeDictionary[currentEdge];
+	                positionedCallout.targetEdge = currentEdge;
+	                positionedCallout.calloutRectangle = _moveRectangleToAnchorRectangle(positionedCallout.calloutRectangle, positionedCallout.calloutEdge, positionedCallout.alignPercent, targetRect, positionedCallout.targetEdge, targetPercent, gap);
+	            }
+	            else {
+	                return positionedCallout;
+	            }
+	        }
+	        return callout;
+	    }
+	    positioningFunctions._flipRectangleToFit = _flipRectangleToFit;
+	})(positioningFunctions = exports.positioningFunctions || (exports.positioningFunctions = {}));
+	var _a, _b, _c, _d;
+
+
+
+/***/ },
+/* 79 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var Rectangle = (function () {
+	    function Rectangle(left, right, top, bottom) {
+	        if (left === void 0) { left = 0; }
+	        if (right === void 0) { right = 0; }
+	        if (top === void 0) { top = 0; }
+	        if (bottom === void 0) { bottom = 0; }
+	        this.top = top;
+	        this.bottom = bottom;
+	        this.left = left;
+	        this.right = right;
+	    }
+	    Object.defineProperty(Rectangle.prototype, "width", {
+	        /**
+	         * Calculated automatically by subtracting the right from left
+	         */
+	        get: function () {
+	            return this.right - this.left;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(Rectangle.prototype, "height", {
+	        /**
+	         * Calculated automatically by subtracting the bottom from top.
+	         */
+	        get: function () {
+	            return this.bottom - this.top;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    return Rectangle;
+	}());
+	Object.defineProperty(exports, "__esModule", { value: true });
+	exports.default = Rectangle;
+
+
+
+/***/ },
+/* 80 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var _scrollbarWidth;
+	exports.DATA_IS_SCROLLABLE_ATTRIBUTE = 'data-is-scrollable';
+	/** Calculates the width of a scrollbar for the browser/os. */
+	function getScrollbarWidth() {
+	    if (_scrollbarWidth === undefined) {
+	        var scrollDiv = document.createElement('div');
+	        scrollDiv.style.setProperty('width', '100px');
+	        scrollDiv.style.setProperty('height', '100px');
+	        scrollDiv.style.setProperty('overflow', 'scroll');
+	        scrollDiv.style.setProperty('position', 'absolute');
+	        scrollDiv.style.setProperty('top', '-9999px');
+	        document.body.appendChild(scrollDiv);
+	        // Get the scrollbar width
+	        _scrollbarWidth = scrollDiv.offsetWidth - scrollDiv.clientWidth;
+	        // Delete the DIV
+	        document.body.removeChild(scrollDiv);
+	    }
+	    return _scrollbarWidth;
+	}
+	exports.getScrollbarWidth = getScrollbarWidth;
+	/**
+	 * Traverses up the DOM for the element with the data-is-scrollable=true attribute, or returns
+	 * document.body.
+	 */
+	function findScrollableParent(startingElement) {
+	    var el = startingElement;
+	    // First do a quick scan for the scrollable attribute.
+	    while (el && el !== document.body) {
+	        if (el.getAttribute(exports.DATA_IS_SCROLLABLE_ATTRIBUTE) === 'true') {
+	            return el;
+	        }
+	        el = el.parentElement;
+	    }
+	    // If we haven't found it, the use the slower method: compute styles to evaluate if overflow is set.
+	    el = startingElement;
+	    while (el && el !== document.body) {
+	        if (el.getAttribute(exports.DATA_IS_SCROLLABLE_ATTRIBUTE) !== 'false') {
+	            var styles = getComputedStyle(el);
+	            var overflowY = styles ? styles.getPropertyValue('overflow-y') : '';
+	            if (overflowY && (overflowY === 'scroll' || overflowY === 'auto')) {
+	                return el;
+	            }
+	        }
+	        el = el.parentElement;
+	    }
+	    // Fall back to window scroll.
+	    if (!el || el === document.body) {
+	        el = window;
+	    }
+	    return el;
+	}
+	exports.findScrollableParent = findScrollableParent;
+	
+
+
+/***/ },
+/* 81 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(45));
+	
+
+
+/***/ },
+/* 82 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Callout{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-shadow:0 0 15px -5px rgba(0,0,0,.4);position:absolute;border:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";box-sizing:border-box}@media screen and (-ms-high-contrast:active){.ms-Callout{border:1px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Callout{border:1px solid " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}.ms-Callout-container{position:relative}.ms-Callout-main{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";overflow-x:hidden;overflow-y:auto;position:relative}.ms-Callout-beak{position:absolute;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-shadow:inherit;border:inherit;box-sizing:border-box;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.ms-Callout-beakCurtain{position:absolute;top:0;right:0;bottom:0;left:0;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 83 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(16);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-DatePicker{box-sizing:border-box;margin:0;padding:0;box-shadow:none;margin-bottom:17px}.ms-DatePicker .ms-TextField{position:relative}.ms-DatePicker .ms-TextField input::-ms-clear{display:none}.ms-DatePicker .ms-TextField input[readonly]{cursor:pointer}.ms-DatePicker-event--with-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:35px}html[dir=ltr] .ms-DatePicker-event--with-label{right:9px}html[dir=rtl] .ms-DatePicker-event--with-label{left:9px}.ms-DatePicker-event--without-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:7px}html[dir=ltr] .ms-DatePicker-event--without-label{right:9px}html[dir=rtl] .ms-DatePicker-event--without-label{left:9px}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 84 */
+/***/ function(module, exports, __webpack_require__) {
+
 	var require;/* WEBPACK VAR INJECTION */(function(process, global) {/*!
 	 * @overview es6-promise - a tiny implementation of Promises/A+.
 	 * @copyright Copyright (c) 2014 Yehuda Katz, Tom Dale, Stefan Penner and contributors (Conversion to ES6 API by Jake Archibald)
@@ -3511,7 +6356,7 @@
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(50);
+	    var vertx = __webpack_require__(85);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -4535,7 +7380,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(9), (function() { return this; }())))
 
 /***/ },
-/* 50 */
+/* 85 */
 /***/ function(module, exports) {
 
 	/* (ignored) */

@@ -56,10 +56,6 @@ body {
   /* Helps to enable smooth scrolling on ios devices. */
   -webkit-overflow-scrolling: touch; }
   html[dir='ltr'] .ms-App-content {
-    left: 300px; }
-  html[dir='rtl'] .ms-App-content {
-    right: 300px; }
-  html[dir='ltr'] .ms-App-content {
     right: 0; }
   html[dir='rtl'] .ms-App-content {
     left: 0; }
