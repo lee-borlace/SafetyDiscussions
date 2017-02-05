@@ -5,32 +5,23 @@ import { DiscussionActionCreator } from '../actions/DiscussionActionCreator';
 import { AppState } from '../state/AppState';
 
 import { DiscussionState, DiscussionFormMode } from '../state/DiscussionState';
-import { AddDiscussion, IAddDiscussionProps } from '../../components/AddDiscussion';
+import { Discussion, IDiscussionProps, FormMode } from '../../components/Discussion';
 
-const mapStateToProps = (state: AppState): IAddDiscussionProps => {
+const mapStateToProps = (state: AppState): IDiscussionProps => {
    
     return {
-        ShowDialog: state.Discussion.DiscussionFormMode == DiscussionFormMode.New ? true : false,
+        FormMode: FormMode.New,
         Discussion: null
-    }
-}
-
-const mapDispatchToProps = (
-    dispatch: (action: DiscussionAction) => void,
-    ownProps: IAddDiscussionProps): IAddDiscussionProps => {
-    return {
-        OnAddDiscussionClick: (): void => {
-            dispatch(DiscussionActionCreator.CreateActionOpenNewDiscussionForm());     
-        },
-        OnSaveDiscussionClick: (): void => {
-            dispatch(DiscussionActionCreator.CreateActionCreateDiscussion(ownProps.Discussion));
-            console.log(ownProps.Discussion.DiscussionLocation);
-        }
     };
 }
 
-// Redux container component for a single discussion.
+const mapDispatchToProps = (
+    dispatch: (action: any) => void,
+    ownProps: any) => {
+    return {};
+}
+
 export const DiscussionContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(AddDiscussion);
+)(Discussion);

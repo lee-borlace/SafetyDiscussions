@@ -4,9 +4,10 @@ import * as ReactDOM from 'react-dom';
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { DatePicker } from 'office-ui-fabric-react/lib/DatePicker';
-import { autobind } from 'office-ui-fabric-react/lib/Utilities';
+import { DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
 import { SafetyDiscussion } from '../models/SafetyDiscussion';
+import { DiscussionService } from '../services/DiscussionService';
 
 export enum FormMode {
     New,
@@ -83,7 +84,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         super(props);
 
         this.state = {
-            Discussion: this.props.Discussion ? this.props.Discussion : new SafetyDiscussion()
+            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion()
         };
     }
 
@@ -92,27 +93,101 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
         return (
             <div>
-                <DatePicker placeholder='Enter date of discussion' strings={DayPickerStrings} />
-                <TextField label='Location' required={true} placeholder='Enter location' onChanged={this.onLocationChanged.bind(this)} />
-                <TextField label='Subject' required={true} multiline resizable={false} placeholder='Enter subject' />
-                <TextField label='Outcome' required={true} multiline resizable={false} placeholder='Enter outcome' />
+                <DatePicker placeholder='Enter date of discussion' strings={DayPickerStrings} onSelectDate={this.OnDateChanged.bind(this)} />
+                <TextField label='Location' required={true} placeholder='Enter location' onChanged={this.OnLocationChanged.bind(this)} />
+                <TextField label='Subject' required={true} multiline resizable={false} placeholder='Enter subject' onChanged={this.OnSubjectChanged.bind(this)} />
+                <TextField label='Outcome' required={true} multiline resizable={false} placeholder='Enter outcome' onChanged={this.OnOutcomeChanged.bind(this)}/>
+                <DialogFooter>
+                    <Button buttonType={ButtonType.primary} onClick={this.Save.bind(this)}>Save</Button>
+                    <Button>Cancel</Button>
+                </DialogFooter>
             </div>
         );
     }
 
 
-    private onLocationChanged(text: string) {
+    private Save() {
+
+        let service: DiscussionService = new DiscussionService();
+        service.SaveDiscussion(this.state.Discussion);
+
+    }
+
+
+    private OnDateChanged(date: Date) {
+        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
+    }
+
+    private OnLocationChanged(text: string) {
+        this.UpdatePropertiesOfDiscussion(null, null, text, null, null, null);
+    }
+
+    private OnSubjectChanged(text: string) {
+        this.UpdatePropertiesOfDiscussion(null, null, null, null, text, null);
+    }
+
+    private OnOutcomeChanged(text: string) {
+        this.UpdatePropertiesOfDiscussion(null, null, null, null, null, text);
+    }
+
+
+    private UpdatePropertiesOfDiscussion(
+        observer?: string,
+        discussionDate?: Date,
+        discussionLocation?: string,
+        discussedWith?: string,
+        subject?: string,
+        outcomes?: string): void {
 
         this.setState(function (prevState, props) {
 
-            prevState.Discussion.DiscussionLocation = text;
+            let updatedDiscussion: SafetyDiscussion = this.CloneDiscussion(prevState.Discussion);
+
+            if (observer) {
+                updatedDiscussion.Observer = observer;
+            }
+
+            if (discussionDate) {
+                updatedDiscussion.DiscussionDate = discussionDate;
+            }
+
+            if (discussionLocation) {
+                updatedDiscussion.DiscussionLocation = discussionLocation;
+            }
+
+            if (discussedWith) {
+                updatedDiscussion.DiscussedWith = discussedWith;
+            }
+
+            if (subject) {
+                updatedDiscussion.Subject = subject;
+            }
+
+            if (outcomes) {
+                updatedDiscussion.Outcomes = outcomes;
+            }
+                      
 
             return {
-                Discussion: prevState
+                Discussion: updatedDiscussion
             } as IDiscussionState;
         });
 
-      
-           
+        console.log(this.state.Discussion);
+    }
+
+
+
+    private CloneDiscussion(discussion: SafetyDiscussion): SafetyDiscussion {
+
+        return {
+            Observer: discussion.Observer,
+            DiscussionDate: discussion.DiscussionDate,
+            DiscussionLocation: discussion.DiscussionLocation,
+            DiscussedWith: discussion.DiscussedWith,
+            Subject: discussion.Subject,
+            Outcomes: discussion.Outcomes
+        }
+
     }
 }

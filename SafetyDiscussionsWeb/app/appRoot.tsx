@@ -14,18 +14,16 @@ import { polyfill } from 'es6-promise';
 polyfill();
 
 
-// Create the store.
-let store = createStore(
-    MainReducer,
-    applyMiddleware(
-        thunk, // lets us dispatch() functions
-    )
-);
+//// Create the store.
+//let store = createStore(
+//    MainReducer,
+//    applyMiddleware(
+//        thunk, // lets us dispatch() functions
+//    )
+//);
 
 ReactDOM.render(
-    <Provider store={store}>
-        <DiscussionContainer />
-    </Provider>,
+    <AddDiscussion />,
     document.getElementById('reactRoot')
 );
 

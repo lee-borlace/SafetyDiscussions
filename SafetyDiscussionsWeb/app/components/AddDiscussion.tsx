@@ -5,57 +5,53 @@ import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
 import { Discussion, FormMode } from './Discussion';
-import { SafetyDiscussion } from '../models/SafetyDiscussion';
 
 export interface IAddDiscussionProps {
-    ShowDialog?: boolean;
-    OnAddDiscussionClick?: () => void;
-    OnSaveDiscussionClick?: () => void;
-    OnCancelClick?: () => void;
-    Discussion?: SafetyDiscussion;
+
+}
+
+export interface IAddDiscussionState {
+    showDialog: boolean;
 }
 
 
-export class AddDiscussion extends React.Component<IAddDiscussionProps, undefined> {
+export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDiscussionState> {
 
+    constructor() {
+        super();
+        this.state = {
+            showDialog: false
+        };
+    }
 
     // Main renderer.
     render() {
 
         return (
             <div>
-                <Button description='Opens the dialog to create a discussion' onClick={this.props.OnAddDiscussionClick}>
+                <Button description='Opens the dialog to create a discussion' onClick={this.showDialog.bind(this)}>
                     Add Safety Discussion
                 </Button>
                 <Dialog
-                    isOpen={this.props.ShowDialog}
+                    isOpen={this.state.showDialog}
                     type={DialogType.close}
-                    onDismiss={this.props.OnCancelClick}
+                    onDismiss={this.closeDialog.bind(this)}
                     title='Add Discussion'
                     subText='Please enter the details for the safety discussion.'
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
-                    <Discussion Discussion={this.props.Discussion} FormMode={FormMode.New} />
-                    <DialogFooter>
-                        <Button buttonType={ButtonType.primary} onClick={this.Save.bind(this)}>Save</Button>
-                        <Button onClick={this.props.OnCancelClick}>Cancel</Button>
-                    </DialogFooter>
+                    <Discussion FormMode={FormMode.New} Discussion={null} />
                 </Dialog>
             </div>
         );
     }
 
-
-    private HandleDiscussionChange(discussion: SafetyDiscussion) {
-        
+    private showDialog() {
+        this.setState({ showDialog: true });
     }
 
-
-    private Save() {
-
-        this.props.OnSaveDiscussionClick();
+    private closeDialog() {
+        this.setState({ showDialog: false });
     }
-
-    
 }

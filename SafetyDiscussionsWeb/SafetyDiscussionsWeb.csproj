@@ -238,6 +238,7 @@
     <TypeScriptCompile Include="app\redux\containers\DiscussionContainer.ts" />
     <TypeScriptCompile Include="app\redux\reducers\MainReducer.ts" />
     <TypeScriptCompile Include="app\redux\state\DiscussionState.ts" />
+    <TypeScriptCompile Include="app\services\DiscussionService.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
