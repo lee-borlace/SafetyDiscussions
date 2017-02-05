@@ -4,7 +4,8 @@ import * as ReactDOM from 'react-dom';
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
-import { DiscussionForm, FormMode } from './DiscussionForm';
+import { Discussion, FormMode } from './Discussion';
+import { DiscussionContainer } from '../redux/containers/DiscussionContainer';
 
 export interface IAddDiscussionProps {
 	
@@ -41,7 +42,7 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
-                    <DiscussionForm FormMode={FormMode.New} />
+                    <DiscussionContainer FormMode={FormMode.New} />
                     <DialogFooter>
                         <Button buttonType={ButtonType.primary} onClick={this.closeDialog.bind(this)}>Save</Button>
                         <Button onClick={this.closeDialog.bind(this)}>Cancel</Button>

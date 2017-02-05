@@ -235,11 +235,11 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="tsconfig.json" />
+    <TypeScriptCompile Include="app\redux\containers\DiscussionContainer.ts" />
+    <TypeScriptCompile Include="app\redux\reducers\MainReducer.ts" />
+    <TypeScriptCompile Include="app\redux\state\DiscussionState.ts" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="app\redux\actions\" />
-    <Folder Include="app\redux\containers\" />
-    <Folder Include="app\redux\reducers\" />
     <Folder Include="App_Data\" />
     <Folder Include="Models\" />
   </ItemGroup>
@@ -253,10 +253,14 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="app\appRoot.tsx" />
-    <TypeScriptCompile Include="app\components\DiscussionForm.tsx" />
+    <TypeScriptCompile Include="app\components\Discussion.tsx" />
     <TypeScriptCompile Include="app\components\MyDiscussions.tsx" />
     <TypeScriptCompile Include="app\hacky-typings\index.d.ts" />
     <TypeScriptCompile Include="app\models\SafetyDiscussion.ts" />
+    <TypeScriptCompile Include="app\redux\actions\Action.ts" />
+    <TypeScriptCompile Include="app\redux\actions\DiscussionAction.ts" />
+    <TypeScriptCompile Include="app\redux\actions\DiscussionActionCreator.ts" />
+    <TypeScriptCompile Include="app\redux\reducers\DiscussionReducer.ts" />
     <TypeScriptCompile Include="app\redux\state\AppState.ts" />
   </ItemGroup>
   <ItemGroup>

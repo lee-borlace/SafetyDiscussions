@@ -1,13 +1,7 @@
-﻿import { SafetyDiscussion } from '../../models/SafetyDiscussion';
+﻿import { DiscussionState } from './DiscussionState';
 
 export class AppState {
 
-    // Current user's discussions.
-    public Discussions: SafetyDiscussion[];
+    Discussion: DiscussionState;
 
-    // Are discussions loading currently?
-    public DiscussionsLoading: boolean;
-
-    // Was there an error fetching discussions?
-    public FetchError: boolean;
 }

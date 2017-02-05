@@ -5,17 +5,16 @@ import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { DatePicker } from 'office-ui-fabric-react/lib/DatePicker';
 
+import { SafetyDiscussion } from '../models/SafetyDiscussion';
 
 export enum FormMode {
     New,
     Edit
 }
 
-export interface IDiscussionFormProps {
+export interface IDiscussionProps {
     FormMode: FormMode;
-}
-
-export interface IDiscussionFormState {
+    Discussion: SafetyDiscussion;
 }
 
 const DayPickerStrings = {
@@ -72,13 +71,8 @@ const DayPickerStrings = {
     goToToday: 'Go to today'
 };
 
-export class DiscussionForm extends React.Component<IDiscussionFormProps, IDiscussionFormState> {
+export class Discussion extends React.Component<IDiscussionProps, undefined> {
 
-    constructor() {
-        super();
-        this.state = {
-        };
-    }
 
     // Main renderer.
     render() {
