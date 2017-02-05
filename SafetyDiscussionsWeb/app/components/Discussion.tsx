@@ -27,6 +27,7 @@ export interface IDiscussionState {
     IsSaving?: boolean;
     SaveClicked?: boolean;
     IsValid?: boolean;
+    IsError?: boolean;
 }
 
 
@@ -92,7 +93,8 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         this.state = {
             Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion(),
             IsSaving: false,
-            IsValid: true
+            IsValid: true,
+            IsError: false
         };
     }
 
@@ -113,6 +115,19 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                         <br />
                     </div>
                 }
+
+                {this.state.IsError &&
+
+                    <div>
+                        <MessageBar
+                            messageBarType={MessageBarType.error}
+                            >
+                            Sorry, there was a problem saving your data. Please refresh the page and try again.
+                        </MessageBar>
+                        <br />
+                    </div>
+                }
+
 
 
                 {!this.state.IsSaving &&
@@ -210,11 +225,19 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
             });
 
             let service: DiscussionService = new DiscussionService();
-            service.SaveDiscussion(this.state.Discussion);
-
-            console.log(this.state.Discussion);
-
-            this.props.DialogClose();
+            service
+                .SaveDiscussion(this.state.Discussion)
+                .then(() => {
+                    console.log(this.state.Discussion);
+                    this.props.DialogClose();
+                })
+                .catch(() => {
+                    this.setState({
+                        IsError: true,
+                        IsSaving: false
+                    });
+                });
+            
         }
 
     }

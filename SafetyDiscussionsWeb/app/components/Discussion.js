@@ -68,7 +68,8 @@ class Discussion extends React.Component {
         this.state = {
             Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
             IsSaving: false,
-            IsValid: true
+            IsValid: true,
+            IsError: false
         };
     }
     // Main renderer.
@@ -77,6 +78,10 @@ class Discussion extends React.Component {
             !this.state.IsValid &&
                 React.createElement("div", null, 
                     React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Please fill in all required information."), 
+                    React.createElement("br", null)), 
+            this.state.IsError &&
+                React.createElement("div", null, 
+                    React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Sorry, there was a problem saving your data. Please refresh the page and try again."), 
                     React.createElement("br", null)), 
             !this.state.IsSaving &&
                 React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DiscussionDate}), 
@@ -109,8 +114,18 @@ class Discussion extends React.Component {
                 IsSaving: true
             });
             let service = new DiscussionService_1.DiscussionService();
-            service.SaveDiscussion(this.state.Discussion);
-            console.log(this.state.Discussion);
+            service
+                .SaveDiscussion(this.state.Discussion)
+                .then(() => {
+                console.log(this.state.Discussion);
+                this.props.DialogClose();
+            })
+                .catch(() => {
+                this.setState({
+                    IsError: true,
+                    IsSaving: false
+                });
+            });
         }
     }
     OnDateChanged(date) {

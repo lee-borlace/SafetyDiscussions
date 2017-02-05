@@ -41,6 +41,7 @@ Being a proof of concept, several simplifications :
   - The app writes to a list in the app web. Real app would create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
   - Rather than directly making API HTTP calls for Redux, these would be wrapped in a dependency-injectible / mockable service
   - Skipped a lot of code comments that would usually be present.
+  - Would usually use Unity for dependency injection in MVC but have hard-coded for PoC.
 
 Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
