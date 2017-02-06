@@ -249,6 +249,7 @@
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="tsconfig.json" />
+    <TypeScriptCompile Include="app\components\DiscussionListItem.tsx" />
     <TypeScriptCompile Include="app\components\SafetyDiscussions.tsx" />
     <TypeScriptCompile Include="app\services\DiscussionService.ts" />
   </ItemGroup>

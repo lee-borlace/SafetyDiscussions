@@ -229,6 +229,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
             service
                 .SaveDiscussion(this.state.Discussion)
                 .then((discussion: SafetyDiscussion ) => {
+                    console.log("AddDiscussion.Save()");
                     console.log(discussion);
                     this.props.NewDiscussionCreated(discussion);
                 })

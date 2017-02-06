@@ -12,7 +12,7 @@ export interface IAddDiscussionProps {
 }
 
 export interface IAddDiscussionState {
-    showDialog: boolean;
+    ShowDialog: boolean;
 }
 
 
@@ -21,7 +21,7 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
     constructor() {
         super();
         this.state = {
-            showDialog: false
+            ShowDialog: false,
         };
     }
 
@@ -34,7 +34,7 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
                     Add Safety Discussion
                 </Button>
                 <Dialog
-                    isOpen={this.state.showDialog}
+                    isOpen={this.state.ShowDialog}
                     type={DialogType.close}
                     onDismiss={this.closeDialog.bind(this)}
                     title='Add Discussion'
@@ -54,15 +54,16 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
 
     // New discussion has been created. Pass up to parent.
     private newDiscussionCreated(discussion: SafetyDiscussion) {
-        this.setState({ showDialog: false });
+        console.log("AddDiscussion.newDiscussionCreated()");
+        this.setState({ ShowDialog: false });
         this.props.NewDiscussionCreated(discussion);
     }
 
     private showDialog() {
-        this.setState({ showDialog: true });
+        this.setState({ ShowDialog: true });
     }
 
     private closeDialog() {
-        this.setState({ showDialog: false });
+        this.setState({ ShowDialog: false });
     }
 }

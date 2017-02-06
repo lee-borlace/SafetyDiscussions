@@ -8,6 +8,7 @@ export interface ISafetyDiscussionsProps {
 }
 
 export interface ISafetyDiscussionsState {
+    MyDiscussions: SafetyDiscussion[];
 }
 
 
@@ -16,6 +17,7 @@ export class SafetyDiscussions extends React.Component<ISafetyDiscussionsProps, 
     constructor() {
         super();
         this.state = {
+            MyDiscussions: []
         };
     }
 
@@ -24,7 +26,9 @@ export class SafetyDiscussions extends React.Component<ISafetyDiscussionsProps, 
 
         return (
             <div>
-                <MyDiscussions />
+                <MyDiscussions
+                    MyDiscussions={this.state.MyDiscussions}
+                />
                 <AddDiscussion
                     NewDiscussionCreated={this.newDiscussionCreated.bind(this)}
                 />  
@@ -32,9 +36,27 @@ export class SafetyDiscussions extends React.Component<ISafetyDiscussionsProps, 
         );
     }
 
-    // New discussion has been created.
+    // New discussion has been created, add it to state.
     private newDiscussionCreated(discussion: SafetyDiscussion) {
-        alert(discussion);
+
+        console.log("SafetyDiscussions.newDiscussionCreated()");
+
+        this.setState((prevState, props) => {
+
+            let discussions: SafetyDiscussion[] = [];
+
+            prevState.MyDiscussions.forEach((x) => {
+                discussions.push(Object.assign({}, x) );
+            })
+
+            discussions.push(discussion);
+
+            return {
+                MyDiscussions: discussions
+            } as ISafetyDiscussionsState;
+        });
+
+
     }
 
    
