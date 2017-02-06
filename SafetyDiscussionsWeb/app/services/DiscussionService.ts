@@ -38,11 +38,19 @@ export class DiscussionService {
     }
 
 
-    private ParseJson(json: any): Promise<number> {
+    private ParseJson(json: any): Promise<SafetyDiscussion> {
 
         return new Promise((resolve, reject): void => {
 
-            resolve(1);
+            resolve({
+                Observer: json.Observer,
+                DateISO: json.DateISO,
+                DiscussionLocation: json.DiscussionLocation,
+                DiscussedWith: json.DiscussedWith,
+                Subject: json.Subject,
+                Outcomes: json.Outcomes,
+                Id: json.Id,
+            });
 
         });
 

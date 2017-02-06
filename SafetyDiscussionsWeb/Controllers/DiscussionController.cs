@@ -1,4 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SafetyDiscussionsWeb.Models;
 using System;
 using System.Collections.Generic;
@@ -12,7 +14,7 @@ namespace SafetyDiscussionsWeb.Controllers
     {
         [SharePointContextFilter]
         [HttpPut]
-        public int CreateDiscussion(SafetyDiscussion discussion)
+        public ActionResult CreateDiscussion(SafetyDiscussion discussion)
         {
 
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
@@ -39,11 +41,25 @@ namespace SafetyDiscussionsWeb.Controllers
 
                     clientContext.ExecuteQuery();
 
-
+                    discussion.Id = newItem.Id;
                 }
             }
 
-            return 0;
+            return GetJsonResult(discussion);
+        }
+
+
+        private ContentResult GetJsonResult(object data)
+        {
+            var camelCaseFormatter = new JsonSerializerSettings();
+            camelCaseFormatter.ContractResolver = new DefaultContractResolver();
+            var serialised = JsonConvert.SerializeObject(data, camelCaseFormatter);
+
+            return new ContentResult
+            {
+                Content = serialised,
+                ContentType = "application/json"
+            };
         }
     }
 }

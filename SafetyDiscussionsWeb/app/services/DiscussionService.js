@@ -27,7 +27,15 @@ class DiscussionService {
     }
     ParseJson(json) {
         return new es6_promise_1.Promise((resolve, reject) => {
-            resolve(1);
+            resolve({
+                Observer: json.Observer,
+                DateISO: json.DateISO,
+                DiscussionLocation: json.DiscussionLocation,
+                DiscussedWith: json.DiscussedWith,
+                Subject: json.Subject,
+                Outcomes: json.Outcomes,
+                Id: json.Id,
+            });
         });
     }
 }

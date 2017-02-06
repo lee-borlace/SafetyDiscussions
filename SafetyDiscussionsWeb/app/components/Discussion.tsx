@@ -20,6 +20,7 @@ export interface IDiscussionProps {
     FormMode: FormMode;
     Discussion: SafetyDiscussion;
     DialogClose: () => void;
+    NewDiscussionCreated: (discussion: SafetyDiscussion) => void;
 }
 
 export interface IDiscussionState {
@@ -227,9 +228,9 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
             let service: DiscussionService = new DiscussionService();
             service
                 .SaveDiscussion(this.state.Discussion)
-                .then(() => {
-                    console.log(this.state.Discussion);
-                    this.props.DialogClose();
+                .then((discussion: SafetyDiscussion ) => {
+                    console.log(discussion);
+                    this.props.NewDiscussionCreated(discussion);
                 })
                 .catch(() => {
                     this.setState({

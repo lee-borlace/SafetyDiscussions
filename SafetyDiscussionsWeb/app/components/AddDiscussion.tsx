@@ -5,9 +5,10 @@ import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { Dialog, DialogType, DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 
 import { Discussion, FormMode } from './Discussion';
+import { SafetyDiscussion } from '../models/SafetyDiscussion';
 
 export interface IAddDiscussionProps {
-
+    NewDiscussionCreated: (discussion: SafetyDiscussion) => void;
 }
 
 export interface IAddDiscussionState {
@@ -41,10 +42,20 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
                     isBlocking={false}
                     closeButtonAriaLabel='Close'
                     >
-                    <Discussion FormMode={FormMode.New} Discussion={null} DialogClose={this.closeDialog.bind(this)} />
+                    <Discussion
+                        FormMode={FormMode.New}
+                        Discussion={null}
+                        DialogClose={this.closeDialog.bind(this)}
+                        NewDiscussionCreated={this.newDiscussionCreated.bind(this)} />
                 </Dialog>
             </div>
         );
+    }
+
+    // New discussion has been created. Pass up to parent.
+    private newDiscussionCreated(discussion: SafetyDiscussion) {
+        this.setState({ showDialog: false });
+        this.props.NewDiscussionCreated(discussion);
     }
 
     private showDialog() {

@@ -116,9 +116,9 @@ class Discussion extends React.Component {
             let service = new DiscussionService_1.DiscussionService();
             service
                 .SaveDiscussion(this.state.Discussion)
-                .then(() => {
-                console.log(this.state.Discussion);
-                this.props.DialogClose();
+                .then((discussion) => {
+                console.log(discussion);
+                this.props.NewDiscussionCreated(discussion);
             })
                 .catch(() => {
                 this.setState({
