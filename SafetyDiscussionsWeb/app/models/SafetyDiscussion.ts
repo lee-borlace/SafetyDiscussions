@@ -1,7 +1,7 @@
 ﻿export class SafetyDiscussion {
 
     public Observer?: string;
-    public DiscussionDate?: Date;
+    public DateISO?: Date;
     public DiscussionLocation?: string;
     public DiscussedWith?: string;
     public Subject?: string;

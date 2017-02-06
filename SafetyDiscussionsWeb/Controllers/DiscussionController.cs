@@ -12,7 +12,7 @@ namespace SafetyDiscussionsWeb.Controllers
     {
         [SharePointContextFilter]
         [HttpPut]
-        public int CreateDiscussion([System.Web.Http.FromBody]SafetyDiscussion discussion)
+        public int CreateDiscussion(SafetyDiscussion discussion)
         {
 
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
@@ -26,9 +26,9 @@ namespace SafetyDiscussionsWeb.Controllers
 
                     var newItem = discussionList.AddItem(itemCreateInfo);
 
-                    if (discussion.DiscussionDate.HasValue)
+                    if (discussion.Date.HasValue)
                     {
-                        newItem["DiscussionDate"] = discussion.DiscussionDate;
+                        newItem["DiscussionDate"] = discussion.Date;
                     }
 
                     newItem["DiscussionLocation"] = discussion.DiscussionLocation;

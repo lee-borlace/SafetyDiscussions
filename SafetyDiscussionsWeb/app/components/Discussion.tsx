@@ -136,7 +136,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                         placeholder='Enter date of discussion'
                         strings={DayPickerStrings}
                         onSelectDate={date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null)}
-                        value={this.state.Discussion.DiscussionDate} // This is a required workaround to stop the field from getting cleared out when state updates.
+                        value={this.state.Discussion.DateISO} // This is a required workaround to stop the field from getting cleared out when state updates.
                         />
                 }
                 <TextField
@@ -197,7 +197,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         let valid: boolean = true;
 
         if (
-            !this.state.Discussion.DiscussionDate ||
+            !this.state.Discussion.DateISO ||
             !this.state.Discussion.DiscussionLocation ||
             !this.state.Discussion.Subject ||
             !this.state.Discussion.Outcomes
@@ -277,7 +277,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
             }
 
             if (discussionDate) {
-                updatedDiscussion.DiscussionDate = discussionDate;
+                updatedDiscussion.DateISO = discussionDate;
             }
 
             if (discussionLocation) {
@@ -311,7 +311,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
         return {
             Observer: discussion.Observer,
-            DiscussionDate: discussion.DiscussionDate,
+            DateISO: discussion.DateISO,
             DiscussionLocation: discussion.DiscussionLocation,
             DiscussedWith: discussion.DiscussedWith,
             Subject: discussion.Subject,

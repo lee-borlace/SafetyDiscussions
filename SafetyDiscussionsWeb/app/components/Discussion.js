@@ -84,7 +84,7 @@ class Discussion extends React.Component {
                     React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Sorry, there was a problem saving your data. Please refresh the page and try again."), 
                     React.createElement("br", null)), 
             !this.state.IsSaving &&
-                React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DiscussionDate}), 
+                React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DateISO}), 
             React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving}), 
@@ -96,7 +96,7 @@ class Discussion extends React.Component {
     }
     Validate() {
         let valid = true;
-        if (!this.state.Discussion.DiscussionDate ||
+        if (!this.state.Discussion.DateISO ||
             !this.state.Discussion.DiscussionLocation ||
             !this.state.Discussion.Subject ||
             !this.state.Discussion.Outcomes) {
@@ -147,7 +147,7 @@ class Discussion extends React.Component {
                 updatedDiscussion.Observer = observer;
             }
             if (discussionDate) {
-                updatedDiscussion.DiscussionDate = discussionDate;
+                updatedDiscussion.DateISO = discussionDate;
             }
             if (discussionLocation) {
                 updatedDiscussion.DiscussionLocation = discussionLocation;
@@ -170,7 +170,7 @@ class Discussion extends React.Component {
     CloneDiscussion(discussion) {
         return {
             Observer: discussion.Observer,
-            DiscussionDate: discussion.DiscussionDate,
+            DateISO: discussion.DateISO,
             DiscussionLocation: discussion.DiscussionLocation,
             DiscussedWith: discussion.DiscussedWith,
             Subject: discussion.Subject,

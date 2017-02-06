@@ -267,7 +267,6 @@
     <TypeScriptCompile Include="app\appRoot.tsx" />
     <TypeScriptCompile Include="app\components\Discussion.tsx" />
     <TypeScriptCompile Include="app\components\MyDiscussions.tsx" />
-    <TypeScriptCompile Include="app\hacky-typings\index.d.ts" />
     <TypeScriptCompile Include="app\models\SafetyDiscussion.ts" />
   </ItemGroup>
   <ItemGroup>

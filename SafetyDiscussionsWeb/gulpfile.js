@@ -56,26 +56,6 @@ gulp.task('copy-from-node-module-files', function () {
 
 
 
-// *********************** Copy several misc typeing files to node_modules. This is needed due to the odd missing typing from packages ***********************
-var DO_COPY_TO_NODE_MODULES = true;
-
-gulp.task('copy-to-node-module-files', function () {
-
-    if (DO_COPY_TO_NODE_MODULES) {
-
-        // Fabric core CSS
-        gulp.src([
-            'app/hacky-typings/index.d.ts'
-        ])
-        .pipe(gulp.dest('node_modules/redux-thunk', { overwrite: true }));
-
-    }
-});
-
-
-
-
-
 
 // *********************** Package the relevant files via webpack ***********************
 var DO_WEBPACK = true;

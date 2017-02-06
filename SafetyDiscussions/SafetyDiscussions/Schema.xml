@@ -37,7 +37,7 @@
         <RowLimit Paged="TRUE">30</RowLimit>
         <ViewFields>
           
-        <FieldRef Name="LinkTitle"></FieldRef><FieldRef Name="Observer" /><FieldRef Name="DiscussionDate" /><FieldRef Name="DiscussionLocation" /><FieldRef Name="DiscussedWith" /><FieldRef Name="Subject" /><FieldRef Name="Outcomes" /></ViewFields>
+        <FieldRef Name="ID" /><FieldRef Name="Edit" /><FieldRef Name="Observer" /><FieldRef Name="DiscussionDate" /><FieldRef Name="DiscussionLocation" /><FieldRef Name="DiscussedWith" /><FieldRef Name="Subject" /><FieldRef Name="Outcomes" /><FieldRef Name="Author" /><FieldRef Name="Created" /></ViewFields>
         <Query>
           <OrderBy>
             

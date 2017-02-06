@@ -11,10 +11,9 @@ namespace SafetyDiscussionsWeb.Models
     {
         public string Observer { get; set; }
 
-        [JsonProperty("DiscussionDate")]
-        public string DiscussionDateISOString { get; set; }
+        public string DateISO { get; set; }
 
-        public DateTime? DiscussionDate
+        public DateTime? Date
         {
             get
             {
@@ -22,7 +21,7 @@ namespace SafetyDiscussionsWeb.Models
 
                 DateTime parsedDate;
 
-                if (DateTime.TryParse(DiscussionDateISOString, out parsedDate))
+                if (DateTime.TryParse(DateISO, out parsedDate))
                 {
                     retVal = parsedDate;
                 }
