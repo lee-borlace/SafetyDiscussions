@@ -13,7 +13,12 @@ export class DiscussionListItem extends React.Component<IDiscussionListItemProps
     render() {
 
         return (
-            <div>{this.props.Discussion.Subject}</div>
+            <div>
+                {this.props.Discussion.DateISO}<br/>
+                {this.props.Discussion.DiscussionLocation}<br />
+                {this.props.Discussion.Subject}<br />
+                {this.props.Discussion.Outcomes}<br />
+            </div>
         );
     }
 }

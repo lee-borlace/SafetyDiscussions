@@ -78,5 +78,4 @@ Some Node modules can have an issue with the possibly older version of Node whic
   - Doesn't let you disable it, so we hide it where we would usually disable it.
 
   # TODO
-  - Date offset being passed from TS to .NET
-  - 
+  -  

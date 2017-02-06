@@ -2454,7 +2454,15 @@
 	const React = __webpack_require__(1);
 	class DiscussionListItem extends React.Component {
 	    render() {
-	        return (React.createElement("div", null, this.props.Discussion.Subject));
+	        return (React.createElement("div", null,
+	            this.props.Discussion.DateISO,
+	            React.createElement("br", null),
+	            this.props.Discussion.DiscussionLocation,
+	            React.createElement("br", null),
+	            this.props.Discussion.Subject,
+	            React.createElement("br", null),
+	            this.props.Discussion.Outcomes,
+	            React.createElement("br", null)));
 	    }
 	}
 	exports.DiscussionListItem = DiscussionListItem;

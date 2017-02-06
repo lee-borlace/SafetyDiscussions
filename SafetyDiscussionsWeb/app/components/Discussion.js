@@ -117,6 +117,7 @@ class Discussion extends React.Component {
             service
                 .SaveDiscussion(this.state.Discussion)
                 .then((discussion) => {
+                console.log("AddDiscussion.Save()");
                 console.log(discussion);
                 this.props.NewDiscussionCreated(discussion);
             })
