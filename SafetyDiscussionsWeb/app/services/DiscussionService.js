@@ -3,7 +3,7 @@ const fetch = require('isomorphic-fetch');
 const es6_promise_1 = require('es6-promise');
 class DiscussionService {
     SaveDiscussion(discussion) {
-        return fetch("api/discussions/create", {
+        return fetch("discussion/creatediscussion" + window.location.search, {
             credentials: 'include',
             method: 'put',
             body: JSON.stringify(discussion),

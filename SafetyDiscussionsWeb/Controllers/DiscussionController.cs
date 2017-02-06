@@ -3,24 +3,21 @@ using SafetyDiscussionsWeb.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web;
-using System.Web.Http;
+using System.Web.Mvc;
 
-namespace SafetyDiscussionsWeb.Api
+namespace SafetyDiscussionsWeb.Controllers
 {
-    public class DiscussionController : ApiController
+    public class DiscussionController : Controller
     {
         [SharePointContextFilter]
-        [Route("api/discussions/create")]
         [HttpPut]
-        public int CreateDiscussion([FromBody]SafetyDiscussion discussion)
+        public int CreateDiscussion([System.Web.Http.FromBody]SafetyDiscussion discussion)
         {
 
-            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext.Current);
+            var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
 
-            using (var clientContext = spContext.CreateUserClientContextForSPHost())
+            using (var clientContext = spContext.CreateUserClientContextForSPAppWeb())
             {
                 if (clientContext != null)
                 {
