@@ -71,29 +71,74 @@ namespace SafetyDiscussionsWeb.Controllers
                 {
                     var discussionList = clientContext.Web.Lists.GetByTitle("Safety Discussions");
 
-                    // TODO : My items only.
-                    var camlQuery = CamlQuery.CreateAllItemsQuery();
 
-                    var items = discussionList.GetItems(camlQuery);
-                    clientContext.Load(items);
+                    var queryText = @"
+                        <View>
+                            <Query>
+                                <Where>
+                                    <Eq>
+                                        <FieldRef Name='Author' LookupId='True'/>
+                                        <Value Type='Lookup'>
+                                            <UserID/>
+                                        </Value>
+                                    </Eq>
+                                </Where>
+                            </Query>
+                            <ViewFields>
+                                <FieldRef Name=""Observer"" />
+                                <FieldRef Name=""DiscussionLocation"" />
+                                <FieldRef Name=""DiscussedWith"" />
+                                <FieldRef Name=""Subject"" />
+                                <FieldRef Name=""Outcomes"" />
+                                <FieldRef Name=""Id"" />
+                                <FieldRef Name=""DiscussionDate"" />
+                            </ViewFields>
+                            
+                        </View>";
+
+                    var query = new CamlQuery();
+                    query.ViewXml = queryText;
+
+                    var itemCollection = discussionList.GetItems(query);
+                    clientContext.Load(
+                        itemCollection, 
+                        items => items.Include(
+                            i => i["Observer"],
+                            i => i["DiscussionLocation"],
+                            i => i["DiscussedWith"],
+                            i => i["Subject"],
+                            i => i["Outcomes"],
+                            i => i["DiscussionDate"],
+                            i => i.Id
+                        ));
+
                     clientContext.ExecuteQuery();
 
-                    foreach (ListItem item in items)
+                    foreach (ListItem item in itemCollection)
                     {
-                        discussions.Add(new SafetyDiscussion {
-                            Observer = item["Observer"].ToString(),
-                            DiscussionLocation = item["DiscussionLocation"].ToString(),
-                            DiscussedWith = item["DiscussedWith"].ToString(),
-                            Subject = item["Subject"].ToString(),
-                            Outcomes = item["Outcomes"].ToString(),
-                            Id = item.Id
-                        });
+                        discussions.Add(DiscussionFromListItem(item));
                     }
                 }
 
                 return GetJsonResult(discussions);
             }
         }
+
+
+        private SafetyDiscussion DiscussionFromListItem(ListItem item)
+        {
+            return new SafetyDiscussion
+            {
+                Observer = item["Observer"]?.ToString(),
+                DiscussionLocation = item["DiscussionLocation"]?.ToString(),
+                DiscussedWith = item["DiscussedWith"]?.ToString(),
+                Subject = item["Subject"]?.ToString(),
+                Outcomes = item["Outcomes"]?.ToString(),
+                DateISO = item["DiscussionDate"] != null? ((DateTime)(item["DiscussionDate"])).ToUniversalTime().ToString("o", System.Globalization.CultureInfo.InvariantCulture) : null,
+                Id = item.Id
+            };
+        }
+
 
         private ContentResult GetJsonResult(object data)
         {
