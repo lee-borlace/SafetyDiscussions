@@ -19,17 +19,21 @@ class SafetyDiscussions extends React.Component {
     }
     // Main renderer.
     render() {
-        return (React.createElement("div", null, 
-            this.state.IsError &&
-                React.createElement("div", null, 
-                    React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Sorry, there was a problem loading your data. Please refresh the page and try again."), 
-                    React.createElement("br", null)), 
-            this.state.IsLoading &&
-                React.createElement(Spinner_1.Spinner, {label: 'Loading discussions...'}), 
-            !this.state.IsLoading && !this.state.IsError &&
-                React.createElement("div", null, 
-                    React.createElement(MyDiscussions_1.MyDiscussions, {MyDiscussions: this.state.MyDiscussions}), 
-                    React.createElement(AddDiscussion_1.AddDiscussion, {NewDiscussionCreated: this.NewDiscussionCreated.bind(this)}))));
+        return (React.createElement("div", {className: "ms-Grid"}, 
+            React.createElement("div", {className: "ms-Grid-row"}, 
+                React.createElement("div", {className: "ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg4"}, 
+                    this.state.IsError &&
+                        React.createElement("div", null, 
+                            React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Sorry, there was a problem loading your data. Please refresh the page and try again."), 
+                            React.createElement("br", null)), 
+                    this.state.IsLoading &&
+                        React.createElement(Spinner_1.Spinner, {label: 'Loading discussions...'}), 
+                    !this.state.IsLoading && !this.state.IsError &&
+                        React.createElement("div", null, 
+                            React.createElement(AddDiscussion_1.AddDiscussion, {NewDiscussionCreated: this.NewDiscussionCreated.bind(this)}), 
+                            React.createElement(MyDiscussions_1.MyDiscussions, {MyDiscussions: this.state.MyDiscussions})))
+            )
+        ));
     }
     // New discussion has been created. Re-load discussions.
     NewDiscussionCreated(discussion) {

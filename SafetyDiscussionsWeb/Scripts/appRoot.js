@@ -45,11 +45,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var React = __webpack_require__(1);
-	var ReactDOM = __webpack_require__(2);
-	var SafetyDiscussions_1 = __webpack_require__(3);
+	const React = __webpack_require__(1);
+	const ReactDOM = __webpack_require__(2);
+	const SafetyDiscussions_1 = __webpack_require__(3);
 	// Polyfill Promise.
-	var es6_promise_1 = __webpack_require__(104);
+	const es6_promise_1 = __webpack_require__(104);
 	es6_promise_1.polyfill();
 	ReactDOM.render(React.createElement(SafetyDiscussions_1.SafetyDiscussions, null), document.getElementById('reactRoot'));
 
@@ -71,75 +71,68 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var MyDiscussions_1 = __webpack_require__(4);
-	var AddDiscussion_1 = __webpack_require__(24);
-	var Spinner_1 = __webpack_require__(95);
-	var MessageBar_1 = __webpack_require__(90);
-	var DiscussionService_1 = __webpack_require__(101);
-	var SafetyDiscussions = (function (_super) {
-	    __extends(SafetyDiscussions, _super);
-	    function SafetyDiscussions() {
-	        var _this = _super.call(this) || this;
-	        _this.state = {
+	const React = __webpack_require__(1);
+	const MyDiscussions_1 = __webpack_require__(4);
+	const AddDiscussion_1 = __webpack_require__(35);
+	const Spinner_1 = __webpack_require__(95);
+	const MessageBar_1 = __webpack_require__(23);
+	const DiscussionService_1 = __webpack_require__(101);
+	class SafetyDiscussions extends React.Component {
+	    constructor() {
+	        super();
+	        this.state = {
 	            MyDiscussions: [],
 	            IsLoading: false,
 	            IsError: false
 	        };
-	        return _this;
 	    }
-	    SafetyDiscussions.prototype.componentDidMount = function () {
+	    componentDidMount() {
 	        this.LoadDiscussions();
-	    };
+	    }
 	    // Main renderer.
-	    SafetyDiscussions.prototype.render = function () {
-	        return (React.createElement("div", null,
-	            this.state.IsError &&
-	                React.createElement("div", null,
-	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Sorry, there was a problem loading your data. Please refresh the page and try again."),
-	                    React.createElement("br", null)),
-	            this.state.IsLoading &&
-	                React.createElement(Spinner_1.Spinner, { label: 'Loading discussions...' }),
-	            !this.state.IsLoading && !this.state.IsError &&
-	                React.createElement("div", null,
-	                    React.createElement(MyDiscussions_1.MyDiscussions, { MyDiscussions: this.state.MyDiscussions }),
-	                    React.createElement(AddDiscussion_1.AddDiscussion, { NewDiscussionCreated: this.NewDiscussionCreated.bind(this) }))));
-	    };
+	    render() {
+	        return (React.createElement("div", { className: "ms-Grid" },
+	            React.createElement("div", { className: "ms-Grid-row" },
+	                React.createElement("div", { className: "ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg4" },
+	                    this.state.IsError &&
+	                        React.createElement("div", null,
+	                            React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Sorry, there was a problem loading your data. Please refresh the page and try again."),
+	                            React.createElement("br", null)),
+	                    this.state.IsLoading &&
+	                        React.createElement(Spinner_1.Spinner, { label: 'Loading discussions...' }),
+	                    !this.state.IsLoading && !this.state.IsError &&
+	                        React.createElement("div", null,
+	                            React.createElement(AddDiscussion_1.AddDiscussion, { NewDiscussionCreated: this.NewDiscussionCreated.bind(this) }),
+	                            React.createElement(MyDiscussions_1.MyDiscussions, { MyDiscussions: this.state.MyDiscussions }))))));
+	    }
 	    // New discussion has been created. Re-load discussions.
-	    SafetyDiscussions.prototype.NewDiscussionCreated = function (discussion) {
+	    NewDiscussionCreated(discussion) {
 	        console.log("SafetyDiscussions.newDiscussionCreated()");
 	        // Re-load discussions.
 	        this.LoadDiscussions();
-	    };
-	    SafetyDiscussions.prototype.LoadDiscussions = function () {
-	        var _this = this;
+	    }
+	    LoadDiscussions() {
 	        // Load existing discussions.
 	        this.setState({ IsLoading: true });
-	        var service = new DiscussionService_1.DiscussionService();
+	        let service = new DiscussionService_1.DiscussionService();
 	        service
 	            .GetMyDiscussions()
-	            .then(function (discussions) {
-	            _this.setState({
+	            .then((discussions) => {
+	            this.setState({
 	                IsError: false,
 	                IsLoading: false,
 	                MyDiscussions: discussions
 	            });
 	        })
-	            .catch(function (error) {
+	            .catch((error) => {
 	            console.log(error);
-	            _this.setState({
+	            this.setState({
 	                IsError: true,
 	                IsLoading: false
 	            });
 	        });
-	    };
-	    return SafetyDiscussions;
-	}(React.Component));
+	    }
+	}
 	exports.SafetyDiscussions = SafetyDiscussions;
 
 
@@ -148,26 +141,19 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var List_1 = __webpack_require__(5);
-	var DiscussionListItem_1 = __webpack_require__(23);
-	var MyDiscussions = (function (_super) {
-	    __extends(MyDiscussions, _super);
-	    function MyDiscussions() {
-	        return _super !== null && _super.apply(this, arguments) || this;
+	const React = __webpack_require__(1);
+	const List_1 = __webpack_require__(5);
+	const MessageBar_1 = __webpack_require__(23);
+	const DiscussionListItem_1 = __webpack_require__(34);
+	class MyDiscussions extends React.Component {
+	    render() {
+	        return (React.createElement("div", null,
+	            this.props.MyDiscussions.length <= 0 &&
+	                React.createElement(MessageBar_1.MessageBar, null, "No discussions to show here yet."),
+	            this.props.MyDiscussions.length > 0 &&
+	                React.createElement(List_1.List, { items: this.props.MyDiscussions, onRenderCell: (item, index) => (React.createElement(DiscussionListItem_1.DiscussionListItem, { Discussion: item })) })));
 	    }
-	    MyDiscussions.prototype.render = function () {
-	        return (React.createElement(List_1.List, { items: this.props.MyDiscussions, onRenderCell: function (item, index) {
-	                return (React.createElement(DiscussionListItem_1.DiscussionListItem, { Discussion: item }));
-	            } }));
-	    };
-	    return MyDiscussions;
-	}(React.Component));
+	}
 	exports.MyDiscussions = MyDiscussions;
 
 
@@ -2501,31 +2487,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var DiscussionListItem = (function (_super) {
-	    __extends(DiscussionListItem, _super);
-	    function DiscussionListItem() {
-	        return _super !== null && _super.apply(this, arguments) || this;
-	    }
-	    DiscussionListItem.prototype.render = function () {
-	        return (React.createElement("div", { className: "sd-discussion" },
-	            React.createElement("div", { className: "ms-font-l" }, this.props.Discussion.Subject),
-	            React.createElement("div", { className: "ms-font-m" }, this.GetFormattedDate(this.props.Discussion.DateISO)),
-	            React.createElement("div", { className: "ms-font-m" }, this.props.Discussion.DiscussionLocation)));
-	    };
-	    DiscussionListItem.prototype.GetFormattedDate = function (date) {
-	        // TODO : Why do we need to do this?
-	        var date = new Date(date);
-	        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
-	    };
-	    return DiscussionListItem;
-	}(React.Component));
-	exports.DiscussionListItem = DiscussionListItem;
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(24));
+	
 
 
 /***/ },
@@ -2533,46 +2499,12 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var Button_1 = __webpack_require__(25);
-	var Dialog_1 = __webpack_require__(31);
-	var Discussion_1 = __webpack_require__(56);
-	var AddDiscussion = (function (_super) {
-	    __extends(AddDiscussion, _super);
-	    function AddDiscussion() {
-	        var _this = _super.call(this) || this;
-	        _this.state = {
-	            ShowDialog: false,
-	        };
-	        return _this;
-	    }
-	    // Main renderer.
-	    AddDiscussion.prototype.render = function () {
-	        return (React.createElement("div", null,
-	            React.createElement(Button_1.Button, { description: 'Opens the dialog to create a discussion', onClick: this.showDialog.bind(this) }, "Add Safety Discussion"),
-	            React.createElement(Dialog_1.Dialog, { isOpen: this.state.ShowDialog, type: Dialog_1.DialogType.close, onDismiss: this.closeDialog.bind(this), title: 'Add Discussion', subText: 'Please enter the details for the safety discussion.', isBlocking: false, closeButtonAriaLabel: 'Close' },
-	                React.createElement(Discussion_1.Discussion, { FormMode: Discussion_1.FormMode.New, Discussion: null, DialogClose: this.closeDialog.bind(this), NewDiscussionCreated: this.newDiscussionCreated.bind(this) }))));
-	    };
-	    // New discussion has been created. Pass up to parent.
-	    AddDiscussion.prototype.newDiscussionCreated = function (discussion) {
-	        console.log("AddDiscussion.newDiscussionCreated()");
-	        this.setState({ ShowDialog: false });
-	        this.props.NewDiscussionCreated(discussion);
-	    };
-	    AddDiscussion.prototype.showDialog = function () {
-	        this.setState({ ShowDialog: true });
-	    };
-	    AddDiscussion.prototype.closeDialog = function () {
-	        this.setState({ ShowDialog: false });
-	    };
-	    return AddDiscussion;
-	}(React.Component));
-	exports.AddDiscussion = AddDiscussion;
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(25));
+	__export(__webpack_require__(33));
+	
 
 
 /***/ },
@@ -2580,10 +2512,103 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(26));
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var Button_1 = __webpack_require__(26);
+	__webpack_require__(32);
+	var css_1 = __webpack_require__(15);
+	var MessageBar_Props_1 = __webpack_require__(33);
+	var object_1 = __webpack_require__(18);
+	var MessageBar = (function (_super) {
+	    __extends(MessageBar, _super);
+	    function MessageBar(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.ICON_MAP = (_a = {},
+	            _a[MessageBar_Props_1.MessageBarType.info] = 'Info',
+	            _a[MessageBar_Props_1.MessageBarType.warning] = 'Info',
+	            _a[MessageBar_Props_1.MessageBarType.error] = 'ErrorBadge',
+	            _a[MessageBar_Props_1.MessageBarType.blocked] = 'Blocked',
+	            _a[MessageBar_Props_1.MessageBarType.remove] = 'Blocked',
+	            _a[MessageBar_Props_1.MessageBarType.severeWarning] = 'Warning',
+	            _a[MessageBar_Props_1.MessageBarType.success] = 'Completed',
+	            _a);
+	        _this.state = {
+	            labelId: object_1.getId('MessageBar')
+	        };
+	        return _this;
+	        var _a;
+	    }
+	    MessageBar.prototype.render = function () {
+	        var isMultiline = this.props.isMultiline;
+	        return isMultiline ? this._renderMultiLine() : this._renderSingleLine();
+	    };
+	    MessageBar.prototype._getActionsDiv = function () {
+	        if (this.props.actions) {
+	            return this.props.isMultiline ?
+	                React.createElement("div", { className: 'ms-MessageBar-actions' },
+	                    " ",
+	                    this.props.actions,
+	                    " ") :
+	                React.createElement("div", { className: 'ms-MessageBar-actionsOneline' },
+	                    this._getDismissDiv(),
+	                    this.props.actions);
+	        }
+	        return null;
+	    };
+	    MessageBar.prototype._getClassName = function () {
+	        return css_1.css(this.props.className, 'ms-MessageBar', {
+	            'ms-MessageBar': this.props.messageBarType === MessageBar_Props_1.MessageBarType.info,
+	            'ms-MessageBar--error': this.props.messageBarType === MessageBar_Props_1.MessageBarType.error,
+	            'ms-MessageBar--blocked': (this.props.messageBarType === MessageBar_Props_1.MessageBarType.blocked) || (this.props.messageBarType === MessageBar_Props_1.MessageBarType.remove),
+	            'ms-MessageBar--severeWarning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.severeWarning,
+	            'ms-MessageBar--success': this.props.messageBarType === MessageBar_Props_1.MessageBarType.success,
+	            'ms-MessageBar--warning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.warning
+	        });
+	    };
+	    MessageBar.prototype._getDismissDiv = function () {
+	        if (this.props.onDismiss != null) {
+	            return React.createElement(Button_1.Button, { disabled: false, className: 'ms-MessageBar-dismissal', buttonType: Button_1.ButtonType.icon, onClick: this.props.onDismiss, icon: 'Cancel', ariaLabel: this.props.dismissButtonAriaLabel });
+	        }
+	        return null;
+	    };
+	    MessageBar.prototype._getIconSpan = function () {
+	        return React.createElement("div", { className: 'ms-MessageBar-icon' },
+	            React.createElement("i", { className: "ms-Icon ms-Icon--" + this.ICON_MAP[this.props.messageBarType] }));
+	    };
+	    MessageBar.prototype._getInnerTextClassName = function () {
+	        return this.props.onDismiss || this.props.actions ? 'ms-MessageBar-innerTextPadding' : 'ms-MessageBar-innerText';
+	    };
+	    MessageBar.prototype._renderMultiLine = function () {
+	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-multiline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
+	            React.createElement("div", { className: 'ms-MessageBar-content' },
+	                this._getIconSpan(),
+	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
+	                    this._getDismissDiv(),
+	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
+	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children)),
+	                    this._getActionsDiv()))));
+	    };
+	    MessageBar.prototype._renderSingleLine = function () {
+	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-singleline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
+	            React.createElement("div", { className: 'ms-MessageBar-content' },
+	                this._getIconSpan(),
+	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
+	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
+	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children))),
+	                this._getActionsDiv())));
+	    };
+	    return MessageBar;
+	}(React.Component));
+	MessageBar.defaultProps = {
+	    messageBarType: MessageBar_Props_1.MessageBarType.info,
+	    onDismiss: null,
+	    isMultiline: true,
+	};
+	exports.MessageBar = MessageBar;
 	
 
 
@@ -2596,12 +2621,24 @@
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
 	__export(__webpack_require__(27));
-	__export(__webpack_require__(28));
 	
 
 
 /***/ },
 /* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(28));
+	__export(__webpack_require__(29));
+	
+
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -2613,11 +2650,11 @@
 	var React = __webpack_require__(1);
 	var css_1 = __webpack_require__(15);
 	var object_1 = __webpack_require__(18);
-	var Button_Props_1 = __webpack_require__(28);
+	var Button_Props_1 = __webpack_require__(29);
 	var object_2 = __webpack_require__(18);
 	var properties_1 = __webpack_require__(21);
 	var BaseComponent_1 = __webpack_require__(9);
-	__webpack_require__(29);
+	__webpack_require__(30);
 	var Button = (function (_super) {
 	    __extends(Button, _super);
 	    function Button(props) {
@@ -2695,7 +2732,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -2719,19 +2756,19 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Button{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border:1px solid " }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";cursor:pointer;display:inline-block;height:32px;min-width:80px;padding:4px 20px 6px}.ms-Button::-moz-focus-inner{border:0}.ms-Button{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-Button:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-Button:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";border-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-Button:hover .ms-Button-label{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-Button:hover{color:#1AEBFF;border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-Button:hover{color:#37006E;border-color:#37006E}}.ms-Button:focus{background-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";outline:1px solid transparent}.ms-Button:focus .ms-Button-label{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}.ms-Button:active{background-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button:active .ms-Button-label{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Button.is-disabled,.ms-Button:disabled{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";cursor:default}.ms-Button.is-disabled .ms-Button-label,.ms-Button:disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Button.is-disabled:focus,.ms-Button.is-disabled:hover,.ms-Button:disabled:focus,.ms-Button:disabled:hover{outline:0}.ms-Button-label{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-weight:600;font-size:14px}.ms-Button-description,.ms-Button-icon{display:none}.ms-Fabric.is-focusVisible .ms-Button:focus{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}.ms-Fabric.is-focusVisible .ms-Button:focus:before{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--primary{background-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--primary .ms-Button-label{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Button--primary:hover{background-color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";border-color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}.ms-Button--primary:hover .ms-Button-label{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Button--primary:focus{background-color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--primary:focus .ms-Button-label{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Button--primary:active{background-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--primary.is-disabled,.ms-Button--primary:disabled{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": "}.ms-Button--primary.is-disabled .ms-Button-label,.ms-Button--primary:disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Fabric.is-focusVisible .ms-Button--primary:focus{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Fabric.is-focusVisible .ms-Button--primary:focus:before{border-color:" }, { "theme": "themeDarker", "defaultValue": "#004578" }, { "rawString": "}.ms-Button--hero{background-color:transparent;border:0;height:auto}.ms-Button--hero .ms-Button-icon{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";display:inline-block;padding-top:5px;font-size:20px;line-height:1}html[dir=ltr] .ms-Button--hero .ms-Button-icon{margin-right:8px}html[dir=rtl] .ms-Button--hero .ms-Button-icon{margin-left:8px}.ms-Button--hero .ms-Button-label{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";font-size:21px;font-weight:100;vertical-align:top}.ms-Button--hero:focus,.ms-Button--hero:hover{background-color:transparent}.ms-Button--hero:focus .ms-Button-icon,.ms-Button--hero:hover .ms-Button-icon{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": "}.ms-Button--hero:focus .ms-Button-label,.ms-Button--hero:hover .ms-Button-label{color:" }, { "theme": "themeDarker", "defaultValue": "#004578" }, { "rawString": "}.ms-Button--hero:active .ms-Button-icon{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--hero:active .ms-Button-label{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--hero.is-disabled .ms-Button-icon,.ms-Button--hero:disabled .ms-Button-icon{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": "}.ms-Button--hero.is-disabled .ms-Button-label,.ms-Button--hero:disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Button--compound{display:block;height:auto;max-width:280px;min-height:72px;padding:20px}.ms-Button--compound .ms-Button-label{display:block;color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";margin-top:-5px}html[dir=ltr] .ms-Button--compound .ms-Button-label{text-align:left}html[dir=rtl] .ms-Button--compound .ms-Button-label{text-align:right}.ms-Button--compound .ms-Button-description{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";display:block;font-size:12px;position:relative;top:3px}html[dir=ltr] .ms-Button--compound .ms-Button-description{text-align:left}html[dir=rtl] .ms-Button--compound .ms-Button-description{text-align:right}.ms-Button--compound:hover .ms-Button-description{color:" }, { "theme": "neutralDark", "defaultValue": "#212121" }, { "rawString": "}.ms-Button--compound:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": "}.ms-Button--compound:focus .ms-Button-label{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-Button--compound:focus .ms-Button-description{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-Button--compound:active{background-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--compound:active .ms-Button-description,.ms-Button--compound:active .ms-Button-label{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Button--compound.is-disabled .ms-Button-description,.ms-Button--compound.is-disabled .ms-Button-label,.ms-Button--compound:disabled .ms-Button-description,.ms-Button--compound:disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Button--compound.is-disabled:active,.ms-Button--compound.is-disabled:focus,.ms-Button--compound:disabled:active,.ms-Button--compound:disabled:focus{border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": "}.ms-Button--compound.is-disabled:active .ms-Button-description,.ms-Button--compound.is-disabled:active .ms-Button-label,.ms-Button--compound.is-disabled:focus .ms-Button-description,.ms-Button--compound.is-disabled:focus .ms-Button-label,.ms-Button--compound:disabled:active .ms-Button-description,.ms-Button--compound:disabled:active .ms-Button-label,.ms-Button--compound:disabled:focus .ms-Button-description,.ms-Button--compound:disabled:focus .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Button--command{background-color:transparent;border:none;height:40px;min-width:0;padding:0 8px}html[dir=ltr] .ms-Button--command{text-align:left}html[dir=rtl] .ms-Button--command{text-align:right}.ms-Button--command .ms-Icon{line-height:40px}.ms-Button--command .ms-Button-label{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";line-height:40px}.ms-Button--command .ms-Button-icon{vertical-align:top;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";display:inline-block;position:relative;font-size:16px}html[dir=ltr] .ms-Button--command .ms-Button-icon{text-align:left}html[dir=rtl] .ms-Button--command .ms-Button-icon{text-align:right}html[dir=ltr] .ms-Button--command .ms-Button-icon{margin-right:8px}html[dir=rtl] .ms-Button--command .ms-Button-icon{margin-left:8px}.ms-Button--command .ms-Button-label{font-weight:400}.ms-Button--command:focus,.ms-Button--command:hover{background-color:transparent}.ms-Button--command:focus .ms-Button-icon,.ms-Button--command:focus .ms-Button-label,.ms-Button--command:hover .ms-Button-icon,.ms-Button--command:hover .ms-Button-label{color:" }, { "theme": "themeDarker", "defaultValue": "#004578" }, { "rawString": "}.ms-Button--command:active .ms-Button-icon,.ms-Button--command:active .ms-Button-label{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Button--command.is-disabled .ms-Button-icon,.ms-Button--command:disabled .ms-Button-icon{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": "}.ms-Button--command.is-disabled .ms-Button-label,.ms-Button--command:disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-Button--icon{background-color:transparent;color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";padding:0;min-width:auto;height:auto;border:0}.ms-Button--icon::-moz-focus-inner{border:0}.ms-Button--icon{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-Button--icon:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-Button--icon:active,.ms-Button--icon:hover{background-color:transparent;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-Button--icon:focus{background-color:transparent}.ms-Button--icon .ms-Icon{font-size:16px;padding:8px}.ms-Button--icon .ms-Button-icon{display:inline}.ms-Button--icon.is-disabled,.ms-Button--icon:disabled{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";background-color:transparent}@media screen and (-ms-high-contrast:active){.ms-Button--icon{color:" }, { "theme": "yellowLight", "defaultValue": "#fff100" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Button--icon{color:" }, { "theme": "blueMid", "defaultValue": "#00188f" }, { "rawString": "}}.ms-Button--primary.disabled{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-Button--primary.disabled .ms-Button-label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}html[dir=ltr] .ms-Button+.ms-Button{margin-left:6px}html[dir=rtl] .ms-Button+.ms-Button{margin-right:6px}html[dir=ltr] .ms-Button--command+.ms-Button--command{margin-left:14px}html[dir=rtl] .ms-Button--command+.ms-Button--command{margin-right:14px}a.ms-Button{text-decoration:none;text-align:center}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {/**
@@ -2972,35 +3009,139 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 31 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(32));
-	var index_1 = __webpack_require__(32);
-	exports.default = index_1.Dialog;
-	
-
-
-/***/ },
 /* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(33));
-	__export(__webpack_require__(50));
-	__export(__webpack_require__(37));
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-MessageBar{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;background-color:" }, { "theme": "infoBackground", "defaultValue": "#f4f4f4" }, { "rawString": ";color:" }, { "theme": "infoText", "defaultValue": "#333333" }, { "rawString": ";width:100%;box-sizing:border-box;display:-webkit-box;display:-ms-flexbox;display:flex;position:relative}.ms-MessageBar .ms-MessageBar-icon{color:" }, { "theme": "info", "defaultValue": "#767676" }, { "rawString": "}html[dir=ltr] .ms-MessageBar .ms-MessageBar-icon{padding-right:8px}html[dir=rtl] .ms-MessageBar .ms-MessageBar-icon{padding-left:8px}.ms-MessageBar .ms-Link{font-size:12px}.ms-MessageBar-icon,.ms-MessageBar-text{display:table-cell;vertical-align:top}.ms-MessageBar-icon{font-size:16px;min-width:16px;min-height:16px;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar-text{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;min-width:0;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar.ms-MessageBar--warning{background-color:" }, { "theme": "warningBackground", "defaultValue": "#fff4ce" }, { "rawString": ";color:" }, { "theme": "warningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning{background-color:" }, { "theme": "severeWarningBackground", "defaultValue": "#fed9cc" }, { "rawString": ";color:" }, { "theme": "severeWarningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning .ms-MessageBar-icon{color:" }, { "theme": "severeWarning", "defaultValue": "#d83b01" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success{background-color:" }, { "theme": "successBackground", "defaultValue": "#dff6dd" }, { "rawString": ";color:" }, { "theme": "successText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success .ms-MessageBar-icon{color:" }, { "theme": "green", "defaultValue": "#107c10" }, { "rawString": "}.ms-MessageBar-content{padding:16px;display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;box-sizing:border-box}.ms-MessageBar-actionables{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;width:100%;min-width:0}.ms-MessageBar-actionables>.ms-MessageBar-dismissal{right:0;top:0;position:absolute!important}.ms-MessageBar-actions,.ms-MessageBar-actionsOneline{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ms-MessageBar-actionsOneline{position:relative}.ms-MessageBar-dismissal{min-width:0}.ms-MessageBar-dismissal::-moz-focus-inner{border:0}.ms-MessageBar-dismissal{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-MessageBar-dismissal:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}html[dir=ltr] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-right:-8px}html[dir=rtl] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-left:-8px}.ms-MessageBar+.ms-MessageBar{margin-bottom:6px}html[dir=ltr] .ms-MessageBar-innerTextPadding{padding-right:24px}html[dir=rtl] .ms-MessageBar-innerTextPadding{padding-left:24px}html[dir=ltr] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=ltr] .ms-MessageBar-innerTextPadding span{padding-right:4px}html[dir=rtl] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=rtl] .ms-MessageBar-innerTextPadding span{padding-left:4px}.ms-MessageBar-multiline>.ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-icon{-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerText,.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerTextPadding{max-height:1.3em;line-height:1.3em;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap}.ms-MessageBar-singleline .ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.ms-MessageBar .ms-Icon--Cancel{font-size:14px}" }]);
+	/* tslint:enable */ 
 	
 
 
 /***/ },
 /* 33 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var MessageBarType;
+	(function (MessageBarType) {
+	    /** Info styled MessageBar */
+	    MessageBarType[MessageBarType["info"] = 0] = "info";
+	    /** Error styled MessageBar */
+	    MessageBarType[MessageBarType["error"] = 1] = "error";
+	    /** Blocked styled MessageBar */
+	    MessageBarType[MessageBarType["blocked"] = 2] = "blocked";
+	    /** SevereWarning styled MessageBar */
+	    MessageBarType[MessageBarType["severeWarning"] = 3] = "severeWarning";
+	    /** Success styled MessageBar */
+	    MessageBarType[MessageBarType["success"] = 4] = "success";
+	    /** Warning styled MessageBar */
+	    MessageBarType[MessageBarType["warning"] = 5] = "warning";
+	    /**
+	     * @deprecated
+	     * Deprecated at v0.48.0, to be removed at >= v1.0.0. Use 'blocked' instead.
+	     */
+	    MessageBarType[MessageBarType["remove"] = 6] = "remove";
+	})(MessageBarType = exports.MessageBarType || (exports.MessageBarType = {}));
+	
+
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	const React = __webpack_require__(1);
+	class DiscussionListItem extends React.Component {
+	    render() {
+	        return (React.createElement("div", { className: "sd-discussion" },
+	            React.createElement("div", { className: "ms-bgColor-neutralLighterAlt" },
+	                React.createElement("div", { className: "ms-font-l ms-fontWeight-semibold" }, this.props.Discussion.Subject),
+	                React.createElement("div", { className: "ms-font-m" }, this.GetFormattedDate(this.props.Discussion.DateISO)),
+	                React.createElement("i", { className: "ms-Icon ms-Icon--POI", "aria-hidden": "true" }),
+	                " ",
+	                React.createElement("span", { className: "ms-font-m" }, this.props.Discussion.DiscussionLocation))));
+	    }
+	    GetFormattedDate(date) {
+	        // TODO : Why do we need to do this?
+	        var date = new Date(date);
+	        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+	    }
+	}
+	exports.DiscussionListItem = DiscussionListItem;
+
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	const React = __webpack_require__(1);
+	const Button_1 = __webpack_require__(26);
+	const Dialog_1 = __webpack_require__(36);
+	const Discussion_1 = __webpack_require__(61);
+	class AddDiscussion extends React.Component {
+	    constructor() {
+	        super();
+	        this.state = {
+	            ShowDialog: false,
+	        };
+	    }
+	    // Main renderer.
+	    render() {
+	        return (React.createElement("div", { className: "sd-addDiscussion" },
+	            React.createElement(Button_1.Button, { description: 'Opens the dialog to create a discussion', onClick: this.showDialog.bind(this), buttonType: Button_1.ButtonType.hero, icon: 'Add' }, "Add Safety Discussion"),
+	            React.createElement(Dialog_1.Dialog, { isOpen: this.state.ShowDialog, type: Dialog_1.DialogType.close, onDismiss: this.closeDialog.bind(this), title: 'Add Discussion', subText: 'Please enter the details for the safety discussion.', isBlocking: false, closeButtonAriaLabel: 'Close' },
+	                React.createElement(Discussion_1.Discussion, { FormMode: Discussion_1.FormMode.New, Discussion: null, DialogClose: this.closeDialog.bind(this), NewDiscussionCreated: this.newDiscussionCreated.bind(this) }))));
+	    }
+	    // New discussion has been created. Pass up to parent.
+	    newDiscussionCreated(discussion) {
+	        console.log("AddDiscussion.newDiscussionCreated()");
+	        this.setState({ ShowDialog: false });
+	        this.props.NewDiscussionCreated(discussion);
+	    }
+	    showDialog() {
+	        this.setState({ ShowDialog: true });
+	    }
+	    closeDialog() {
+	        this.setState({ ShowDialog: false });
+	    }
+	}
+	exports.AddDiscussion = AddDiscussion;
+
+
+/***/ },
+/* 36 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(37));
+	var index_1 = __webpack_require__(37);
+	exports.default = index_1.Dialog;
+	
+
+
+/***/ },
+/* 37 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(38));
+	__export(__webpack_require__(55));
+	__export(__webpack_require__(42));
+	
+
+
+/***/ },
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3016,18 +3157,18 @@
 	    return c > 3 && r && Object.defineProperty(target, key, r), r;
 	};
 	var React = __webpack_require__(1);
-	var index_1 = __webpack_require__(34);
-	var Dialog_Props_1 = __webpack_require__(37);
-	var Overlay_1 = __webpack_require__(38);
-	var Layer_1 = __webpack_require__(42);
-	var Button_1 = __webpack_require__(25);
-	var DialogFooter_1 = __webpack_require__(50);
+	var index_1 = __webpack_require__(39);
+	var Dialog_Props_1 = __webpack_require__(42);
+	var Overlay_1 = __webpack_require__(43);
+	var Layer_1 = __webpack_require__(47);
+	var Button_1 = __webpack_require__(26);
+	var DialogFooter_1 = __webpack_require__(55);
 	var css_1 = __webpack_require__(15);
-	var index_2 = __webpack_require__(52);
-	var withResponsiveMode_1 = __webpack_require__(54);
+	var index_2 = __webpack_require__(57);
+	var withResponsiveMode_1 = __webpack_require__(59);
 	var object_1 = __webpack_require__(18);
 	var BaseComponent_1 = __webpack_require__(9);
-	__webpack_require__(51);
+	__webpack_require__(56);
 	var Dialog = (function (_super) {
 	    __extends(Dialog, _super);
 	    function Dialog(props) {
@@ -3161,19 +3302,19 @@
 
 
 /***/ },
-/* 34 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(35));
+	__export(__webpack_require__(40));
 	
 
 
 /***/ },
-/* 35 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3198,7 +3339,7 @@
 	};
 	var React = __webpack_require__(1);
 	var Utilities_1 = __webpack_require__(8);
-	var focus_1 = __webpack_require__(36);
+	var focus_1 = __webpack_require__(41);
 	var FocusTrapZone = (function (_super) {
 	    __extends(FocusTrapZone, _super);
 	    function FocusTrapZone() {
@@ -3287,7 +3428,7 @@
 
 
 /***/ },
-/* 36 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* tslint:disable:no-string-literal */
@@ -3432,7 +3573,7 @@
 
 
 /***/ },
-/* 37 */
+/* 42 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3449,31 +3590,31 @@
 
 
 /***/ },
-/* 38 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(39));
+	__export(__webpack_require__(44));
 	
 
 
 /***/ },
-/* 39 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(40));
+	__export(__webpack_require__(45));
 	
 
 
 /***/ },
-/* 40 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3493,7 +3634,7 @@
 	var React = __webpack_require__(1);
 	var css_1 = __webpack_require__(15);
 	var properties_1 = __webpack_require__(21);
-	__webpack_require__(41);
+	__webpack_require__(46);
 	var Overlay = (function (_super) {
 	    __extends(Overlay, _super);
 	    function Overlay() {
@@ -3514,44 +3655,44 @@
 
 
 /***/ },
-/* 41 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Overlay{background-color:" }, { "theme": "whiteTranslucent40", "defaultValue": "rgba(255,255,255,.4)" }, { "rawString": ";position:absolute;bottom:0;left:0;right:0;top:0}.ms-Overlay.ms-Overlay--none{visibility:hidden}.ms-Overlay.ms-Overlay--dark{background-color:" }, { "theme": "blackTranslucent40", "defaultValue": "rgba(0,0,0,.4)" }, { "rawString": "}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
-/* 42 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(43));
+	__export(__webpack_require__(48));
 	
 
 
 /***/ },
-/* 43 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(44));
 	__export(__webpack_require__(49));
+	__export(__webpack_require__(54));
 	
 
 
 /***/ },
-/* 44 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3564,9 +3705,9 @@
 	var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(2);
 	/* tslint:enable:no-unused-variable */
-	var Fabric_1 = __webpack_require__(45);
+	var Fabric_1 = __webpack_require__(50);
 	var Utilities_1 = __webpack_require__(8);
-	__webpack_require__(48);
+	__webpack_require__(53);
 	var _layersByHostId = {};
 	var Layer = (function (_super) {
 	    __extends(Layer, _super);
@@ -3671,31 +3812,31 @@
 
 
 /***/ },
-/* 45 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(46));
+	__export(__webpack_require__(51));
 	
 
 
 /***/ },
-/* 46 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(47));
+	__export(__webpack_require__(52));
 	
 
 
 /***/ },
-/* 47 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3781,19 +3922,19 @@
 
 
 /***/ },
-/* 48 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Layer--fixed{position:fixed;z-index:1000000;top:0;left:0;width:100vw;height:100vh;visibility:hidden}.ms-Layer-content{visibility:visible}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
-/* 49 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3812,7 +3953,7 @@
 	};
 	var React = __webpack_require__(1);
 	var Utilities_1 = __webpack_require__(8);
-	var Layer_1 = __webpack_require__(44);
+	var Layer_1 = __webpack_require__(49);
 	var LayerHost = (function (_super) {
 	    __extends(LayerHost, _super);
 	    function LayerHost() {
@@ -3837,7 +3978,7 @@
 
 
 /***/ },
-/* 50 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3847,7 +3988,7 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var React = __webpack_require__(1);
-	__webpack_require__(51);
+	__webpack_require__(56);
 	var DialogFooter = (function (_super) {
 	    __extends(DialogFooter, _super);
 	    function DialogFooter() {
@@ -3869,31 +4010,31 @@
 
 
 /***/ },
-/* 51 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Dialog{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;background-color:transparent;position:fixed;height:100%;width:100%;top:0;display:none}html[dir=ltr] .ms-Dialog{left:0}html[dir=rtl] .ms-Dialog{right:0}.ms-Dialog .ms-Button.ms-Button--compound{display:block}html[dir=ltr] .ms-Dialog .ms-Button.ms-Button--compound{margin-left:0}html[dir=rtl] .ms-Dialog .ms-Button.ms-Button--compound{margin-right:0}@media screen and (-ms-high-contrast:active){.ms-Dialog .ms-Overlay{opacity:0}}.ms-Dialog.is-open{display:block}.ms-Dialog.is-open{display:block;line-height:100vh;text-align:center}.ms-Dialog.is-open::before{vertical-align:middle;display:inline-block;content:\"\";height:100%;width:0}.ms-Dialog.is-animatingOpen{-webkit-animation-duration:367ms;-webkit-animation-name:fadeIn;-webkit-animation-fill-mode:both;animation-duration:367ms;animation-name:fadeIn;animation-fill-mode:both;-webkit-animation-duration:267ms;animation-duration:267ms}.ms-Dialog.is-animatingClose{-webkit-animation-duration:367ms;-webkit-animation-name:fadeOut;-webkit-animation-fill-mode:both;animation-duration:367ms;animation-name:fadeOut;animation-fill-mode:both;-webkit-animation-duration:167ms;animation-duration:167ms}.ms-Dialog-main{vertical-align:middle;display:inline-block;box-shadow:0 0 5px 0 rgba(0,0,0,.4);background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-sizing:border-box;line-height:1.35;margin:auto;width:288px;position:relative;outline:3px solid transparent;max-height:100%;overflow-y:auto}html[dir=ltr] .ms-Dialog-main{text-align:left}html[dir=rtl] .ms-Dialog-main{text-align:right}.ms-Dialog-button.ms-Dialog-button--close{display:none}.ms-Dialog-button.ms-Dialog-button--close .ms-Icon.ms-Icon--Cancel{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:16px}.ms-Dialog-inner{padding:0 28px 20px}.ms-Dialog-header{position:relative;width:100%;box-sizing:border-box}.ms-Dialog-title{margin:0;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:21px;font-weight:100;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";padding:20px 36px 20px 28px}html[dir=rtl] .ms-Dialog-title{padding:20px 28px 20px 36px}.ms-Dialog-topButton{position:absolute;top:0;padding:12px 12px 0 0}html[dir=ltr] .ms-Dialog-topButton{right:0}html[dir=rtl] .ms-Dialog-topButton{left:0}html[dir=rtl] .ms-Dialog-topButton{padding:12px 0 0 12px}.ms-Dialog-content{position:relative;width:100%}.ms-Dialog-content .ms-Button.ms-Button--compound{margin-bottom:20px}.ms-Dialog-content .ms-Button.ms-Button--compound:last-child{margin-bottom:0}.ms-Dialog-subText{margin:0 0 20px 0;padding-top:8px;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-weight:300;line-height:1.5}.ms-Dialog-actions{position:relative;width:100%;min-height:24px;line-height:24px;margin:20px 0 0;font-size:0}.ms-Dialog-actions .ms-Button{line-height:normal}.ms-Dialog-actionsRight{font-size:0}html[dir=ltr] .ms-Dialog-actionsRight{text-align:right}html[dir=rtl] .ms-Dialog-actionsRight{text-align:left}html[dir=ltr] .ms-Dialog-actionsRight{margin-right:-4px}html[dir=rtl] .ms-Dialog-actionsRight{margin-left:-4px}.ms-Dialog-actionsRight .ms-Dialog-action{margin:0 4px}.ms-Dialog.ms-Dialog--close:not(.ms-Dialog--lgHeader) .ms-Dialog-button.ms-Dialog-button--close{display:block}.ms-Dialog.ms-Dialog--multiline .ms-Dialog-title{font-size:28px}.ms-Dialog.ms-Dialog--multiline .ms-Dialog-inner{padding:0 20px 20px}.ms-Dialog.ms-Dialog--lgHeader .ms-Dialog-header{background-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-Dialog.ms-Dialog--lgHeader .ms-Dialog-title{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:28px;font-weight:100;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";padding:26px 28px 28px;margin-bottom:8px}.ms-Dialog.ms-Dialog--lgHeader .ms-Dialog-subText{font-size:14px}@media (min-width:480px){.ms-Dialog-main{width:auto;min-width:288px;max-width:340px}}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
-/* 52 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(53));
+	__export(__webpack_require__(58));
 	
 
 
 /***/ },
-/* 53 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3914,7 +4055,7 @@
 	var KeyCodes_1 = __webpack_require__(12);
 	var BaseComponent_1 = __webpack_require__(9);
 	var Utilities_1 = __webpack_require__(8);
-	var focus_1 = __webpack_require__(36);
+	var focus_1 = __webpack_require__(41);
 	var dom_1 = __webpack_require__(16);
 	/**
 	 * This adds accessibility to Dialog and Panel controls
@@ -3974,7 +4115,7 @@
 
 
 /***/ },
-/* 54 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -3992,7 +4133,7 @@
 	    return t;
 	};
 	var React = __webpack_require__(1);
-	var BaseDecorator_1 = __webpack_require__(55);
+	var BaseDecorator_1 = __webpack_require__(60);
 	var dom_1 = __webpack_require__(16);
 	var ResponsiveMode;
 	(function (ResponsiveMode) {
@@ -4075,7 +4216,7 @@
 
 
 /***/ },
-/* 55 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4115,30 +4256,25 @@
 
 
 /***/ },
-/* 56 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var Button_1 = __webpack_require__(25);
-	var TextField_1 = __webpack_require__(57);
-	var DatePicker_1 = __webpack_require__(65);
-	var Dialog_1 = __webpack_require__(31);
-	var MessageBar_1 = __webpack_require__(90);
-	var Spinner_1 = __webpack_require__(95);
-	var SafetyDiscussion_1 = __webpack_require__(100);
-	var DiscussionService_1 = __webpack_require__(101);
+	const React = __webpack_require__(1);
+	const Button_1 = __webpack_require__(26);
+	const TextField_1 = __webpack_require__(62);
+	const DatePicker_1 = __webpack_require__(70);
+	const Dialog_1 = __webpack_require__(36);
+	const MessageBar_1 = __webpack_require__(23);
+	const Spinner_1 = __webpack_require__(95);
+	const SafetyDiscussion_1 = __webpack_require__(100);
+	const DiscussionService_1 = __webpack_require__(101);
 	var FormMode;
 	(function (FormMode) {
 	    FormMode[FormMode["New"] = 0] = "New";
 	    FormMode[FormMode["Edit"] = 1] = "Edit";
 	})(FormMode = exports.FormMode || (exports.FormMode = {}));
-	var DayPickerStrings = {
+	const DayPickerStrings = {
 	    months: [
 	        'January',
 	        'February',
@@ -4187,21 +4323,18 @@
 	    ],
 	    goToToday: 'Go to today'
 	};
-	var Discussion = (function (_super) {
-	    __extends(Discussion, _super);
-	    function Discussion(props) {
-	        var _this = _super.call(this, props) || this;
-	        _this.state = {
-	            Discussion: _this.props.FormMode == FormMode.Edit ? _this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
+	class Discussion extends React.Component {
+	    constructor(props) {
+	        super(props);
+	        this.state = {
+	            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
 	            IsSaving: false,
 	            IsValid: true,
 	            IsError: false
 	        };
-	        return _this;
 	    }
 	    // Main renderer.
-	    Discussion.prototype.render = function () {
-	        var _this = this;
+	    render() {
 	        return (React.createElement("div", null,
 	            !this.state.IsValid &&
 	                React.createElement("div", null,
@@ -4212,7 +4345,7 @@
 	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Sorry, there was a problem saving your data. Please refresh the page and try again."),
 	                    React.createElement("br", null)),
 	            !this.state.IsSaving &&
-	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: function (date) { return _this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null); }, value: this.state.Discussion.DateISO }),
+	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DateISO }),
 	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving }),
@@ -4221,9 +4354,9 @@
 	            React.createElement(Dialog_1.DialogFooter, null,
 	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving }, "Save"),
 	                React.createElement(Button_1.Button, { onClick: this.props.DialogClose }, "Cancel"))));
-	    };
-	    Discussion.prototype.Validate = function () {
-	        var valid = true;
+	    }
+	    Validate() {
+	        let valid = true;
 	        if (!this.state.Discussion.DateISO ||
 	            !this.state.Discussion.DiscussionLocation ||
 	            !this.state.Discussion.Subject ||
@@ -4234,46 +4367,45 @@
 	            IsValid: valid
 	        });
 	        return valid;
-	    };
-	    Discussion.prototype.Save = function () {
-	        var _this = this;
+	    }
+	    Save() {
 	        var valid = this.Validate();
 	        if (valid) {
 	            this.setState({
 	                IsSaving: true
 	            });
-	            var service = new DiscussionService_1.DiscussionService();
+	            let service = new DiscussionService_1.DiscussionService();
 	            service
 	                .SaveDiscussion(this.state.Discussion)
-	                .then(function (discussion) {
+	                .then((discussion) => {
 	                console.log("AddDiscussion.Save()");
 	                console.log(discussion);
-	                _this.props.NewDiscussionCreated(discussion);
+	                this.props.NewDiscussionCreated(discussion);
 	            })
-	                .catch(function (error) {
+	                .catch((error) => {
 	                console.log(error);
-	                _this.setState({
+	                this.setState({
 	                    IsError: true,
 	                    IsSaving: false
 	                });
 	            });
 	        }
-	    };
-	    Discussion.prototype.OnDateChanged = function (date) {
+	    }
+	    OnDateChanged(date) {
 	        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
-	    };
-	    Discussion.prototype.OnLocationChanged = function (text) {
+	    }
+	    OnLocationChanged(text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, text, null, null, null);
-	    };
-	    Discussion.prototype.OnSubjectChanged = function (text) {
+	    }
+	    OnSubjectChanged(text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, null, null, text, null);
-	    };
-	    Discussion.prototype.OnOutcomeChanged = function (text) {
+	    }
+	    OnOutcomeChanged(text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, null, null, null, text);
-	    };
-	    Discussion.prototype.UpdatePropertiesOfDiscussion = function (observer, discussionDate, discussionLocation, discussedWith, subject, outcomes) {
+	    }
+	    UpdatePropertiesOfDiscussion(observer, discussionDate, discussionLocation, discussedWith, subject, outcomes) {
 	        this.setState(function (prevState, props) {
-	            var updatedDiscussion = this.CloneDiscussion(prevState.Discussion);
+	            let updatedDiscussion = this.CloneDiscussion(prevState.Discussion);
 	            if (observer) {
 	                updatedDiscussion.Observer = observer;
 	            }
@@ -4296,8 +4428,8 @@
 	                Discussion: updatedDiscussion
 	            };
 	        });
-	    };
-	    Discussion.prototype.CloneDiscussion = function (discussion) {
+	    }
+	    CloneDiscussion(discussion) {
 	        return {
 	            Observer: discussion.Observer,
 	            DateISO: discussion.DateISO,
@@ -4306,38 +4438,37 @@
 	            Subject: discussion.Subject,
 	            Outcomes: discussion.Outcomes
 	        };
-	    };
-	    return Discussion;
-	}(React.Component));
+	    }
+	}
 	exports.Discussion = Discussion;
 
 
 /***/ },
-/* 57 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(58));
+	__export(__webpack_require__(63));
 	
 
 
 /***/ },
-/* 58 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(59));
+	__export(__webpack_require__(64));
 	
 
 
 /***/ },
-/* 59 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -4355,9 +4486,9 @@
 	    return t;
 	};
 	var React = __webpack_require__(1);
-	var Label_1 = __webpack_require__(60);
+	var Label_1 = __webpack_require__(65);
 	var Utilities_1 = __webpack_require__(8);
-	__webpack_require__(64);
+	__webpack_require__(69);
 	var TextField = (function (_super) {
 	    __extends(TextField, _super);
 	    function TextField(props) {
@@ -4598,93 +4729,6 @@
 
 
 /***/ },
-/* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(61));
-	
-
-
-/***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(62));
-	
-
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var __assign = (this && this.__assign) || Object.assign || function(t) {
-	    for (var s, i = 1, n = arguments.length; i < n; i++) {
-	        s = arguments[i];
-	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-	            t[p] = s[p];
-	    }
-	    return t;
-	};
-	var React = __webpack_require__(1);
-	var Utilities_1 = __webpack_require__(8);
-	__webpack_require__(63);
-	var Label = (function (_super) {
-	    __extends(Label, _super);
-	    function Label() {
-	        return _super.apply(this, arguments) || this;
-	    }
-	    Label.prototype.render = function () {
-	        var _a = this.props, disabled = _a.disabled, required = _a.required, children = _a.children, className = _a.className;
-	        return (React.createElement("label", __assign({}, Utilities_1.getNativeProps(this.props, Utilities_1.divProperties), { className: Utilities_1.css('ms-Label', className, {
-	                'is-disabled': disabled,
-	                'is-required': required
-	            }) }), children));
-	    };
-	    return Label;
-	}(React.Component));
-	exports.Label = Label;
-	
-
-
-/***/ },
-/* 63 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
-	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}" }]);
-	/* tslint:enable */ 
-	
-
-
-/***/ },
-/* 64 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
-	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-size:14px;font-weight:400;margin-bottom:8px}.ms-TextField .ms-Label{font-size:14px;font-weight:400}.ms-TextField.is-disabled .ms-TextField-field{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField.is-disabled::-webkit-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled::-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-ms-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-required .ms-Label::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-webkit-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-ms-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField-field{box-sizing:border-box;margin:0;padding:0;box-shadow:none;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;border:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";border-radius:0;font-weight:400;font-size:14px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:32px;padding:0 12px 0 12px;width:100%;outline:0;text-overflow:ellipsis}html[dir=rtl] .ms-TextField-field{padding:0 12px 0 12px}.ms-TextField-field:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}.ms-TextField-field:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#37006E}}.ms-TextField-field[disabled]{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField-field::-webkit-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field::-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-ms-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-description{color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": ";font-size:11px}.ms-TextField.ms-TextField--underlined{border-bottom:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";display:table;width:100%}.ms-TextField.ms-TextField--underlined:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined:hover{border-color:#37006E}}.ms-TextField.ms-TextField--underlined:active,.ms-TextField.ms-TextField--underlined:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField.ms-TextField--underlined .ms-Label{font-size:14px;display:table-cell;vertical-align:top;padding-top:9px;height:32px;width:1%;white-space:nowrap}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{margin-right:8px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{margin-left:8px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}.ms-TextField.ms-TextField--underlined .ms-TextField-field{border:0;display:table-cell;padding-top:8px;padding-bottom:3px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:right}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--underlined .ms-TextField-field:active,.ms-TextField.ms-TextField--underlined .ms-TextField-field:focus,.ms-TextField.ms-TextField--underlined .ms-TextField-field:hover{outline:0}.ms-TextField.ms-TextField--underlined.is-disabled{border-bottom-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-Label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-TextField-field{background-color:transparent;color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined.is-active{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined.is-active{border-color:#37006E}}.ms-TextField.ms-TextField--multiline .ms-TextField-field{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:400;line-height:17px;min-height:60px;height:auto;padding-top:6px;overflow:auto}.ms-TextField-errorMessage{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": ";margin:0;padding-top:5px}.ms-TextField-invalid,.ms-TextField-invalid:focus,.ms-TextField-invalid:hover{border-color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": "}.ms-u-screenReaderOnly{position:absolute;text-indent:-9999px;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;border:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:0}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--multiline .ms-TextField-field.ms-TextField-field--unresizable{resize:none}.ms-TextField-hidden{display:none}" }]);
-	/* tslint:enable */ 
-	
-
-
-/***/ },
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -4718,6 +4762,93 @@
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var Utilities_1 = __webpack_require__(8);
+	__webpack_require__(68);
+	var Label = (function (_super) {
+	    __extends(Label, _super);
+	    function Label() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    Label.prototype.render = function () {
+	        var _a = this.props, disabled = _a.disabled, required = _a.required, children = _a.children, className = _a.className;
+	        return (React.createElement("label", __assign({}, Utilities_1.getNativeProps(this.props, Utilities_1.divProperties), { className: Utilities_1.css('ms-Label', className, {
+	                'is-disabled': disabled,
+	                'is-required': required
+	            }) }), children));
+	    };
+	    return Label;
+	}(React.Component));
+	exports.Label = Label;
+	
+
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Label{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";box-sizing:border-box;display:block;padding:5px 0}.ms-Label.is-required::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-Label.is-disabled{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-size:14px;font-weight:400;margin-bottom:8px}.ms-TextField .ms-Label{font-size:14px;font-weight:400}.ms-TextField.is-disabled .ms-TextField-field{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField.is-disabled::-webkit-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled::-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-moz-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-disabled:-ms-input-placeholder{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.is-required .ms-Label::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-webkit-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required::-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-moz-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-required:-ms-input-placeholder::after{content:' *';color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-TextField.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField-field{box-sizing:border-box;margin:0;padding:0;box-shadow:none;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;border:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";border-radius:0;font-weight:400;font-size:14px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:32px;padding:0 12px 0 12px;width:100%;outline:0;text-overflow:ellipsis}html[dir=rtl] .ms-TextField-field{padding:0 12px 0 12px}.ms-TextField-field:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}.ms-TextField-field:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField-field:focus,.ms-TextField-field:hover{border-color:#37006E}}.ms-TextField-field[disabled]{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";border-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";pointer-events:none;cursor:default}.ms-TextField-field::-webkit-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field::-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-moz-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-field:-ms-input-placeholder{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-TextField-description{color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": ";font-size:11px}.ms-TextField.ms-TextField--underlined{border-bottom:1px solid " }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";display:table;width:100%}.ms-TextField.ms-TextField--underlined:hover{border-color:" }, { "theme": "neutralSecondaryAlt", "defaultValue": "#767676" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined:hover{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined:hover{border-color:#37006E}}.ms-TextField.ms-TextField--underlined:active,.ms-TextField.ms-TextField--underlined:focus{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-TextField.ms-TextField--underlined .ms-Label{font-size:14px;display:table-cell;vertical-align:top;padding-top:9px;height:32px;width:1%;white-space:nowrap}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{margin-right:8px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{margin-left:8px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}.ms-TextField.ms-TextField--underlined .ms-TextField-field{border:0;display:table-cell;padding-top:8px;padding-bottom:3px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{float:right}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--underlined .ms-TextField-field:active,.ms-TextField.ms-TextField--underlined .ms-TextField-field:focus,.ms-TextField.ms-TextField--underlined .ms-TextField-field:hover{outline:0}.ms-TextField.ms-TextField--underlined.is-disabled{border-bottom-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-Label{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-disabled .ms-TextField-field{background-color:transparent;color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-TextField.ms-TextField--underlined.is-active{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}@media screen and (-ms-high-contrast:active){.ms-TextField.ms-TextField--underlined.is-active{border-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-TextField.ms-TextField--underlined.is-active{border-color:#37006E}}.ms-TextField.ms-TextField--multiline .ms-TextField-field{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;font-size:14px;font-weight:400;line-height:17px;min-height:60px;height:auto;padding-top:6px;overflow:auto}.ms-TextField-errorMessage{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": ";margin:0;padding-top:5px}.ms-TextField-invalid,.ms-TextField-invalid:focus,.ms-TextField-invalid:hover{border-color:" }, { "theme": "redDark", "defaultValue": "#a80000" }, { "rawString": "}.ms-u-screenReaderOnly{position:absolute;text-indent:-9999px;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;border:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:12px}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:12px}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-Label{padding-right:0}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-Label{padding-left:0}html[dir=ltr] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:left}html[dir=rtl] .ms-TextField.ms-TextField--underlined .ms-TextField-field{text-align:right}.ms-TextField.ms-TextField--multiline .ms-TextField-field.ms-TextField-field--unresizable{resize:none}.ms-TextField-hidden{display:none}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(71));
+	
+
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(72));
+	
+
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
 	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
 	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
 	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -4725,12 +4856,12 @@
 	    return c > 3 && r && Object.defineProperty(target, key, r), r;
 	};
 	var React = __webpack_require__(1);
-	var Calendar_1 = __webpack_require__(68);
-	var Callout_1 = __webpack_require__(80);
-	var DirectionalHint_1 = __webpack_require__(84);
-	var TextField_1 = __webpack_require__(57);
+	var Calendar_1 = __webpack_require__(73);
+	var Callout_1 = __webpack_require__(85);
+	var DirectionalHint_1 = __webpack_require__(89);
+	var TextField_1 = __webpack_require__(62);
 	var Utilities_1 = __webpack_require__(8);
-	__webpack_require__(89);
+	__webpack_require__(94);
 	var DatePicker = (function (_super) {
 	    __extends(DatePicker, _super);
 	    function DatePicker(props) {
@@ -4979,32 +5110,32 @@
 
 
 /***/ },
-/* 68 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(69));
+	__export(__webpack_require__(74));
 	
 
 
 /***/ },
-/* 69 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(70));
-	__export(__webpack_require__(71));
+	__export(__webpack_require__(75));
+	__export(__webpack_require__(76));
 	
 
 
 /***/ },
-/* 70 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5020,11 +5151,11 @@
 	    return c > 3 && r && Object.defineProperty(target, key, r), r;
 	};
 	var React = __webpack_require__(1);
-	var Calendar_Props_1 = __webpack_require__(71);
-	var CalendarDay_1 = __webpack_require__(72);
-	var CalendarMonth_1 = __webpack_require__(78);
+	var Calendar_Props_1 = __webpack_require__(76);
+	var CalendarDay_1 = __webpack_require__(77);
+	var CalendarMonth_1 = __webpack_require__(83);
 	var Utilities_1 = __webpack_require__(8);
-	__webpack_require__(79);
+	__webpack_require__(84);
 	var Calendar = (function (_super) {
 	    __extends(Calendar, _super);
 	    function Calendar(props) {
@@ -5156,7 +5287,7 @@
 
 
 /***/ },
-/* 71 */
+/* 76 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5174,7 +5305,7 @@
 
 
 /***/ },
-/* 72 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5185,9 +5316,9 @@
 	};
 	var React = __webpack_require__(1);
 	var css_1 = __webpack_require__(15);
-	var FocusZone_1 = __webpack_require__(73);
+	var FocusZone_1 = __webpack_require__(78);
 	var KeyCodes_1 = __webpack_require__(12);
-	var DateMath_1 = __webpack_require__(77);
+	var DateMath_1 = __webpack_require__(82);
 	var rtl_1 = __webpack_require__(20);
 	var object_1 = __webpack_require__(18);
 	var DAYS_IN_WEEK = 7;
@@ -5323,32 +5454,32 @@
 
 
 /***/ },
-/* 73 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(74));
+	__export(__webpack_require__(79));
 	
 
 
 /***/ },
-/* 74 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(75));
-	__export(__webpack_require__(76));
+	__export(__webpack_require__(80));
+	__export(__webpack_require__(81));
 	
 
 
 /***/ },
-/* 75 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5372,9 +5503,9 @@
 	    return c > 3 && r && Object.defineProperty(target, key, r), r;
 	};
 	var React = __webpack_require__(1);
-	var FocusZone_Props_1 = __webpack_require__(76);
+	var FocusZone_Props_1 = __webpack_require__(81);
 	var Utilities_1 = __webpack_require__(8);
-	var focus_1 = __webpack_require__(36);
+	var focus_1 = __webpack_require__(41);
 	var IS_FOCUSABLE_ATTRIBUTE = 'data-is-focusable';
 	var IS_ENTER_DISABLED_ATTRIBUTE = 'data-disable-click-on-enter';
 	var FOCUSZONE_ID_ATTRIBUTE = 'data-focuszone-id';
@@ -5865,7 +5996,7 @@
 
 
 /***/ },
-/* 76 */
+/* 81 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5882,7 +6013,7 @@
 
 
 /***/ },
-/* 77 */
+/* 82 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -5977,7 +6108,7 @@
 
 
 /***/ },
-/* 78 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -5987,9 +6118,9 @@
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
 	var React = __webpack_require__(1);
-	var FocusZone_1 = __webpack_require__(73);
+	var FocusZone_1 = __webpack_require__(78);
 	var KeyCodes_1 = __webpack_require__(12);
-	var DateMath_1 = __webpack_require__(77);
+	var DateMath_1 = __webpack_require__(82);
 	var rtl_1 = __webpack_require__(20);
 	var css_1 = __webpack_require__(15);
 	var CalendarMonth = (function (_super) {
@@ -6047,44 +6178,44 @@
 
 
 /***/ },
-/* 79 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": ".ms-DatePicker{box-sizing:border-box;margin:0;padding:0;box-shadow:none;margin-bottom:17px}.ms-DatePicker-picker{color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";font-size:14px;position:relative}html[dir=ltr] .ms-DatePicker-picker{text-align:left}html[dir=rtl] .ms-DatePicker-picker{text-align:right}.ms-DatePicker-holder{-webkit-overflow-scrolling:touch;box-sizing:border-box;background:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";min-width:300px;display:none}.ms-DatePicker-picker.ms-DatePicker-picker--opened .ms-DatePicker-holder{-webkit-animation-name:fadeIn,slideDownIn10;animation-name:fadeIn,slideDownIn10;-webkit-animation-duration:167ms;-moz-animation-duration:167ms;-ms-animation-duration:167ms;-o-animation-duration:167ms;-webkit-animation-timing-function:cubic-bezier(.1,.25,.75,.9);animation-timing-function:cubic-bezier(.1,.25,.75,.9);-webkit-animation-fill-mode:both;animation-fill-mode:both;box-sizing:border-box;display:block}.ms-DatePicker-picker--opened{position:relative}.ms-DatePicker-frame{padding:1px}.ms-DatePicker-wrap{margin:-1px;padding:9px}.ms-DatePicker-dayPicker{display:block;margin-bottom:30px}.ms-DatePicker-header{height:40px;line-height:44px}.ms-DatePicker-month,.ms-DatePicker-year{display:inline-block;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:21px;font-weight:100;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";margin-top:-1px}.ms-DatePicker-month:hover,.ms-DatePicker-year:hover{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";cursor:pointer}html[dir=ltr] .ms-DatePicker-month{margin-left:15px}html[dir=rtl] .ms-DatePicker-month{margin-right:15px}html[dir=ltr] .ms-DatePicker-year{margin-left:15px}html[dir=rtl] .ms-DatePicker-year{margin-right:15px}.ms-DatePicker-table{text-align:center;border-collapse:collapse;border-spacing:0;table-layout:fixed;font-size:inherit}.ms-DatePicker-table td{margin:0;padding:0}.ms-DatePicker-table td:hover{outline:1px solid transparent}.ms-DatePicker-day,.ms-DatePicker-weekday{width:40px;height:40px;padding:0;line-height:40px;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:15px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-DatePicker-day--today{position:relative;background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.ms-DatePicker-day--disabled:before{border-top-color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-DatePicker-day--outfocus{color:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": ";font-weight:400}.ms-DatePicker-day--infocus:hover,.ms-DatePicker-day--outfocus:hover{cursor:pointer;color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";background:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-DatePicker-day--highlighted:hover,.ms-DatePicker-picker--focused .ms-DatePicker-day--highlighted{cursor:pointer;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-day--highlighted.ms-DatePicker-day--disabled,.ms-DatePicker-day--highlighted.ms-DatePicker-day--disabled:hover{background:" }, { "theme": "neutralTertiary", "defaultValue": "#a6a6a6" }, { "rawString": "}.ms-DatePicker-monthPicker,.ms-DatePicker-yearPicker{display:none}.ms-DatePicker-monthComponents{position:absolute;top:9px}html[dir=ltr] .ms-DatePicker-monthComponents{right:9px}html[dir=rtl] .ms-DatePicker-monthComponents{left:9px}html[dir=ltr] .ms-DatePicker-monthComponents{left:9px}html[dir=rtl] .ms-DatePicker-monthComponents{right:9px}.ms-DatePicker-decadeComponents,.ms-DatePicker-yearComponents{position:absolute;top:-2px}html[dir=ltr] .ms-DatePicker-decadeComponents,html[dir=ltr] .ms-DatePicker-yearComponents{right:10px}html[dir=rtl] .ms-DatePicker-decadeComponents,html[dir=rtl] .ms-DatePicker-yearComponents{left:10px}.ms-DatePicker-nextDecade,.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevDecade,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{width:40px;height:40px;display:block;text-align:center;line-height:40px;text-align:center;font-size:16px;color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";position:relative;top:2px}html[dir=ltr] .ms-DatePicker-nextDecade,html[dir=ltr] .ms-DatePicker-nextMonth,html[dir=ltr] .ms-DatePicker-nextYear,html[dir=ltr] .ms-DatePicker-prevDecade,html[dir=ltr] .ms-DatePicker-prevMonth,html[dir=ltr] .ms-DatePicker-prevYear{margin-left:10px}html[dir=rtl] .ms-DatePicker-nextDecade,html[dir=rtl] .ms-DatePicker-nextMonth,html[dir=rtl] .ms-DatePicker-nextYear,html[dir=rtl] .ms-DatePicker-prevDecade,html[dir=rtl] .ms-DatePicker-prevMonth,html[dir=rtl] .ms-DatePicker-prevYear{margin-right:10px}.ms-DatePicker-nextDecade:hover,.ms-DatePicker-nextMonth:hover,.ms-DatePicker-nextYear:hover,.ms-DatePicker-prevDecade:hover,.ms-DatePicker-prevMonth:hover,.ms-DatePicker-prevYear:hover{color:" }, { "theme": "neutralDark", "defaultValue": "#212121" }, { "rawString": ";cursor:pointer;outline:1px solid transparent}.ms-DatePicker-headerToggleView{height:40px;position:absolute;top:0;width:140px;cursor:pointer}html[dir=ltr] .ms-DatePicker-headerToggleView{left:0}html[dir=rtl] .ms-DatePicker-headerToggleView{right:0}.ms-DatePicker-currentDecade,.ms-DatePicker-currentYear{display:block;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:21px;font-weight:100;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:40px;line-height:42px}html[dir=ltr] .ms-DatePicker-currentDecade,html[dir=ltr] .ms-DatePicker-currentYear{margin-left:15px}html[dir=rtl] .ms-DatePicker-currentDecade,html[dir=rtl] .ms-DatePicker-currentYear{margin-right:15px}.ms-DatePicker-currentYear{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-currentYear:hover{color:" }, { "theme": "themeDark", "defaultValue": "#005a9e" }, { "rawString": ";cursor:pointer}.ms-DatePicker-optionGrid{position:relative;height:210px;width:280px;margin:10px 0 30px 5px}html[dir=rtl] .ms-DatePicker-optionGrid{margin:10px 5px 30px 0}.ms-DatePicker-monthOption,.ms-DatePicker-yearOption{background-color:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";width:60px;height:60px;line-height:60px;cursor:pointer;margin:0 10px 10px 0;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:13px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";text-align:center}html[dir=ltr] .ms-DatePicker-monthOption,html[dir=ltr] .ms-DatePicker-yearOption{float:left}html[dir=rtl] .ms-DatePicker-monthOption,html[dir=rtl] .ms-DatePicker-yearOption{float:right}html[dir=rtl] .ms-DatePicker-monthOption,html[dir=rtl] .ms-DatePicker-yearOption{margin:0 0 10px 10px}.ms-DatePicker-monthOption:hover,.ms-DatePicker-yearOption:hover{background-color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";outline:1px solid transparent}.ms-DatePicker-monthOption.is-highlighted,.ms-DatePicker-yearOption.is-highlighted{background-color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-DatePicker-goToday{bottom:9px;color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";cursor:pointer;font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:13px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:30px;line-height:30px;padding:0 10px;position:absolute}html[dir=ltr] .ms-DatePicker-goToday{right:9px}html[dir=rtl] .ms-DatePicker-goToday{left:9px}.ms-DatePicker-goToday:hover{outline:1px solid transparent}.ms-DatePicker.is-pickingYears .ms-DatePicker-dayPicker,.ms-DatePicker.is-pickingYears .ms-DatePicker-monthComponents{display:none}.ms-DatePicker.is-pickingYears .ms-DatePicker-monthPicker{display:none}.ms-DatePicker.is-pickingYears .ms-DatePicker-yearPicker{display:block}@media (min-width:460px){.ms-DatePicker-header{height:30px;line-height:28px}.ms-DatePicker-day,.ms-DatePicker-weekday{width:30px;height:30px;line-height:28px;font-weight:600;font-size:12px}.ms-DatePicker-monthComponents{width:210px}.ms-DatePicker-nextDecade,.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevDecade,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{font-size:12px;width:24px;height:24px;line-height:24px}.ms-DatePicker-holder{min-width:240px}.ms-DatePicker-month,.ms-DatePicker-year{font-weight:300}.ms-DatePicker-month,.ms-DatePicker-year{font-size:17px;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-DatePicker-month:hover,.ms-DatePicker-year:hover{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";cursor:default}.is-monthPickerVisible .ms-DatePicker-dayPicker{margin:-10px 0;padding:10px 0}.is-monthPickerVisible .ms-DatePicker-dayPicker{box-sizing:border-box;width:220px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-dayPicker{border-right:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-dayPicker{border-left:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.is-monthPickerVisible .ms-DatePicker-holder{width:440px}.is-monthPickerVisible .ms-DatePicker-monthPicker{display:block}.is-monthPickerVisible .ms-DatePicker-monthPicker,.is-monthPickerVisible .ms-DatePicker-yearPicker{top:9px;position:absolute}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-monthPicker,html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-yearPicker{left:238px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-monthPicker,html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-yearPicker{right:238px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-month{margin-left:12px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-month{margin-right:12px}.is-monthPickerVisible .ms-DatePicker-optionGrid{width:200px;height:auto;margin:10px 0 0 0}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-optionGrid{margin:10px 0 0 0}.is-monthPickerVisible .ms-DatePicker-toggleMonthView{display:none}.is-monthPickerVisible .ms-DatePicker-currentDecade,.is-monthPickerVisible .ms-DatePicker-currentYear{font-size:17px;margin:0;height:30px;line-height:26px;padding:0 10px;display:inline-block}.is-monthPickerVisible .ms-DatePicker-monthOption,.is-monthPickerVisible .ms-DatePicker-yearOption{width:40px;height:40px;line-height:38px;font-size:12px;margin:0 10px 10px 0}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-monthOption,html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-yearOption{margin:0 0 10px 10px}.is-monthPickerVisible .ms-DatePicker-monthOption:hover,.is-monthPickerVisible .ms-DatePicker-yearOption:hover{outline:1px solid transparent}.is-monthPickerVisible .ms-DatePicker-goToday{box-sizing:border-box;font-size:12px;height:30px;line-height:30px;padding:0 10px;top:199px;width:210px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-goToday{right:10px}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-goToday{left:10px}html[dir=ltr] .is-monthPickerVisible .ms-DatePicker-goToday{text-align:right}html[dir=rtl] .is-monthPickerVisible .ms-DatePicker-goToday{text-align:left}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-dayPicker,.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-monthComponents{display:block}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-monthPicker{display:none}.is-monthPickerVisible .ms-DatePicker.is-pickingYears .ms-DatePicker-yearPicker{display:block}}@media (max-width:459px){.ms-DatePicker.is-pickingMonths .ms-DatePicker-dayPicker,.ms-DatePicker.is-pickingMonths .ms-DatePicker-monthComponents{display:none}.ms-DatePicker.is-pickingMonths .ms-DatePicker-monthPicker{display:block}}.ms-DatePicker-wrap div:focus,.ms-DatePicker-wrap span:focus{outline:1px solid " }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-DatePicker-goToday{width:auto}.ms-DatePicker-nextMonth,.ms-DatePicker-nextYear,.ms-DatePicker-prevMonth,.ms-DatePicker-prevYear{display:inline-block}html[dir=ltr] .ms-DatePicker-navContainer{float:right}html[dir=rtl] .ms-DatePicker-navContainer{float:left}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
-/* 80 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(81));
+	__export(__webpack_require__(86));
 	
 
 
 /***/ },
-/* 81 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
 	function __export(m) {
 	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
 	}
-	__export(__webpack_require__(82));
-	__export(__webpack_require__(84));
+	__export(__webpack_require__(87));
+	__export(__webpack_require__(89));
 	
 
 
 /***/ },
-/* 82 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6102,8 +6233,8 @@
 	    return t;
 	};
 	var React = __webpack_require__(1);
-	var CalloutContent_1 = __webpack_require__(83);
-	var Layer_1 = __webpack_require__(42);
+	var CalloutContent_1 = __webpack_require__(88);
+	var Layer_1 = __webpack_require__(47);
 	var Callout = (function (_super) {
 	    __extends(Callout, _super);
 	    function Callout(props) {
@@ -6120,7 +6251,7 @@
 
 
 /***/ },
-/* 83 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -6137,14 +6268,14 @@
 	};
 	/* tslint:disable:no-unused-variable */
 	var React = __webpack_require__(1);
-	var DirectionalHint_1 = __webpack_require__(84);
+	var DirectionalHint_1 = __webpack_require__(89);
 	var Utilities_1 = __webpack_require__(8);
-	var positioning_1 = __webpack_require__(85);
-	var focus_1 = __webpack_require__(36);
+	var positioning_1 = __webpack_require__(90);
+	var focus_1 = __webpack_require__(41);
 	var Utilities_2 = __webpack_require__(8);
-	var Popup_1 = __webpack_require__(87);
+	var Popup_1 = __webpack_require__(92);
 	var BaseComponent_1 = __webpack_require__(9);
-	__webpack_require__(88);
+	__webpack_require__(93);
 	var BEAK_ORIGIN_POSITION = { top: 0, left: 0 };
 	var OFF_SCREEN_STYLE = { opacity: 0 };
 	var BORDER_WIDTH = 1;
@@ -6371,7 +6502,7 @@
 
 
 /***/ },
-/* 84 */
+/* 89 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6438,12 +6569,12 @@
 
 
 /***/ },
-/* 85 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var DirectionalHint_1 = __webpack_require__(84);
-	var Rectangle_1 = __webpack_require__(86);
+	var DirectionalHint_1 = __webpack_require__(89);
+	var Rectangle_1 = __webpack_require__(91);
 	var scroll_1 = __webpack_require__(22);
 	var object_1 = __webpack_require__(18);
 	var RectangleEdge;
@@ -6939,7 +7070,7 @@
 
 
 /***/ },
-/* 86 */
+/* 91 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6982,168 +7113,14 @@
 
 
 /***/ },
-/* 87 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(52));
-	
-
-
-/***/ },
-/* 88 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
-	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Callout{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-shadow:0 0 15px -5px rgba(0,0,0,.4);position:absolute;border:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";box-sizing:border-box}@media screen and (-ms-high-contrast:active){.ms-Callout{border:1px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Callout{border:1px solid " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}.ms-Callout-container{position:relative}.ms-Callout-main{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";overflow-x:hidden;overflow-y:auto;position:relative}.ms-Callout-beak{position:absolute;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-shadow:inherit;border:inherit;box-sizing:border-box;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.ms-Callout-beakCurtain{position:absolute;top:0;right:0;bottom:0;left:0;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}" }]);
-	/* tslint:enable */ 
-	
-
-
-/***/ },
-/* 89 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
-	load_themed_styles_1.loadStyles([{ "rawString": ".ms-DatePicker{box-sizing:border-box;margin:0;padding:0;box-shadow:none;margin-bottom:17px}.ms-DatePicker .ms-TextField{position:relative}.ms-DatePicker .ms-TextField input::-ms-clear{display:none}.ms-DatePicker .ms-TextField input[readonly]{cursor:pointer}.ms-DatePicker-event--with-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:35px}html[dir=ltr] .ms-DatePicker-event--with-label{right:9px}html[dir=rtl] .ms-DatePicker-event--with-label{left:9px}.ms-DatePicker-event--without-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:7px}html[dir=ltr] .ms-DatePicker-event--without-label{right:9px}html[dir=rtl] .ms-DatePicker-event--without-label{left:9px}" }]);
-	/* tslint:enable */ 
-	
-
-
-/***/ },
-/* 90 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(91));
-	
-
-
-/***/ },
-/* 91 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	function __export(m) {
-	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-	}
-	__export(__webpack_require__(92));
-	__export(__webpack_require__(94));
-	
-
-
-/***/ },
 /* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var __extends = (this && this.__extends) || function (d, b) {
-	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-	    function __() { this.constructor = d; }
-	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-	};
-	var React = __webpack_require__(1);
-	var Button_1 = __webpack_require__(25);
-	__webpack_require__(93);
-	var css_1 = __webpack_require__(15);
-	var MessageBar_Props_1 = __webpack_require__(94);
-	var object_1 = __webpack_require__(18);
-	var MessageBar = (function (_super) {
-	    __extends(MessageBar, _super);
-	    function MessageBar(props) {
-	        var _this = _super.call(this, props) || this;
-	        _this.ICON_MAP = (_a = {},
-	            _a[MessageBar_Props_1.MessageBarType.info] = 'Info',
-	            _a[MessageBar_Props_1.MessageBarType.warning] = 'Info',
-	            _a[MessageBar_Props_1.MessageBarType.error] = 'ErrorBadge',
-	            _a[MessageBar_Props_1.MessageBarType.blocked] = 'Blocked',
-	            _a[MessageBar_Props_1.MessageBarType.remove] = 'Blocked',
-	            _a[MessageBar_Props_1.MessageBarType.severeWarning] = 'Warning',
-	            _a[MessageBar_Props_1.MessageBarType.success] = 'Completed',
-	            _a);
-	        _this.state = {
-	            labelId: object_1.getId('MessageBar')
-	        };
-	        return _this;
-	        var _a;
-	    }
-	    MessageBar.prototype.render = function () {
-	        var isMultiline = this.props.isMultiline;
-	        return isMultiline ? this._renderMultiLine() : this._renderSingleLine();
-	    };
-	    MessageBar.prototype._getActionsDiv = function () {
-	        if (this.props.actions) {
-	            return this.props.isMultiline ?
-	                React.createElement("div", { className: 'ms-MessageBar-actions' },
-	                    " ",
-	                    this.props.actions,
-	                    " ") :
-	                React.createElement("div", { className: 'ms-MessageBar-actionsOneline' },
-	                    this._getDismissDiv(),
-	                    this.props.actions);
-	        }
-	        return null;
-	    };
-	    MessageBar.prototype._getClassName = function () {
-	        return css_1.css(this.props.className, 'ms-MessageBar', {
-	            'ms-MessageBar': this.props.messageBarType === MessageBar_Props_1.MessageBarType.info,
-	            'ms-MessageBar--error': this.props.messageBarType === MessageBar_Props_1.MessageBarType.error,
-	            'ms-MessageBar--blocked': (this.props.messageBarType === MessageBar_Props_1.MessageBarType.blocked) || (this.props.messageBarType === MessageBar_Props_1.MessageBarType.remove),
-	            'ms-MessageBar--severeWarning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.severeWarning,
-	            'ms-MessageBar--success': this.props.messageBarType === MessageBar_Props_1.MessageBarType.success,
-	            'ms-MessageBar--warning': this.props.messageBarType === MessageBar_Props_1.MessageBarType.warning
-	        });
-	    };
-	    MessageBar.prototype._getDismissDiv = function () {
-	        if (this.props.onDismiss != null) {
-	            return React.createElement(Button_1.Button, { disabled: false, className: 'ms-MessageBar-dismissal', buttonType: Button_1.ButtonType.icon, onClick: this.props.onDismiss, icon: 'Cancel', ariaLabel: this.props.dismissButtonAriaLabel });
-	        }
-	        return null;
-	    };
-	    MessageBar.prototype._getIconSpan = function () {
-	        return React.createElement("div", { className: 'ms-MessageBar-icon' },
-	            React.createElement("i", { className: "ms-Icon ms-Icon--" + this.ICON_MAP[this.props.messageBarType] }));
-	    };
-	    MessageBar.prototype._getInnerTextClassName = function () {
-	        return this.props.onDismiss || this.props.actions ? 'ms-MessageBar-innerTextPadding' : 'ms-MessageBar-innerText';
-	    };
-	    MessageBar.prototype._renderMultiLine = function () {
-	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-multiline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
-	            React.createElement("div", { className: 'ms-MessageBar-content' },
-	                this._getIconSpan(),
-	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
-	                    this._getDismissDiv(),
-	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
-	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children)),
-	                    this._getActionsDiv()))));
-	    };
-	    MessageBar.prototype._renderSingleLine = function () {
-	        return (React.createElement("div", { className: this._getClassName() + ' ms-MessageBar-singleline', role: 'status', "aria-live": 'polite', "aria-controls": 'ms-MessageBar-text' },
-	            React.createElement("div", { className: 'ms-MessageBar-content' },
-	                this._getIconSpan(),
-	                React.createElement("div", { className: 'ms-MessageBar-actionables' },
-	                    React.createElement("div", { className: 'ms-MessageBar-text', id: this.state.labelId },
-	                        React.createElement("span", { className: this._getInnerTextClassName() }, this.props.children))),
-	                this._getActionsDiv())));
-	    };
-	    return MessageBar;
-	}(React.Component));
-	MessageBar.defaultProps = {
-	    messageBarType: MessageBar_Props_1.MessageBarType.info,
-	    onDismiss: null,
-	    isMultiline: true,
-	};
-	exports.MessageBar = MessageBar;
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(57));
 	
 
 
@@ -7153,37 +7130,21 @@
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
-	load_themed_styles_1.loadStyles([{ "rawString": ".ms-MessageBar{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;background-color:" }, { "theme": "infoBackground", "defaultValue": "#f4f4f4" }, { "rawString": ";color:" }, { "theme": "infoText", "defaultValue": "#333333" }, { "rawString": ";width:100%;box-sizing:border-box;display:-webkit-box;display:-ms-flexbox;display:flex;position:relative}.ms-MessageBar .ms-MessageBar-icon{color:" }, { "theme": "info", "defaultValue": "#767676" }, { "rawString": "}html[dir=ltr] .ms-MessageBar .ms-MessageBar-icon{padding-right:8px}html[dir=rtl] .ms-MessageBar .ms-MessageBar-icon{padding-left:8px}.ms-MessageBar .ms-Link{font-size:12px}.ms-MessageBar-icon,.ms-MessageBar-text{display:table-cell;vertical-align:top}.ms-MessageBar-icon{font-size:16px;min-width:16px;min-height:16px;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar-text{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:12px;font-weight:400;min-width:0;display:-webkit-box;display:-ms-flexbox;display:flex}.ms-MessageBar.ms-MessageBar--warning{background-color:" }, { "theme": "warningBackground", "defaultValue": "#fff4ce" }, { "rawString": ";color:" }, { "theme": "warningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning{background-color:" }, { "theme": "severeWarningBackground", "defaultValue": "#fed9cc" }, { "rawString": ";color:" }, { "theme": "severeWarningText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--severeWarning .ms-MessageBar-icon{color:" }, { "theme": "severeWarning", "defaultValue": "#d83b01" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--error .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked{background-color:" }, { "theme": "errorBackground", "defaultValue": "#fde7e9" }, { "rawString": ";color:" }, { "theme": "errorText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--blocked .ms-MessageBar-icon{color:" }, { "theme": "error", "defaultValue": "#a80000" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success{background-color:" }, { "theme": "successBackground", "defaultValue": "#dff6dd" }, { "rawString": ";color:" }, { "theme": "successText", "defaultValue": "#333333" }, { "rawString": "}.ms-MessageBar.ms-MessageBar--success .ms-MessageBar-icon{color:" }, { "theme": "green", "defaultValue": "#107c10" }, { "rawString": "}.ms-MessageBar-content{padding:16px;display:-webkit-box;display:-ms-flexbox;display:flex;width:100%;box-sizing:border-box}.ms-MessageBar-actionables{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column;width:100%;min-width:0}.ms-MessageBar-actionables>.ms-MessageBar-dismissal{right:0;top:0;position:absolute!important}.ms-MessageBar-actions,.ms-MessageBar-actionsOneline{display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-flex:0;-ms-flex:0 0 auto;flex:0 0 auto;-webkit-box-orient:horizontal;-webkit-box-direction:reverse;-ms-flex-direction:row-reverse;flex-direction:row-reverse;-webkit-box-align:center;-ms-flex-align:center;align-items:center}.ms-MessageBar-actionsOneline{position:relative}.ms-MessageBar-dismissal{min-width:0}.ms-MessageBar-dismissal::-moz-focus-inner{border:0}.ms-MessageBar-dismissal{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-MessageBar-dismissal:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}html[dir=ltr] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-right:-8px}html[dir=rtl] .ms-MessageBar-actionsOneline .ms-MessageBar-dismissal{margin-left:-8px}.ms-MessageBar+.ms-MessageBar{margin-bottom:6px}html[dir=ltr] .ms-MessageBar-innerTextPadding{padding-right:24px}html[dir=rtl] .ms-MessageBar-innerTextPadding{padding-left:24px}html[dir=ltr] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=ltr] .ms-MessageBar-innerTextPadding span{padding-right:4px}html[dir=rtl] .ms-MessageBar-innerTextPadding .ms-MessageBar-innerText>span,html[dir=rtl] .ms-MessageBar-innerTextPadding span{padding-left:4px}.ms-MessageBar-multiline>.ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:vertical;-webkit-box-direction:normal;-ms-flex-direction:column;flex-direction:column}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-icon{-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text{-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;-webkit-box-align:center;-ms-flex-align:center;-ms-grid-row-align:center;align-items:center}.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerText,.ms-MessageBar-singleline .ms-MessageBar-content .ms-MessageBar-actionables>.ms-MessageBar-text .ms-MessageBar-innerTextPadding{max-height:1.3em;line-height:1.3em;overflow-x:hidden;text-overflow:ellipsis;white-space:nowrap}.ms-MessageBar-singleline .ms-MessageBar-content>.ms-MessageBar-actionables{-webkit-box-orient:horizontal;-webkit-box-direction:normal;-ms-flex-direction:row;flex-direction:row}.ms-MessageBar .ms-Icon--Cancel{font-size:14px}" }]);
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Callout{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-shadow:0 0 15px -5px rgba(0,0,0,.4);position:absolute;border:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";box-sizing:border-box}@media screen and (-ms-high-contrast:active){.ms-Callout{border:1px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Callout{border:1px solid " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}.ms-Callout-container{position:relative}.ms-Callout-main{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";overflow-x:hidden;overflow-y:auto;position:relative}.ms-Callout-beak{position:absolute;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-shadow:inherit;border:inherit;box-sizing:border-box;-webkit-transform:rotate(45deg);transform:rotate(45deg)}.ms-Callout-beakCurtain{position:absolute;top:0;right:0;bottom:0;left:0;background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}" }]);
 	/* tslint:enable */ 
 	
 
 
 /***/ },
 /* 94 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var MessageBarType;
-	(function (MessageBarType) {
-	    /** Info styled MessageBar */
-	    MessageBarType[MessageBarType["info"] = 0] = "info";
-	    /** Error styled MessageBar */
-	    MessageBarType[MessageBarType["error"] = 1] = "error";
-	    /** Blocked styled MessageBar */
-	    MessageBarType[MessageBarType["blocked"] = 2] = "blocked";
-	    /** SevereWarning styled MessageBar */
-	    MessageBarType[MessageBarType["severeWarning"] = 3] = "severeWarning";
-	    /** Success styled MessageBar */
-	    MessageBarType[MessageBarType["success"] = 4] = "success";
-	    /** Warning styled MessageBar */
-	    MessageBarType[MessageBarType["warning"] = 5] = "warning";
-	    /**
-	     * @deprecated
-	     * Deprecated at v0.48.0, to be removed at >= v1.0.0. Use 'blocked' instead.
-	     */
-	    MessageBarType[MessageBarType["remove"] = 6] = "remove";
-	})(MessageBarType = exports.MessageBarType || (exports.MessageBarType = {}));
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-DatePicker{box-sizing:border-box;margin:0;padding:0;box-shadow:none;margin-bottom:17px}.ms-DatePicker .ms-TextField{position:relative}.ms-DatePicker .ms-TextField input::-ms-clear{display:none}.ms-DatePicker .ms-TextField input[readonly]{cursor:pointer}.ms-DatePicker-event--with-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:35px}html[dir=ltr] .ms-DatePicker-event--with-label{right:9px}html[dir=rtl] .ms-DatePicker-event--with-label{left:9px}.ms-DatePicker-event--without-label{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-size:20px;line-height:20px;pointer-events:none;position:absolute;top:7px}html[dir=ltr] .ms-DatePicker-event--without-label{right:9px}html[dir=rtl] .ms-DatePicker-event--without-label{left:9px}" }]);
+	/* tslint:enable */ 
 	
 
 
@@ -7265,7 +7226,7 @@
 
 	"use strict";
 	/* tslint:disable */
-	var load_themed_styles_1 = __webpack_require__(30);
+	var load_themed_styles_1 = __webpack_require__(31);
 	load_themed_styles_1.loadStyles([{ "rawString": "@-webkit-keyframes ms-Spinner-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}@keyframes ms-Spinner-spin{0%{-webkit-transform:rotate(0);transform:rotate(0)}100%{-webkit-transform:rotate(360deg);transform:rotate(360deg)}}.ms-Spinner>.ms-Spinner-circle{margin:auto;box-sizing:border-box;border-radius:50%;width:100%;height:100%;border:1.5px solid " }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": ";border-top-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";-webkit-animation:ms-Spinner-spin 1.3s infinite cubic-bezier(.53,.21,.29,.67);animation:ms-Spinner-spin 1.3s infinite cubic-bezier(.53,.21,.29,.67)}.ms-Spinner>.ms-Spinner-circle.ms-Spinner--normal{width:20px;height:20px}.ms-Spinner>.ms-Spinner-circle.ms-Spinner--large{width:28px;height:28px}.ms-Spinner>.ms-Spinner-label{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";margin-top:10px;text-align:center}@media screen and (-ms-high-contrast:active){.ms-Spinner>.ms-Spinner-circle{border-top-style:none}}" }]);
 	/* tslint:enable */ 
 	
@@ -7276,11 +7237,8 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	var SafetyDiscussion = (function () {
-	    function SafetyDiscussion() {
-	    }
-	    return SafetyDiscussion;
-	}());
+	class SafetyDiscussion {
+	}
 	exports.SafetyDiscussion = SafetyDiscussion;
 
 
@@ -7289,27 +7247,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var fetch = __webpack_require__(102);
-	var es6_promise_1 = __webpack_require__(104);
-	var DiscussionService = (function () {
-	    function DiscussionService() {
-	        var _this = this;
-	        this.ParseCreateDiscussionResultJson = function (json) {
-	            return new es6_promise_1.Promise(function (resolve, reject) {
-	                resolve(_this.ParseJsonToDiscussion(json));
+	const fetch = __webpack_require__(102);
+	const es6_promise_1 = __webpack_require__(104);
+	class DiscussionService {
+	    constructor() {
+	        this.ParseCreateDiscussionResultJson = (json) => {
+	            return new es6_promise_1.Promise((resolve, reject) => {
+	                resolve(this.ParseJsonToDiscussion(json));
 	            });
 	        };
-	        this.ParseGetMyDiscussionsResultJson = function (json) {
-	            return new es6_promise_1.Promise(function (resolve, reject) {
-	                var retVal = [];
+	        this.ParseGetMyDiscussionsResultJson = (json) => {
+	            return new es6_promise_1.Promise((resolve, reject) => {
+	                let retVal = [];
 	                for (var i = 0; i < json.length; i++) {
-	                    retVal.push(_this.ParseJsonToDiscussion(json[i]));
+	                    retVal.push(this.ParseJsonToDiscussion(json[i]));
 	                }
 	                resolve(retVal);
 	            });
 	        };
 	    }
-	    DiscussionService.prototype.SaveDiscussion = function (discussion) {
+	    SaveDiscussion(discussion) {
 	        return fetch("discussion/creatediscussion" + window.location.search, {
 	            credentials: 'include',
 	            method: 'put',
@@ -7320,9 +7277,9 @@
 	        })
 	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
 	            .then(this.ParseCreateDiscussionResultJson); // Parse out the JSON
-	    };
-	    DiscussionService.prototype.ProcessServerResponse = function (response) {
-	        return new es6_promise_1.Promise(function (resolve, reject) {
+	    }
+	    ProcessServerResponse(response) {
+	        return new es6_promise_1.Promise((resolve, reject) => {
 	            // Response was 200, resolve the promise.
 	            if (response.status === 200) {
 	                resolve(response.json());
@@ -7331,16 +7288,16 @@
 	                reject(new Error(response.statusText));
 	            }
 	        });
-	    };
-	    DiscussionService.prototype.GetMyDiscussions = function () {
+	    }
+	    GetMyDiscussions() {
 	        return fetch("discussion/mydiscussions" + window.location.search, {
 	            credentials: 'include',
 	            method: 'get'
 	        })
 	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
 	            .then(this.ParseGetMyDiscussionsResultJson); // Parse out the JSON
-	    };
-	    DiscussionService.prototype.ParseJsonToDiscussion = function (json) {
+	    }
+	    ParseJsonToDiscussion(json) {
 	        return {
 	            Observer: json.Observer,
 	            DateISO: json.DateISO,
@@ -7350,9 +7307,8 @@
 	            Outcomes: json.Outcomes,
 	            Id: json.Id,
 	        };
-	    };
-	    return DiscussionService;
-	}());
+	    }
+	}
 	exports.DiscussionService = DiscussionService;
 
 

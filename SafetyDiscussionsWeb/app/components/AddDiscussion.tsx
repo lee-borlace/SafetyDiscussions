@@ -29,8 +29,8 @@ export class AddDiscussion extends React.Component<IAddDiscussionProps, IAddDisc
     render() {
 
         return (
-            <div>
-                <Button description='Opens the dialog to create a discussion' onClick={this.showDialog.bind(this)}>
+            <div className="sd-addDiscussion">
+                <Button description='Opens the dialog to create a discussion' onClick={this.showDialog.bind(this)} buttonType={ButtonType.hero} icon='Add'>
                     Add Safety Discussion
                 </Button>
                 <Dialog

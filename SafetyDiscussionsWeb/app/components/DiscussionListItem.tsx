@@ -14,9 +14,11 @@ export class DiscussionListItem extends React.Component<IDiscussionListItemProps
 
         return (
             <div className="sd-discussion">
-                <div className="ms-font-l">{this.props.Discussion.Subject}</div>
-                <div className="ms-font-m">{this.GetFormattedDate(this.props.Discussion.DateISO)}</div>
-                <div className="ms-font-m">{this.props.Discussion.DiscussionLocation}</div>
+                <div className="ms-bgColor-neutralLighterAlt">
+                    <div className="ms-font-l ms-fontWeight-semibold">{this.props.Discussion.Subject}</div>
+                    <div className="ms-font-m">{this.GetFormattedDate(this.props.Discussion.DateISO)}</div>
+                    <i className="ms-Icon ms-Icon--POI" aria-hidden="true"></i> <span className="ms-font-m">{this.props.Discussion.DiscussionLocation}</span>
+                </div>
             </div>
         );
     }

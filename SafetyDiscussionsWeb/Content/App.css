@@ -114,5 +114,10 @@ body {
   background: #107c10; }
 
 .sd-discussion {
-  padding: 10px;
+  padding: 5px;
   border: 1px; }
+  .sd-discussion > div {
+    padding: 10px; }
+
+.sd-addDiscussion {
+  padding: 10px; }

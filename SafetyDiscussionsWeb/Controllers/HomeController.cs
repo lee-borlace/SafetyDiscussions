@@ -12,21 +12,16 @@ namespace SafetyDiscussionsWeb.Controllers
         [SharePointContextFilter]
         public ActionResult Index()
         {
-            User spUser = null;
-
             var spContext = SharePointContextProvider.Current.GetSharePointContext(HttpContext);
 
-            using (var clientContext = spContext.CreateUserClientContextForSPHost())
+            using (var clientContext = spContext.CreateUserClientContextForSPAppWeb())
             {
                 if (clientContext != null)
                 {
-                    spUser = clientContext.Web.CurrentUser;
-
-                    clientContext.Load(spUser, user => user.Title);
-
+                    var discussionList = clientContext.Web.Lists.GetByTitle("Safety Discussions");
+                    clientContext.Load(clientContext.Web, w => w.Url);
                     clientContext.ExecuteQuery();
-
-                    ViewBag.UserName = spUser.Title;
+                    ViewBag.ListUrl = clientContext.Web.Url + "/Lists/SafetyDiscussions";
                 }
             }
 

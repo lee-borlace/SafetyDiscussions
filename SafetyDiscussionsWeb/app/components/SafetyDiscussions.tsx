@@ -39,39 +39,44 @@ export class SafetyDiscussions extends React.Component<ISafetyDiscussionsProps, 
     render() {
 
         return (
-            <div>
+            <div className="ms-Grid"> 
+                <div className="ms-Grid-row">
+                    <div className="ms-Grid-col ms-u-sm12 ms-u-md6 ms-u-lg4">
 
-                {this.state.IsError &&
-                    <div>
-                        <MessageBar
-                            messageBarType={MessageBarType.error}
-                            >
-                            Sorry, there was a problem loading your data. Please refresh the page and try again.
-                        </MessageBar>
-                        <br />
+                        {this.state.IsError &&
+                            <div>
+                                <MessageBar
+                                    messageBarType={MessageBarType.error}
+                                    >
+                                    Sorry, there was a problem loading your data. Please refresh the page and try again.
+                                </MessageBar>
+                                <br />
+                            </div>
+                        }
+
+                        {this.state.IsLoading &&
+                            <Spinner label='Loading discussions...' />
+                        }
+
+                        {!this.state.IsLoading && !this.state.IsError &&
+
+                            <div>
+
+                                <AddDiscussion
+                                    NewDiscussionCreated={this.NewDiscussionCreated.bind(this)}
+                                    />
+
+                                <MyDiscussions
+                                    MyDiscussions={this.state.MyDiscussions}
+                                    />
+
+                        
+
+                            </div>
+                        }
+
                     </div>
-                }
-
-                {this.state.IsLoading &&
-                    <Spinner label='Loading discussions...' />
-                }
-
-                {!this.state.IsLoading && !this.state.IsError &&
-
-                    <div>
-
-                        <MyDiscussions
-                            MyDiscussions={this.state.MyDiscussions}
-                            />
-
-                        <AddDiscussion
-                            NewDiscussionCreated={this.NewDiscussionCreated.bind(this)}
-                            />
-
-                    </div>
-                }
-
-
+                </div>
             </div>
         );
     }

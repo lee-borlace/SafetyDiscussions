@@ -17,33 +17,33 @@ It should also allow the employee to view a list of previous discussions they ha
 # Assumptions
 - SharePoint Online not on-premises
 - Outcome and location are text fields
+- ES6-compatible browser e.g. latest Chrome / IE / Firefox
 
 # Design Decisions
 Reactive considerations addressed as follows :
 - Responsive
     - Provider-hosted app for maximum control over HTML rendered - don't want SP's UI in the way of being as reactive as possible.
-    - First load will still be slow as it authenticates to SP.
     - Office Fabric UI chosen (in conjunction with Bootstrap) as it is responsive (in terms of mobile vs tablet vs desktop layouts), provides an Office-themed UI, and provides various useful components.
     - Client-heavy solution to minimise postbacks and maximise reactiveness - allows messages / spinners etc while data is fetched / written.
     - React JS chosen as it is quick to load and is the core way of using Fabric UI.
     - Webpack for bundling and minifying JS and reducing JS load time.
 - Message-driven
-  - Not fully message-driven for this application's simple requirements. 
-  - Event-driven, but Redux used to dispatch actions.
+  - Not fully message-driven for this application's simple requirements. Would use Redux to manage state and actions when moving away from PoC.
 - Resilient
-  - Failure of API calls is built into Redux state so the app can degrade gracefully.
   - Back-pressue from server back to client under heavy load not built into proof of concept.
 - Elastic
   - Elastic server-side components not addressed in this proof of concept.
 
 Being a proof of concept, several simplifications :
-  - No unit tests. In reality there would be unit tests around React components, service layer etc.
+  - React components directly manage their own state. A real application would use Redux to manage state in response to actions.
+  - No unit / integration / end-to-end tests. In reality there would be unit tests around React components, service layer etc.
   - Discussion location is single line of text. Beyond proof of concept would use managed metadata.
   - The app writes to a list in the app web. Real app would create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
   - Hard-coded services in Typescript would be mockable / injectible interfaces in a real product.
   - Skipped a lot of code comments that would usually be present.
   - Would usually use Unity for dependency injection in MVC but have hard-coded for PoC.
-  - Web API controller to read / write to SP would usually go via a business layer rather than direct SP access.
+  - Controller to read / write to SP would usually go via business layers etc rather than direct SP access.
+  - No JS polyfills used
 
 Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
