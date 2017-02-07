@@ -233,7 +233,10 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                     console.log(discussion);
                     this.props.NewDiscussionCreated(discussion);
                 })
-                .catch(() => {
+                .catch((error: Error) => {
+
+                    console.log(error);
+
                     this.setState({
                         IsError: true,
                         IsSaving: false
@@ -303,8 +306,6 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                 Discussion: updatedDiscussion
             } as IDiscussionState;
         });
-
-        console.log(this.state.Discussion);
     }
 
 

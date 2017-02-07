@@ -4,11 +4,18 @@ import { SafetyDiscussion } from '../models/SafetyDiscussion';
 import { MyDiscussions } from './MyDiscussions';
 import { AddDiscussion } from './AddDiscussion';
 
+import { Spinner, SpinnerType } from 'office-ui-fabric-react/lib/Spinner';
+import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
+
+import { DiscussionService } from '../services/DiscussionService';
+
 export interface ISafetyDiscussionsProps {
 }
 
 export interface ISafetyDiscussionsState {
-    MyDiscussions: SafetyDiscussion[];
+    MyDiscussions?: SafetyDiscussion[];
+    IsLoading?: boolean;
+    IsError?: boolean;
 }
 
 
@@ -17,47 +24,93 @@ export class SafetyDiscussions extends React.Component<ISafetyDiscussionsProps, 
     constructor() {
         super();
         this.state = {
-            MyDiscussions: []
+            MyDiscussions: [],
+            IsLoading: false,
+            IsError: false
         };
     }
+
+    componentDidMount() {
+        this.LoadDiscussions()
+    }
+
 
     // Main renderer.
     render() {
 
         return (
             <div>
-                <MyDiscussions
-                    MyDiscussions={this.state.MyDiscussions}
-                />
-                <AddDiscussion
-                    NewDiscussionCreated={this.newDiscussionCreated.bind(this)}
-                />  
+
+                {this.state.IsError &&
+                    <div>
+                        <MessageBar
+                            messageBarType={MessageBarType.error}
+                            >
+                            Sorry, there was a problem loading your data. Please refresh the page and try again.
+                        </MessageBar>
+                        <br />
+                    </div>
+                }
+
+                {this.state.IsLoading &&
+                    <Spinner label='Loading discussions...' />
+                }
+
+                {!this.state.IsLoading && !this.state.IsError &&
+
+                    <div>
+
+                        <MyDiscussions
+                            MyDiscussions={this.state.MyDiscussions}
+                            />
+
+                        <AddDiscussion
+                            NewDiscussionCreated={this.NewDiscussionCreated.bind(this)}
+                            />
+
+                    </div>
+                }
+
+
             </div>
         );
     }
 
-    // New discussion has been created, add it to state.
-    private newDiscussionCreated(discussion: SafetyDiscussion) {
+    // New discussion has been created. Re-load discussions.
+    private NewDiscussionCreated(discussion: SafetyDiscussion) {
 
         console.log("SafetyDiscussions.newDiscussionCreated()");
 
-        this.setState((prevState, props) => {
-
-            let discussions: SafetyDiscussion[] = [];
-
-            prevState.MyDiscussions.forEach((x) => {
-                discussions.push(Object.assign({}, x) );
-            })
-
-            discussions.push(discussion);
-
-            return {
-                MyDiscussions: discussions
-            } as ISafetyDiscussionsState;
-        });
+        // Re-load discussions.
+        this.LoadDiscussions();
 
 
     }
 
+
+    private LoadDiscussions() {
+        // Load existing discussions.
+        this.setState({ IsLoading: true });
+
+        let service: DiscussionService = new DiscussionService();
+        service
+            .GetMyDiscussions()
+            .then((discussions: SafetyDiscussion[]) => {
+                this.setState({
+                    IsError: false,
+                    IsLoading: false,
+                    MyDiscussions: discussions
+                });
+            })
+            .catch((error: Error) => {
+
+                console.log(error);
+
+                this.setState({
+                    IsError: true,
+                    IsLoading: false
+                });
+            });
+    }
    
 }

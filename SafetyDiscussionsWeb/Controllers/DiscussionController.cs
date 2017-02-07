@@ -83,6 +83,9 @@ namespace SafetyDiscussionsWeb.Controllers
                                         </Value>
                                     </Eq>
                                 </Where>
+                                <OrderBy>
+                                    <FieldRef Name=""DiscussionDate"" Ascending=""FALSE""/>
+                                </OrderBy>
                             </Query>
                             <ViewFields>
                                 <FieldRef Name=""Observer"" />
@@ -102,7 +105,7 @@ namespace SafetyDiscussionsWeb.Controllers
                     var itemCollection = discussionList.GetItems(query);
                     clientContext.Load(
                         itemCollection, 
-                        items => items.Include(
+                        items => items.Take(10).Include( // TODO : In a real app instead of taking 10 there would be a smarter mechanism e.g. paging
                             i => i["Observer"],
                             i => i["DiscussionLocation"],
                             i => i["DiscussedWith"],

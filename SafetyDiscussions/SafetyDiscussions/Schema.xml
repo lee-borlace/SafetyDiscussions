@@ -41,7 +41,7 @@
         <Query>
           <OrderBy>
             
-          <FieldRef Name="ID"></FieldRef></OrderBy>
+          <FieldRef Name="ID"></FieldRef><FieldRef Name="DiscussionDate" Ascending="FALSE" /></OrderBy>
         </Query>
         <ParameterBindings>
           <ParameterBinding Name="NoAnnouncements" Location="Resource(wss,noXinviewofY_LIST)" />

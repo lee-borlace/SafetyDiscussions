@@ -74,31 +74,60 @@
 	const React = __webpack_require__(1);
 	const MyDiscussions_1 = __webpack_require__(4);
 	const AddDiscussion_1 = __webpack_require__(24);
+	const Spinner_1 = __webpack_require__(95);
+	const MessageBar_1 = __webpack_require__(90);
+	const DiscussionService_1 = __webpack_require__(101);
 	class SafetyDiscussions extends React.Component {
 	    constructor() {
 	        super();
 	        this.state = {
-	            MyDiscussions: []
+	            MyDiscussions: [],
+	            IsLoading: false,
+	            IsError: false
 	        };
+	    }
+	    componentDidMount() {
+	        this.LoadDiscussions();
 	    }
 	    // Main renderer.
 	    render() {
 	        return (React.createElement("div", null,
-	            React.createElement(MyDiscussions_1.MyDiscussions, { MyDiscussions: this.state.MyDiscussions }),
-	            React.createElement(AddDiscussion_1.AddDiscussion, { NewDiscussionCreated: this.newDiscussionCreated.bind(this) })));
+	            this.state.IsError &&
+	                React.createElement("div", null,
+	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Sorry, there was a problem loading your data. Please refresh the page and try again."),
+	                    React.createElement("br", null)),
+	            this.state.IsLoading &&
+	                React.createElement(Spinner_1.Spinner, { label: 'Loading discussions...' }),
+	            !this.state.IsLoading && !this.state.IsError &&
+	                React.createElement("div", null,
+	                    React.createElement(MyDiscussions_1.MyDiscussions, { MyDiscussions: this.state.MyDiscussions }),
+	                    React.createElement(AddDiscussion_1.AddDiscussion, { NewDiscussionCreated: this.NewDiscussionCreated.bind(this) }))));
 	    }
-	    // New discussion has been created, add it to state.
-	    newDiscussionCreated(discussion) {
+	    // New discussion has been created. Re-load discussions.
+	    NewDiscussionCreated(discussion) {
 	        console.log("SafetyDiscussions.newDiscussionCreated()");
-	        this.setState((prevState, props) => {
-	            let discussions = [];
-	            prevState.MyDiscussions.forEach((x) => {
-	                discussions.push(Object.assign({}, x));
-	            });
-	            discussions.push(discussion);
-	            return {
+	        // Re-load discussions.
+	        this.LoadDiscussions();
+	    }
+	    LoadDiscussions() {
+	        // Load existing discussions.
+	        this.setState({ IsLoading: true });
+	        let service = new DiscussionService_1.DiscussionService();
+	        service
+	            .GetMyDiscussions()
+	            .then((discussions) => {
+	            this.setState({
+	                IsError: false,
+	                IsLoading: false,
 	                MyDiscussions: discussions
-	            };
+	            });
+	        })
+	            .catch((error) => {
+	            console.log(error);
+	            this.setState({
+	                IsError: true,
+	                IsLoading: false
+	            });
 	        });
 	    }
 	}
@@ -4173,7 +4202,8 @@
 	                console.log(discussion);
 	                this.props.NewDiscussionCreated(discussion);
 	            })
-	                .catch(() => {
+	                .catch((error) => {
+	                console.log(error);
 	                this.setState({
 	                    IsError: true,
 	                    IsSaving: false
@@ -4218,7 +4248,6 @@
 	                Discussion: updatedDiscussion
 	            };
 	        });
-	        console.log(this.state.Discussion);
 	    }
 	    CloneDiscussion(discussion) {
 	        return {
@@ -7211,6 +7240,22 @@
 	const fetch = __webpack_require__(102);
 	const es6_promise_1 = __webpack_require__(104);
 	class DiscussionService {
+	    constructor() {
+	        this.ParseCreateDiscussionResultJson = (json) => {
+	            return new es6_promise_1.Promise((resolve, reject) => {
+	                resolve(this.ParseJsonToDiscussion(json));
+	            });
+	        };
+	        this.ParseGetMyDiscussionsResultJson = (json) => {
+	            return new es6_promise_1.Promise((resolve, reject) => {
+	                let retVal = [];
+	                for (var i = 0; i < json.length; i++) {
+	                    retVal.push(this.ParseJsonToDiscussion(json[i]));
+	                }
+	                resolve(retVal);
+	            });
+	        };
+	    }
 	    SaveDiscussion(discussion) {
 	        return fetch("discussion/creatediscussion" + window.location.search, {
 	            credentials: 'include',
@@ -7221,7 +7266,7 @@
 	            })
 	        })
 	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
-	            .then(this.ParseJson); // Parse out the JSON
+	            .then(this.ParseCreateDiscussionResultJson); // Parse out the JSON
 	    }
 	    ProcessServerResponse(response) {
 	        return new es6_promise_1.Promise((resolve, reject) => {
@@ -7234,18 +7279,24 @@
 	            }
 	        });
 	    }
-	    ParseJson(json) {
-	        return new es6_promise_1.Promise((resolve, reject) => {
-	            resolve({
-	                Observer: json.Observer,
-	                DateISO: json.DateISO,
-	                DiscussionLocation: json.DiscussionLocation,
-	                DiscussedWith: json.DiscussedWith,
-	                Subject: json.Subject,
-	                Outcomes: json.Outcomes,
-	                Id: json.Id,
-	            });
-	        });
+	    GetMyDiscussions() {
+	        return fetch("discussion/mydiscussions" + window.location.search, {
+	            credentials: 'include',
+	            method: 'get'
+	        })
+	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
+	            .then(this.ParseGetMyDiscussionsResultJson); // Parse out the JSON
+	    }
+	    ParseJsonToDiscussion(json) {
+	        return {
+	            Observer: json.Observer,
+	            DateISO: json.DateISO,
+	            DiscussionLocation: json.DiscussionLocation,
+	            DiscussedWith: json.DiscussedWith,
+	            Subject: json.Subject,
+	            Outcomes: json.Outcomes,
+	            Id: json.Id,
+	        };
 	    }
 	}
 	exports.DiscussionService = DiscussionService;

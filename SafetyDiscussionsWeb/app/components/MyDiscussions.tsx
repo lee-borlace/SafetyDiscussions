@@ -10,7 +10,6 @@ export interface IMyDiscussionsProps {
     MyDiscussions: SafetyDiscussion[];
 }
 
-
 export class MyDiscussions extends React.Component<IMyDiscussionsProps, undefined> {
 
     render() {

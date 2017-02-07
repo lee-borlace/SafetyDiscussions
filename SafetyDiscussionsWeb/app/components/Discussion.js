@@ -121,7 +121,8 @@ class Discussion extends React.Component {
                 console.log(discussion);
                 this.props.NewDiscussionCreated(discussion);
             })
-                .catch(() => {
+                .catch((error) => {
+                console.log(error);
                 this.setState({
                     IsError: true,
                     IsSaving: false
@@ -166,7 +167,6 @@ class Discussion extends React.Component {
                 Discussion: updatedDiscussion
             };
         });
-        console.log(this.state.Discussion);
     }
     CloneDiscussion(discussion) {
         return {
