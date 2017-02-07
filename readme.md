@@ -16,6 +16,7 @@ It should also allow the employee to view a list of previous discussions they ha
 
 # Assumptions
 - SharePoint Online not on-premises
+- Outcome and location are text fields
 
 # Design Decisions
 Reactive considerations addressed as follows :
@@ -53,7 +54,7 @@ Other decisions :
 
 # Prerequisites
 ## General
-- Office 365 account
+- Office 365 user account with access to SharePoint Online
 - SharePoint Online Team Site to deploy to
 - Node JS
 
@@ -71,11 +72,15 @@ Some Node modules can have an issue with the possibly older version of Node whic
 # Building the Solution
 1. Open a Node command prompt at\SafetyDiscussions\SafetyDiscussionsWeb.
 2. Run `npm install`.
-3. 
+3. Open the .SLN file.
+4. Build it.
 
 # Known Issues
 - Fabric UI DatePicker appears to have several bugs which I've not searched for workarounds for yet.
   - Doesn't let you disable it, so we hide it where we would usually disable it.
 
-  # TODO
-  -  
+# TODO
+
+
+# Bugs
+- Time offsets for dates are not being correctly passed between client and server.

@@ -45,11 +45,11 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	const ReactDOM = __webpack_require__(2);
-	const SafetyDiscussions_1 = __webpack_require__(3);
+	var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(2);
+	var SafetyDiscussions_1 = __webpack_require__(3);
 	// Polyfill Promise.
-	const es6_promise_1 = __webpack_require__(104);
+	var es6_promise_1 = __webpack_require__(104);
 	es6_promise_1.polyfill();
 	ReactDOM.render(React.createElement(SafetyDiscussions_1.SafetyDiscussions, null), document.getElementById('reactRoot'));
 
@@ -71,26 +71,33 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	const MyDiscussions_1 = __webpack_require__(4);
-	const AddDiscussion_1 = __webpack_require__(24);
-	const Spinner_1 = __webpack_require__(95);
-	const MessageBar_1 = __webpack_require__(90);
-	const DiscussionService_1 = __webpack_require__(101);
-	class SafetyDiscussions extends React.Component {
-	    constructor() {
-	        super();
-	        this.state = {
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var MyDiscussions_1 = __webpack_require__(4);
+	var AddDiscussion_1 = __webpack_require__(24);
+	var Spinner_1 = __webpack_require__(95);
+	var MessageBar_1 = __webpack_require__(90);
+	var DiscussionService_1 = __webpack_require__(101);
+	var SafetyDiscussions = (function (_super) {
+	    __extends(SafetyDiscussions, _super);
+	    function SafetyDiscussions() {
+	        var _this = _super.call(this) || this;
+	        _this.state = {
 	            MyDiscussions: [],
 	            IsLoading: false,
 	            IsError: false
 	        };
+	        return _this;
 	    }
-	    componentDidMount() {
+	    SafetyDiscussions.prototype.componentDidMount = function () {
 	        this.LoadDiscussions();
-	    }
+	    };
 	    // Main renderer.
-	    render() {
+	    SafetyDiscussions.prototype.render = function () {
 	        return (React.createElement("div", null,
 	            this.state.IsError &&
 	                React.createElement("div", null,
@@ -102,35 +109,37 @@
 	                React.createElement("div", null,
 	                    React.createElement(MyDiscussions_1.MyDiscussions, { MyDiscussions: this.state.MyDiscussions }),
 	                    React.createElement(AddDiscussion_1.AddDiscussion, { NewDiscussionCreated: this.NewDiscussionCreated.bind(this) }))));
-	    }
+	    };
 	    // New discussion has been created. Re-load discussions.
-	    NewDiscussionCreated(discussion) {
+	    SafetyDiscussions.prototype.NewDiscussionCreated = function (discussion) {
 	        console.log("SafetyDiscussions.newDiscussionCreated()");
 	        // Re-load discussions.
 	        this.LoadDiscussions();
-	    }
-	    LoadDiscussions() {
+	    };
+	    SafetyDiscussions.prototype.LoadDiscussions = function () {
+	        var _this = this;
 	        // Load existing discussions.
 	        this.setState({ IsLoading: true });
-	        let service = new DiscussionService_1.DiscussionService();
+	        var service = new DiscussionService_1.DiscussionService();
 	        service
 	            .GetMyDiscussions()
-	            .then((discussions) => {
-	            this.setState({
+	            .then(function (discussions) {
+	            _this.setState({
 	                IsError: false,
 	                IsLoading: false,
 	                MyDiscussions: discussions
 	            });
 	        })
-	            .catch((error) => {
+	            .catch(function (error) {
 	            console.log(error);
-	            this.setState({
+	            _this.setState({
 	                IsError: true,
 	                IsLoading: false
 	            });
 	        });
-	    }
-	}
+	    };
+	    return SafetyDiscussions;
+	}(React.Component));
 	exports.SafetyDiscussions = SafetyDiscussions;
 
 
@@ -139,14 +148,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	const List_1 = __webpack_require__(5);
-	const DiscussionListItem_1 = __webpack_require__(23);
-	class MyDiscussions extends React.Component {
-	    render() {
-	        return (React.createElement(List_1.List, { items: this.props.MyDiscussions, onRenderCell: (item, index) => (React.createElement(DiscussionListItem_1.DiscussionListItem, { Discussion: item })) }));
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var List_1 = __webpack_require__(5);
+	var DiscussionListItem_1 = __webpack_require__(23);
+	var MyDiscussions = (function (_super) {
+	    __extends(MyDiscussions, _super);
+	    function MyDiscussions() {
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
-	}
+	    MyDiscussions.prototype.render = function () {
+	        return (React.createElement(List_1.List, { items: this.props.MyDiscussions, onRenderCell: function (item, index) {
+	                return (React.createElement(DiscussionListItem_1.DiscussionListItem, { Discussion: item }));
+	            } }));
+	    };
+	    return MyDiscussions;
+	}(React.Component));
 	exports.MyDiscussions = MyDiscussions;
 
 
@@ -2480,20 +2501,30 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	class DiscussionListItem extends React.Component {
-	    render() {
-	        return (React.createElement("div", null,
-	            this.props.Discussion.DateISO,
-	            React.createElement("br", null),
-	            this.props.Discussion.DiscussionLocation,
-	            React.createElement("br", null),
-	            this.props.Discussion.Subject,
-	            React.createElement("br", null),
-	            this.props.Discussion.Outcomes,
-	            React.createElement("br", null)));
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var DiscussionListItem = (function (_super) {
+	    __extends(DiscussionListItem, _super);
+	    function DiscussionListItem() {
+	        return _super !== null && _super.apply(this, arguments) || this;
 	    }
-	}
+	    DiscussionListItem.prototype.render = function () {
+	        return (React.createElement("div", { className: "sd-discussion" },
+	            React.createElement("div", { className: "ms-font-l" }, this.props.Discussion.Subject),
+	            React.createElement("div", { className: "ms-font-m" }, this.GetFormattedDate(this.props.Discussion.DateISO)),
+	            React.createElement("div", { className: "ms-font-m" }, this.props.Discussion.DiscussionLocation)));
+	    };
+	    DiscussionListItem.prototype.GetFormattedDate = function (date) {
+	        // TODO : Why do we need to do this?
+	        var date = new Date(date);
+	        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+	    };
+	    return DiscussionListItem;
+	}(React.Component));
 	exports.DiscussionListItem = DiscussionListItem;
 
 
@@ -2502,37 +2533,45 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	const Button_1 = __webpack_require__(25);
-	const Dialog_1 = __webpack_require__(31);
-	const Discussion_1 = __webpack_require__(56);
-	class AddDiscussion extends React.Component {
-	    constructor() {
-	        super();
-	        this.state = {
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var Button_1 = __webpack_require__(25);
+	var Dialog_1 = __webpack_require__(31);
+	var Discussion_1 = __webpack_require__(56);
+	var AddDiscussion = (function (_super) {
+	    __extends(AddDiscussion, _super);
+	    function AddDiscussion() {
+	        var _this = _super.call(this) || this;
+	        _this.state = {
 	            ShowDialog: false,
 	        };
+	        return _this;
 	    }
 	    // Main renderer.
-	    render() {
+	    AddDiscussion.prototype.render = function () {
 	        return (React.createElement("div", null,
 	            React.createElement(Button_1.Button, { description: 'Opens the dialog to create a discussion', onClick: this.showDialog.bind(this) }, "Add Safety Discussion"),
 	            React.createElement(Dialog_1.Dialog, { isOpen: this.state.ShowDialog, type: Dialog_1.DialogType.close, onDismiss: this.closeDialog.bind(this), title: 'Add Discussion', subText: 'Please enter the details for the safety discussion.', isBlocking: false, closeButtonAriaLabel: 'Close' },
 	                React.createElement(Discussion_1.Discussion, { FormMode: Discussion_1.FormMode.New, Discussion: null, DialogClose: this.closeDialog.bind(this), NewDiscussionCreated: this.newDiscussionCreated.bind(this) }))));
-	    }
+	    };
 	    // New discussion has been created. Pass up to parent.
-	    newDiscussionCreated(discussion) {
+	    AddDiscussion.prototype.newDiscussionCreated = function (discussion) {
 	        console.log("AddDiscussion.newDiscussionCreated()");
 	        this.setState({ ShowDialog: false });
 	        this.props.NewDiscussionCreated(discussion);
-	    }
-	    showDialog() {
+	    };
+	    AddDiscussion.prototype.showDialog = function () {
 	        this.setState({ ShowDialog: true });
-	    }
-	    closeDialog() {
+	    };
+	    AddDiscussion.prototype.closeDialog = function () {
 	        this.setState({ ShowDialog: false });
-	    }
-	}
+	    };
+	    return AddDiscussion;
+	}(React.Component));
 	exports.AddDiscussion = AddDiscussion;
 
 
@@ -4080,21 +4119,26 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const React = __webpack_require__(1);
-	const Button_1 = __webpack_require__(25);
-	const TextField_1 = __webpack_require__(57);
-	const DatePicker_1 = __webpack_require__(65);
-	const Dialog_1 = __webpack_require__(31);
-	const MessageBar_1 = __webpack_require__(90);
-	const Spinner_1 = __webpack_require__(95);
-	const SafetyDiscussion_1 = __webpack_require__(100);
-	const DiscussionService_1 = __webpack_require__(101);
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var React = __webpack_require__(1);
+	var Button_1 = __webpack_require__(25);
+	var TextField_1 = __webpack_require__(57);
+	var DatePicker_1 = __webpack_require__(65);
+	var Dialog_1 = __webpack_require__(31);
+	var MessageBar_1 = __webpack_require__(90);
+	var Spinner_1 = __webpack_require__(95);
+	var SafetyDiscussion_1 = __webpack_require__(100);
+	var DiscussionService_1 = __webpack_require__(101);
 	var FormMode;
 	(function (FormMode) {
 	    FormMode[FormMode["New"] = 0] = "New";
 	    FormMode[FormMode["Edit"] = 1] = "Edit";
 	})(FormMode = exports.FormMode || (exports.FormMode = {}));
-	const DayPickerStrings = {
+	var DayPickerStrings = {
 	    months: [
 	        'January',
 	        'February',
@@ -4143,18 +4187,21 @@
 	    ],
 	    goToToday: 'Go to today'
 	};
-	class Discussion extends React.Component {
-	    constructor(props) {
-	        super(props);
-	        this.state = {
-	            Discussion: this.props.FormMode == FormMode.Edit ? this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
+	var Discussion = (function (_super) {
+	    __extends(Discussion, _super);
+	    function Discussion(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.state = {
+	            Discussion: _this.props.FormMode == FormMode.Edit ? _this.props.Discussion : new SafetyDiscussion_1.SafetyDiscussion(),
 	            IsSaving: false,
 	            IsValid: true,
 	            IsError: false
 	        };
+	        return _this;
 	    }
 	    // Main renderer.
-	    render() {
+	    Discussion.prototype.render = function () {
+	        var _this = this;
 	        return (React.createElement("div", null,
 	            !this.state.IsValid &&
 	                React.createElement("div", null,
@@ -4165,7 +4212,7 @@
 	                    React.createElement(MessageBar_1.MessageBar, { messageBarType: MessageBar_1.MessageBarType.error }, "Sorry, there was a problem saving your data. Please refresh the page and try again."),
 	                    React.createElement("br", null)),
 	            !this.state.IsSaving &&
-	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DateISO }),
+	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: function (date) { return _this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null); }, value: this.state.Discussion.DateISO }),
 	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving }),
@@ -4174,9 +4221,9 @@
 	            React.createElement(Dialog_1.DialogFooter, null,
 	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving }, "Save"),
 	                React.createElement(Button_1.Button, { onClick: this.props.DialogClose }, "Cancel"))));
-	    }
-	    Validate() {
-	        let valid = true;
+	    };
+	    Discussion.prototype.Validate = function () {
+	        var valid = true;
 	        if (!this.state.Discussion.DateISO ||
 	            !this.state.Discussion.DiscussionLocation ||
 	            !this.state.Discussion.Subject ||
@@ -4187,45 +4234,46 @@
 	            IsValid: valid
 	        });
 	        return valid;
-	    }
-	    Save() {
+	    };
+	    Discussion.prototype.Save = function () {
+	        var _this = this;
 	        var valid = this.Validate();
 	        if (valid) {
 	            this.setState({
 	                IsSaving: true
 	            });
-	            let service = new DiscussionService_1.DiscussionService();
+	            var service = new DiscussionService_1.DiscussionService();
 	            service
 	                .SaveDiscussion(this.state.Discussion)
-	                .then((discussion) => {
+	                .then(function (discussion) {
 	                console.log("AddDiscussion.Save()");
 	                console.log(discussion);
-	                this.props.NewDiscussionCreated(discussion);
+	                _this.props.NewDiscussionCreated(discussion);
 	            })
-	                .catch((error) => {
+	                .catch(function (error) {
 	                console.log(error);
-	                this.setState({
+	                _this.setState({
 	                    IsError: true,
 	                    IsSaving: false
 	                });
 	            });
 	        }
-	    }
-	    OnDateChanged(date) {
+	    };
+	    Discussion.prototype.OnDateChanged = function (date) {
 	        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
-	    }
-	    OnLocationChanged(text) {
+	    };
+	    Discussion.prototype.OnLocationChanged = function (text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, text, null, null, null);
-	    }
-	    OnSubjectChanged(text) {
+	    };
+	    Discussion.prototype.OnSubjectChanged = function (text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, null, null, text, null);
-	    }
-	    OnOutcomeChanged(text) {
+	    };
+	    Discussion.prototype.OnOutcomeChanged = function (text) {
 	        this.UpdatePropertiesOfDiscussion(null, null, null, null, null, text);
-	    }
-	    UpdatePropertiesOfDiscussion(observer, discussionDate, discussionLocation, discussedWith, subject, outcomes) {
+	    };
+	    Discussion.prototype.UpdatePropertiesOfDiscussion = function (observer, discussionDate, discussionLocation, discussedWith, subject, outcomes) {
 	        this.setState(function (prevState, props) {
-	            let updatedDiscussion = this.CloneDiscussion(prevState.Discussion);
+	            var updatedDiscussion = this.CloneDiscussion(prevState.Discussion);
 	            if (observer) {
 	                updatedDiscussion.Observer = observer;
 	            }
@@ -4248,8 +4296,8 @@
 	                Discussion: updatedDiscussion
 	            };
 	        });
-	    }
-	    CloneDiscussion(discussion) {
+	    };
+	    Discussion.prototype.CloneDiscussion = function (discussion) {
 	        return {
 	            Observer: discussion.Observer,
 	            DateISO: discussion.DateISO,
@@ -4258,8 +4306,9 @@
 	            Subject: discussion.Subject,
 	            Outcomes: discussion.Outcomes
 	        };
-	    }
-	}
+	    };
+	    return Discussion;
+	}(React.Component));
 	exports.Discussion = Discussion;
 
 
@@ -7227,8 +7276,11 @@
 /***/ function(module, exports) {
 
 	"use strict";
-	class SafetyDiscussion {
-	}
+	var SafetyDiscussion = (function () {
+	    function SafetyDiscussion() {
+	    }
+	    return SafetyDiscussion;
+	}());
 	exports.SafetyDiscussion = SafetyDiscussion;
 
 
@@ -7237,26 +7289,27 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const fetch = __webpack_require__(102);
-	const es6_promise_1 = __webpack_require__(104);
-	class DiscussionService {
-	    constructor() {
-	        this.ParseCreateDiscussionResultJson = (json) => {
-	            return new es6_promise_1.Promise((resolve, reject) => {
-	                resolve(this.ParseJsonToDiscussion(json));
+	var fetch = __webpack_require__(102);
+	var es6_promise_1 = __webpack_require__(104);
+	var DiscussionService = (function () {
+	    function DiscussionService() {
+	        var _this = this;
+	        this.ParseCreateDiscussionResultJson = function (json) {
+	            return new es6_promise_1.Promise(function (resolve, reject) {
+	                resolve(_this.ParseJsonToDiscussion(json));
 	            });
 	        };
-	        this.ParseGetMyDiscussionsResultJson = (json) => {
-	            return new es6_promise_1.Promise((resolve, reject) => {
-	                let retVal = [];
+	        this.ParseGetMyDiscussionsResultJson = function (json) {
+	            return new es6_promise_1.Promise(function (resolve, reject) {
+	                var retVal = [];
 	                for (var i = 0; i < json.length; i++) {
-	                    retVal.push(this.ParseJsonToDiscussion(json[i]));
+	                    retVal.push(_this.ParseJsonToDiscussion(json[i]));
 	                }
 	                resolve(retVal);
 	            });
 	        };
 	    }
-	    SaveDiscussion(discussion) {
+	    DiscussionService.prototype.SaveDiscussion = function (discussion) {
 	        return fetch("discussion/creatediscussion" + window.location.search, {
 	            credentials: 'include',
 	            method: 'put',
@@ -7267,9 +7320,9 @@
 	        })
 	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
 	            .then(this.ParseCreateDiscussionResultJson); // Parse out the JSON
-	    }
-	    ProcessServerResponse(response) {
-	        return new es6_promise_1.Promise((resolve, reject) => {
+	    };
+	    DiscussionService.prototype.ProcessServerResponse = function (response) {
+	        return new es6_promise_1.Promise(function (resolve, reject) {
 	            // Response was 200, resolve the promise.
 	            if (response.status === 200) {
 	                resolve(response.json());
@@ -7278,16 +7331,16 @@
 	                reject(new Error(response.statusText));
 	            }
 	        });
-	    }
-	    GetMyDiscussions() {
+	    };
+	    DiscussionService.prototype.GetMyDiscussions = function () {
 	        return fetch("discussion/mydiscussions" + window.location.search, {
 	            credentials: 'include',
 	            method: 'get'
 	        })
 	            .then(this.ProcessServerResponse) // Look at the response, confirm it's 200
 	            .then(this.ParseGetMyDiscussionsResultJson); // Parse out the JSON
-	    }
-	    ParseJsonToDiscussion(json) {
+	    };
+	    DiscussionService.prototype.ParseJsonToDiscussion = function (json) {
 	        return {
 	            Observer: json.Observer,
 	            DateISO: json.DateISO,
@@ -7297,8 +7350,9 @@
 	            Outcomes: json.Outcomes,
 	            Id: json.Id,
 	        };
-	    }
-	}
+	    };
+	    return DiscussionService;
+	}());
 	exports.DiscussionService = DiscussionService;
 
 

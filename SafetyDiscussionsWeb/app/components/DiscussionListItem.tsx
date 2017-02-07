@@ -13,12 +13,22 @@ export class DiscussionListItem extends React.Component<IDiscussionListItemProps
     render() {
 
         return (
-            <div>
-                {this.props.Discussion.DateISO}<br/>
-                {this.props.Discussion.DiscussionLocation}<br />
-                {this.props.Discussion.Subject}<br />
-                {this.props.Discussion.Outcomes}<br />
+            <div className="sd-discussion">
+                <div className="ms-font-l">{this.props.Discussion.Subject}</div>
+                <div className="ms-font-m">{this.GetFormattedDate(this.props.Discussion.DateISO)}</div>
+                <div className="ms-font-m">{this.props.Discussion.DiscussionLocation}</div>
             </div>
         );
     }
+
+
+    GetFormattedDate(date: Date): string {
+
+        // TODO : Why do we need to do this?
+        var date = new Date(date);
+
+        return date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+    }
+
 }
