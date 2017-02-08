@@ -49,7 +49,7 @@
 	const ReactDOM = __webpack_require__(2);
 	const SafetyDiscussions_1 = __webpack_require__(3);
 	// Polyfill Promise.
-	const es6_promise_1 = __webpack_require__(104);
+	const es6_promise_1 = __webpack_require__(143);
 	es6_promise_1.polyfill();
 	ReactDOM.render(React.createElement(SafetyDiscussions_1.SafetyDiscussions, null), document.getElementById('reactRoot'));
 
@@ -76,7 +76,7 @@
 	const AddDiscussion_1 = __webpack_require__(35);
 	const Spinner_1 = __webpack_require__(95);
 	const MessageBar_1 = __webpack_require__(23);
-	const DiscussionService_1 = __webpack_require__(101);
+	const DiscussionService_1 = __webpack_require__(140);
 	class SafetyDiscussions extends React.Component {
 	    constructor() {
 	        super();
@@ -4267,8 +4267,10 @@
 	const Dialog_1 = __webpack_require__(36);
 	const MessageBar_1 = __webpack_require__(23);
 	const Spinner_1 = __webpack_require__(95);
-	const SafetyDiscussion_1 = __webpack_require__(100);
-	const DiscussionService_1 = __webpack_require__(101);
+	const PeoplePicker_1 = __webpack_require__(100);
+	const Label_1 = __webpack_require__(65);
+	const SafetyDiscussion_1 = __webpack_require__(139);
+	const DiscussionService_1 = __webpack_require__(140);
 	var FormMode;
 	(function (FormMode) {
 	    FormMode[FormMode["New"] = 0] = "New";
@@ -4346,14 +4348,26 @@
 	                    React.createElement("br", null)),
 	            !this.state.IsSaving &&
 	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(date, null, null, null, null), value: this.state.Discussion.DateISO }),
-	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
+	            React.createElement(Label_1.Label, null, "Discussed With"),
+	            React.createElement(PeoplePicker_1.NormalPeoplePicker, { onResolveSuggestions: this.OnFilterChanged.bind(this), getTextFromItem: (persona) => persona.primaryText, pickerSuggestionsProps: {
+	                    suggestionsHeaderText: 'Suggested People',
+	                    noResultsFoundText: 'No results found',
+	                    loadingText: 'Loading'
+	                }, className: 'ms-PeoplePicker', key: 'normal' }),
+	            React.createElement(TextField_1.TextField, { label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving }),
 	            React.createElement(TextField_1.TextField, { label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving }),
 	            this.state.IsSaving &&
 	                React.createElement(Spinner_1.Spinner, { label: 'Saving discussion...' }),
 	            React.createElement(Dialog_1.DialogFooter, null,
 	                React.createElement(Button_1.Button, { buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving }, "Save"),
 	                React.createElement(Button_1.Button, { onClick: this.props.DialogClose }, "Cancel"))));
+	    }
+	    OnFilterChanged(filterText, currentPersonas, limitResults) {
+	        if (filterText) {
+	            let service = new DiscussionService_1.DiscussionService();
+	            return service.UserSearch(filterText, currentPersonas, limitResults);
+	        }
 	    }
 	    Validate() {
 	        let valid = true;
@@ -7230,6 +7244,3319 @@
 
 /***/ },
 /* 100 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable */
+	var React = __webpack_require__(1);
+	/* tslint:enable */
+	var BasePicker_1 = __webpack_require__(101);
+	var SelectedItemDefault_1 = __webpack_require__(112);
+	var SuggestionItemDefault_1 = __webpack_require__(125);
+	var SelectedItemWithMenu_1 = __webpack_require__(126);
+	__webpack_require__(138);
+	var BasePeoplePicker = (function (_super) {
+	    __extends(BasePeoplePicker, _super);
+	    function BasePeoplePicker() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    return BasePeoplePicker;
+	}(BasePicker_1.BasePicker));
+	exports.BasePeoplePicker = BasePeoplePicker;
+	var MemberListPeoplePicker = (function (_super) {
+	    __extends(MemberListPeoplePicker, _super);
+	    function MemberListPeoplePicker() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    return MemberListPeoplePicker;
+	}(BasePicker_1.BasePickerListBelow));
+	exports.MemberListPeoplePicker = MemberListPeoplePicker;
+	/**
+	 * Standard People Picker.
+	 */
+	var NormalPeoplePicker = (function (_super) {
+	    __extends(NormalPeoplePicker, _super);
+	    function NormalPeoplePicker() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    return NormalPeoplePicker;
+	}(BasePeoplePicker));
+	NormalPeoplePicker.defaultProps = {
+	    onRenderItem: function (props) { return React.createElement(SelectedItemDefault_1.SelectedItemDefault, __assign({}, props)); },
+	    onRenderSuggestionsItem: function (props) { return React.createElement(SuggestionItemDefault_1.SuggestionItemNormal, __assign({}, props)); }
+	};
+	exports.NormalPeoplePicker = NormalPeoplePicker;
+	/**
+	* Compact layout. It uses small personas when displaying search results.
+	*/
+	var CompactPeoplePicker = (function (_super) {
+	    __extends(CompactPeoplePicker, _super);
+	    function CompactPeoplePicker() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    return CompactPeoplePicker;
+	}(BasePeoplePicker));
+	CompactPeoplePicker.defaultProps = {
+	    onRenderItem: function (props) { return React.createElement(SelectedItemDefault_1.SelectedItemDefault, __assign({}, props)); },
+	    onRenderSuggestionsItem: function (props) { return React.createElement(SuggestionItemDefault_1.SuggestionItemSmall, __assign({}, props)); }
+	};
+	exports.CompactPeoplePicker = CompactPeoplePicker;
+	/**
+	 * MemberList layout. The selected people show up below the search box.
+	 */
+	var ListPeoplePicker = (function (_super) {
+	    __extends(ListPeoplePicker, _super);
+	    function ListPeoplePicker() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    return ListPeoplePicker;
+	}(MemberListPeoplePicker));
+	ListPeoplePicker.defaultProps = {
+	    onRenderItem: function (props) { return React.createElement(SelectedItemWithMenu_1.SelectedItemWithMenu, __assign({}, props)); },
+	    onRenderSuggestionsItem: function (props) { return React.createElement(SuggestionItemDefault_1.SuggestionItemNormal, __assign({}, props)); }
+	};
+	exports.ListPeoplePicker = ListPeoplePicker;
+	
+
+
+/***/ },
+/* 101 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var FocusZone_1 = __webpack_require__(78);
+	var Callout_1 = __webpack_require__(85);
+	var index_1 = __webpack_require__(102);
+	var Suggestions_1 = __webpack_require__(107);
+	var SuggestionsController_1 = __webpack_require__(109);
+	var BaseAutoFill_1 = __webpack_require__(110);
+	var BaseComponent_1 = __webpack_require__(9);
+	var Utilities_1 = __webpack_require__(8);
+	__webpack_require__(111);
+	var BasePicker = (function (_super) {
+	    __extends(BasePicker, _super);
+	    function BasePicker(basePickerProps) {
+	        var _this = _super.call(this, basePickerProps) || this;
+	        _this.SuggestionOfProperType = Suggestions_1.Suggestions;
+	        var items = basePickerProps.defaultSelectedItems || [];
+	        _this.suggestionStore = new SuggestionsController_1.SuggestionsController();
+	        _this.selection = new index_1.Selection({ onSelectionChanged: function () { return _this.onSelectionChange(); } });
+	        _this.selection.setItems(items);
+	        _this.state = {
+	            items: items,
+	            suggestedDisplayValue: '',
+	            moreSuggestionsAvailable: false
+	        };
+	        return _this;
+	    }
+	    Object.defineProperty(BasePicker.prototype, "items", {
+	        get: function () {
+	            return this.state.items;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    BasePicker.prototype.componentWillReceiveProps = function (newProps, newState) {
+	        if (newState.items && newState.items !== this.state.items) {
+	            this.selection.setItems(newState.items);
+	        }
+	    };
+	    BasePicker.prototype.componentDidMount = function () {
+	        this.selection.setItems(this.state.items);
+	    };
+	    BasePicker.prototype.focus = function () {
+	        this.focusZone.focus();
+	    };
+	    BasePicker.prototype.dismissSuggestions = function () {
+	        this.setState({ suggestionsVisible: false });
+	    };
+	    BasePicker.prototype.completeSuggestion = function () {
+	        if (this.suggestionStore.hasSelectedSuggestion()) {
+	            this.addItem(this.suggestionStore.currentSuggestion.item);
+	            this.updateValue('');
+	            this.input.clear();
+	        }
+	    };
+	    BasePicker.prototype.render = function () {
+	        var suggestedDisplayValue = this.state.suggestedDisplayValue;
+	        var _a = this.props, className = _a.className, inputProps = _a.inputProps;
+	        return (React.createElement("div", { ref: this._resolveRef('root'), className: Utilities_1.css('ms-BasePicker', className ? className : ''), onKeyDown: this.onKeyDown },
+	            React.createElement(index_1.SelectionZone, { selection: this.selection, selectionMode: index_1.SelectionMode.multiple },
+	                React.createElement(FocusZone_1.FocusZone, { ref: this._resolveRef('focusZone'), className: 'ms-BasePicker-text' },
+	                    this.renderItems(),
+	                    React.createElement(BaseAutoFill_1.BaseAutoFill, __assign({}, inputProps, { className: 'ms-BasePicker-input', ref: this._resolveRef('input'), onFocus: this.onInputFocus, onInputValueChange: this.onInputChange, suggestedDisplayValue: suggestedDisplayValue, "aria-activedescendant": 'sug-' + this.suggestionStore.currentIndex, "aria-owns": 'suggestion-list', "aria-expanded": 'true', "aria-haspopup": 'true', autoCapitalize: 'off', autoComplete: 'off', role: 'combobox' })))),
+	            this.renderSuggestions()));
+	    };
+	    BasePicker.prototype.renderSuggestions = function () {
+	        var TypedSuggestion = this.SuggestionOfProperType;
+	        return this.state.suggestionsVisible ? (React.createElement(Callout_1.Callout, { isBeakVisible: false, gapSpace: 0, targetElement: this.root, onDismiss: this.dismissSuggestions, directionalHint: Utilities_1.getRTL() ? Callout_1.DirectionalHint.bottomRightEdge : Callout_1.DirectionalHint.bottomLeftEdge },
+	            React.createElement(TypedSuggestion, __assign({ onRenderSuggestion: this.props.onRenderSuggestionsItem, onSuggestionClick: this.onSuggestionClick, suggestions: this.suggestionStore.getSuggestions(), ref: this._resolveRef('suggestionElement'), onGetMoreResults: this.onGetMoreResults, moreSuggestionsAvailable: this.state.moreSuggestionsAvailable, isLoading: this.state.suggestionsLoading }, this.props.pickerSuggestionsProps)))) : (null);
+	    };
+	    BasePicker.prototype.renderItems = function () {
+	        var _this = this;
+	        var onRenderItem = this.props.onRenderItem;
+	        var items = this.state.items;
+	        return items.map(function (item, index) { return onRenderItem({
+	            item: item,
+	            index: index,
+	            key: index + _this._getTextFromItem(item),
+	            selected: _this.selection.isIndexSelected(index),
+	            onRemoveItem: function () { return _this.removeItem(item); },
+	            onItemChange: _this.onItemChange
+	        }); });
+	    };
+	    BasePicker.prototype.resetFocus = function (index) {
+	        var items = this.state.items;
+	        if (items.length) {
+	            var newEl = this.root.querySelectorAll('[data-selection-index]')[Math.min(index, items.length - 1)];
+	            if (newEl) {
+	                this.focusZone.focusElement(newEl);
+	            }
+	        }
+	        else {
+	            this.input.focus();
+	        }
+	    };
+	    BasePicker.prototype.onSuggestionSelect = function () {
+	        if (this.suggestionStore.currentSuggestion) {
+	            var currentValue = this.input.value;
+	            var itemValue = this._getTextFromItem(this.suggestionStore.currentSuggestion.item, currentValue);
+	            this.setState({ suggestedDisplayValue: itemValue });
+	        }
+	    };
+	    BasePicker.prototype.onSelectionChange = function () {
+	        this.forceUpdate();
+	    };
+	    BasePicker.prototype.updateSuggestions = function (suggestions) {
+	        this.suggestionStore.updateSuggestions(suggestions);
+	        this.forceUpdate();
+	    };
+	    BasePicker.prototype.updateValue = function (updatedValue) {
+	        var _this = this;
+	        var suggestions = this.props.onResolveSuggestions(updatedValue, this.state.items);
+	        var suggestionsArray = suggestions;
+	        var suggestionsPromiseLike = suggestions;
+	        // Check to see if the returned value is an array, if it is then just pass it into the next function.
+	        // If the returned value is not an array then check to see if it's a promise or PromiseLike. If it is then resolve it asynchronously.
+	        if (Array.isArray(suggestionsArray)) {
+	            this.resolveNewValue(updatedValue, suggestionsArray);
+	        }
+	        else if (suggestionsPromiseLike.then) {
+	            if (!this.loadingTimer) {
+	                this.loadingTimer = this._async.setTimeout(function () { return _this.setState({
+	                    suggestionsLoading: true
+	                }); }, 500);
+	            }
+	            this.setState({
+	                suggestionsVisible: this.input.value !== '' && this.input.inputElement === document.activeElement
+	            });
+	            // Ensure that the promise will only use the callback if it was the most recent one.
+	            var promise_1 = this.currentPromise = suggestionsPromiseLike;
+	            promise_1.then(function (newSuggestions) {
+	                if (promise_1 === _this.currentPromise) {
+	                    _this.resolveNewValue(updatedValue, newSuggestions);
+	                    if (_this.loadingTimer) {
+	                        _this._async.clearTimeout(_this.loadingTimer);
+	                        _this.loadingTimer = undefined;
+	                    }
+	                }
+	            });
+	        }
+	    };
+	    BasePicker.prototype.resolveNewValue = function (updatedValue, suggestions) {
+	        this.suggestionStore.updateSuggestions(suggestions);
+	        var itemValue = undefined;
+	        if (this.suggestionStore.currentSuggestion) {
+	            itemValue = this._getTextFromItem(this.suggestionStore.currentSuggestion.item, updatedValue);
+	        }
+	        this.setState({
+	            suggestionsLoading: false,
+	            suggestedDisplayValue: itemValue,
+	            suggestionsVisible: this.input.value !== '' && this.input.inputElement === document.activeElement
+	        });
+	    };
+	    BasePicker.prototype.onChange = function () {
+	        if (this.props.onChange) {
+	            this.props.onChange(this.state.items);
+	        }
+	    };
+	    BasePicker.prototype.onInputChange = function (value) {
+	        this.updateValue(value);
+	        this.setState({ moreSuggestionsAvailable: true });
+	    };
+	    BasePicker.prototype.onSuggestionClick = function (ev, item, index) {
+	        this.addItemByIndex(index);
+	    };
+	    BasePicker.prototype.onInputFocus = function (ev) {
+	        this.selection.setAllSelected(false);
+	        if (this.input.value) {
+	            this.setState({ suggestionsVisible: true });
+	        }
+	    };
+	    BasePicker.prototype.onKeyDown = function (ev) {
+	        var value = this.input.value;
+	        switch (ev.which) {
+	            case Utilities_1.KeyCodes.escape:
+	                this.dismissSuggestions();
+	                break;
+	            case Utilities_1.KeyCodes.tab:
+	            case Utilities_1.KeyCodes.enter:
+	                if (value && this.suggestionStore.hasSelectedSuggestion()) {
+	                    this.completeSuggestion();
+	                    ev.preventDefault();
+	                    ev.stopPropagation();
+	                }
+	                break;
+	            case Utilities_1.KeyCodes.backspace:
+	                this.onBackspace(ev);
+	                break;
+	            case Utilities_1.KeyCodes.up:
+	                if (ev.target === this.input.inputElement && this.suggestionStore.previousSuggestion()) {
+	                    ev.preventDefault();
+	                    ev.stopPropagation();
+	                    this.onSuggestionSelect();
+	                }
+	                break;
+	            case Utilities_1.KeyCodes.down:
+	                if (ev.target === this.input.inputElement) {
+	                    if (this.suggestionStore.nextSuggestion()) {
+	                        ev.preventDefault();
+	                        ev.stopPropagation();
+	                        this.onSuggestionSelect();
+	                    }
+	                }
+	                break;
+	        }
+	    };
+	    BasePicker.prototype.onItemChange = function (changedItem, index) {
+	        var _this = this;
+	        var items = this.state.items;
+	        if (index >= 0) {
+	            var newItems = items;
+	            newItems[index] = changedItem;
+	            this.setState({ items: newItems }, function () { return _this.onChange(); });
+	        }
+	    };
+	    BasePicker.prototype.onGetMoreResults = function () {
+	        var _this = this;
+	        if (this.props.onGetMoreResults) {
+	            var suggestions = this.props.onGetMoreResults(this.input.value, this.state.items);
+	            var suggestionsArray = suggestions;
+	            var suggestionsPromiseLike = suggestions;
+	            if (Array.isArray(suggestionsArray)) {
+	                this.updateSuggestions(suggestionsArray);
+	            }
+	            else if (suggestionsPromiseLike.then) {
+	                suggestionsPromiseLike.then(function (newSuggestions) { return _this.updateSuggestions(newSuggestions); });
+	            }
+	        }
+	        this.input.focus();
+	        this.setState({ moreSuggestionsAvailable: false });
+	    };
+	    BasePicker.prototype.addItemByIndex = function (index) {
+	        this.addItem(this.suggestionStore.getSuggestionAtIndex(index).item);
+	        this.input.clear();
+	        this.updateValue('');
+	    };
+	    BasePicker.prototype.addItem = function (item) {
+	        var _this = this;
+	        var newItems = this.state.items.concat([item]);
+	        this.selection.setItems(newItems);
+	        this.setState({ items: newItems }, function () { return _this.onChange(); });
+	    };
+	    BasePicker.prototype.removeItem = function (item) {
+	        var _this = this;
+	        var items = this.state.items;
+	        var index = items.indexOf(item);
+	        if (index >= 0) {
+	            var newItems = items.slice(0, index).concat(items.slice(index + 1));
+	            this.selection.setItems(newItems);
+	            this.setState({ items: newItems }, function () { return _this.onChange(); });
+	        }
+	    };
+	    BasePicker.prototype.removeItems = function (itemsToRemove) {
+	        var _this = this;
+	        var items = this.state.items;
+	        var newItems = items.filter(function (item) { return itemsToRemove.indexOf(item) === -1; });
+	        var firstItemToRemove = this.selection.getSelection()[0];
+	        var index = items.indexOf(firstItemToRemove);
+	        this.selection.setItems(newItems);
+	        this.setState({ items: newItems }, function () { return _this.resetFocus(index); });
+	    };
+	    // This is protected because we may expect the backspace key to work differently in a different kind of picker.
+	    // This lets the subclass override it and provide it's own onBackspace. For an example see the BasePickerListBelow
+	    BasePicker.prototype.onBackspace = function (ev) {
+	        if (this.state.items.length && !this.input.isValueSelected && this.input.cursorLocation === 0) {
+	            this.removeItem(this.state.items[this.state.items.length - 1]);
+	        }
+	        else if (this.selection.getSelectedCount() > 0) {
+	            this.removeItems(this.selection.getSelection());
+	        }
+	    };
+	    BasePicker.prototype._getTextFromItem = function (item, currentValue) {
+	        if (this.props.getTextFromItem) {
+	            return this.props.getTextFromItem(item, currentValue);
+	        }
+	        else {
+	            return '';
+	        }
+	    };
+	    return BasePicker;
+	}(BaseComponent_1.BaseComponent));
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "dismissSuggestions", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onInputChange", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onSuggestionClick", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onInputFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onKeyDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onItemChange", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "onGetMoreResults", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "addItemByIndex", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "addItem", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "removeItem", null);
+	__decorate([
+	    Utilities_1.autobind
+	], BasePicker.prototype, "removeItems", null);
+	exports.BasePicker = BasePicker;
+	var BasePickerListBelow = (function (_super) {
+	    __extends(BasePickerListBelow, _super);
+	    function BasePickerListBelow() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    BasePickerListBelow.prototype.render = function () {
+	        var suggestedDisplayValue = this.state.suggestedDisplayValue;
+	        var _a = this.props, className = _a.className, inputProps = _a.inputProps;
+	        return (React.createElement("div", null,
+	            React.createElement("div", { ref: this._resolveRef('root'), className: Utilities_1.css('ms-BasePicker', className ? className : ''), onKeyDown: this.onKeyDown },
+	                React.createElement(index_1.SelectionZone, { selection: this.selection, selectionMode: index_1.SelectionMode.multiple },
+	                    React.createElement("div", { className: 'ms-BasePicker-text' },
+	                        React.createElement(BaseAutoFill_1.BaseAutoFill, __assign({}, inputProps, { className: 'ms-BasePicker-input', ref: this._resolveRef('input'), onFocus: this.onInputFocus, onInputValueChange: this.onInputChange, suggestedDisplayValue: suggestedDisplayValue, "aria-activedescendant": 'sug-' + this.suggestionStore.currentIndex, "aria-owns": 'suggestion-list', "aria-expanded": 'true', "aria-haspopup": 'true', autoCapitalize: 'off', autoComplete: 'off', role: 'combobox' }))))),
+	            this.renderSuggestions(),
+	            React.createElement(FocusZone_1.FocusZone, { ref: this._resolveRef('focusZone'), className: 'ms-BasePicker-selectedItems' }, this.renderItems())));
+	    };
+	    BasePickerListBelow.prototype.onBackspace = function (ev) {
+	        // override the existing backspace method to not do anything because the list items appear below.
+	    };
+	    return BasePickerListBelow;
+	}(BasePicker));
+	exports.BasePickerListBelow = BasePickerListBelow;
+	
+
+
+/***/ },
+/* 102 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(103));
+	__export(__webpack_require__(104));
+	__export(__webpack_require__(105));
+	__export(__webpack_require__(106));
+	
+
+
+/***/ },
+/* 103 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.SELECTION_CHANGE = 'change';
+	var SelectionMode;
+	(function (SelectionMode) {
+	    SelectionMode[SelectionMode["none"] = 0] = "none";
+	    SelectionMode[SelectionMode["single"] = 1] = "single";
+	    SelectionMode[SelectionMode["multiple"] = 2] = "multiple";
+	})(SelectionMode = exports.SelectionMode || (exports.SelectionMode = {}));
+	var SelectionDirection;
+	(function (SelectionDirection) {
+	    SelectionDirection[SelectionDirection["horizontal"] = 0] = "horizontal";
+	    SelectionDirection[SelectionDirection["vertical"] = 1] = "vertical";
+	})(SelectionDirection = exports.SelectionDirection || (exports.SelectionDirection = {}));
+	
+
+
+/***/ },
+/* 104 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var interfaces_1 = __webpack_require__(103);
+	var EventGroup_1 = __webpack_require__(11);
+	var Selection = (function () {
+	    function Selection(options) {
+	        if (options === void 0) { options = {}; }
+	        var onSelectionChanged = options.onSelectionChanged, getKey = options.getKey, _a = options.canSelectItem, canSelectItem = _a === void 0 ? function (item) { return true; } : _a;
+	        this.getKey = getKey || (function (item, index) { return (item ? item.key : String(index)); });
+	        this._changeEventSuppressionCount = 0;
+	        this._exemptedCount = 0;
+	        this._anchoredIndex = 0;
+	        this._unselectableCount = 0;
+	        this.setItems([], true);
+	        this._onSelectionChanged = onSelectionChanged;
+	        this.canSelectItem = canSelectItem;
+	    }
+	    Selection.prototype.setChangeEvents = function (isEnabled, suppressChange) {
+	        this._changeEventSuppressionCount += isEnabled ? -1 : 1;
+	        if (this._changeEventSuppressionCount === 0 && this._hasChanged) {
+	            this._hasChanged = false;
+	            if (!suppressChange) {
+	                this._change();
+	            }
+	        }
+	    };
+	    /**
+	     * Selection needs the items, call this method to set them. If the set
+	     * of items is the same, this will re-evaluate selection and index maps.
+	     * Otherwise, shouldClear should be set to true, so that selection is
+	     * cleared.
+	     */
+	    Selection.prototype.setItems = function (items, shouldClear) {
+	        if (shouldClear === void 0) { shouldClear = true; }
+	        var newKeyToIndexMap = {};
+	        var newUnselectableIndices = {};
+	        var hasSelectionChanged = false;
+	        this.setChangeEvents(false);
+	        // Reset the unselectable count.
+	        this._unselectableCount = 0;
+	        // Build lookup table for quick selection evaluation.
+	        for (var i = 0; i < items.length; i++) {
+	            var item = items[i];
+	            if (item) {
+	                newKeyToIndexMap[this.getKey(item, i)] = i;
+	            }
+	            newUnselectableIndices[i] = item && !this.canSelectItem(item);
+	            if (newUnselectableIndices[i]) {
+	                this._unselectableCount++;
+	            }
+	        }
+	        if (shouldClear) {
+	            this.setAllSelected(false);
+	        }
+	        // Check the exemption list for discrepencies.
+	        var newExemptedIndicies = {};
+	        for (var indexProperty in this._exemptedIndices) {
+	            if (this._exemptedIndices.hasOwnProperty(indexProperty)) {
+	                var index = Number(indexProperty);
+	                var item = this._items[index];
+	                var exemptKey = item ? this.getKey(item, Number(index)) : undefined;
+	                var newIndex = exemptKey ? newKeyToIndexMap[exemptKey] : index;
+	                if (newIndex === undefined) {
+	                    // We don't know the index of the item any more so it's either moved or removed.
+	                    // In this case we reset the entire selection.
+	                    this.setAllSelected(false);
+	                    break;
+	                }
+	                else {
+	                    // We know the new index of the item. update the existing exemption table.
+	                    newExemptedIndicies[newIndex] = true;
+	                    hasSelectionChanged = hasSelectionChanged || (newIndex !== index);
+	                }
+	            }
+	        }
+	        this._exemptedIndices = newExemptedIndicies;
+	        this._keyToIndexMap = newKeyToIndexMap;
+	        this._unselectableIndices = newUnselectableIndices;
+	        this._items = items || [];
+	        if (hasSelectionChanged) {
+	            this._change();
+	        }
+	        this.setChangeEvents(true);
+	    };
+	    Selection.prototype.getItems = function () {
+	        return this._items;
+	    };
+	    Selection.prototype.getSelection = function () {
+	        if (!this._selectedItems) {
+	            this._selectedItems = [];
+	            for (var i = 0; i < this._items.length; i++) {
+	                if (this.isIndexSelected(i)) {
+	                    this._selectedItems.push(this._items[i]);
+	                }
+	            }
+	        }
+	        return this._selectedItems;
+	    };
+	    Selection.prototype.getSelectedCount = function () {
+	        return this._isAllSelected ? (this._items.length - this._exemptedCount - this._unselectableCount) : (this._exemptedCount);
+	    };
+	    Selection.prototype.isRangeSelected = function (fromIndex, count) {
+	        var endIndex = fromIndex + count;
+	        for (var i = fromIndex; i < endIndex; i++) {
+	            if (!this.isIndexSelected(i)) {
+	                return false;
+	            }
+	        }
+	        return true;
+	    };
+	    Selection.prototype.isAllSelected = function () {
+	        var selectableCount = this._items.length - this._unselectableCount;
+	        return ((this.count > 0) &&
+	            (this._isAllSelected && this._exemptedCount === 0) ||
+	            (!this._isAllSelected && (this._exemptedCount === selectableCount) && selectableCount > 0));
+	    };
+	    Selection.prototype.isKeySelected = function (key) {
+	        var index = this._keyToIndexMap[key];
+	        return this.isIndexSelected(index);
+	    };
+	    Selection.prototype.isIndexSelected = function (index) {
+	        return !!((this.count > 0) &&
+	            (this._isAllSelected && !this._exemptedIndices[index] && !this._unselectableIndices[index]) ||
+	            (!this._isAllSelected && this._exemptedIndices[index]));
+	    };
+	    Selection.prototype.setAllSelected = function (isAllSelected) {
+	        var selectableCount = this._items ? (this._items.length - this._unselectableCount) : 0;
+	        if (selectableCount > 0 && (this._exemptedCount > 0 || isAllSelected !== this._isAllSelected)) {
+	            this._exemptedIndices = {};
+	            this._exemptedCount = 0;
+	            this._isAllSelected = isAllSelected;
+	            this._updateCount();
+	        }
+	    };
+	    Selection.prototype.setKeySelected = function (key, isSelected, shouldAnchor) {
+	        var index = this._keyToIndexMap[key];
+	        if (index >= 0) {
+	            this.setIndexSelected(index, isSelected, shouldAnchor);
+	        }
+	    };
+	    Selection.prototype.setIndexSelected = function (index, isSelected, shouldAnchor) {
+	        // Clamp the index.
+	        index = Math.min(Math.max(0, index), this._items.length - 1);
+	        // No-op on out of bounds selections.
+	        if (index < 0 || index >= this._items.length) {
+	            return;
+	        }
+	        var isExempt = this._exemptedIndices[index];
+	        var hasChanged = false;
+	        var canSelect = !this._unselectableIndices[index];
+	        if (canSelect) {
+	            // Determine if we need to remove the exemption.
+	            if (isExempt && ((isSelected && this._isAllSelected) ||
+	                (!isSelected && !this._isAllSelected))) {
+	                hasChanged = true;
+	                delete this._exemptedIndices[index];
+	                this._exemptedCount--;
+	            }
+	            // Determine if we need to add the exemption.
+	            if (!isExempt && ((isSelected && !this._isAllSelected) ||
+	                (!isSelected && this._isAllSelected))) {
+	                hasChanged = true;
+	                this._exemptedIndices[index] = true;
+	                this._exemptedCount++;
+	            }
+	            if (shouldAnchor) {
+	                this._anchoredIndex = index;
+	            }
+	        }
+	        if (hasChanged) {
+	            this._updateCount();
+	        }
+	    };
+	    Selection.prototype.selectToKey = function (key, clearSelection) {
+	        this.selectToIndex(this._keyToIndexMap[key], clearSelection);
+	    };
+	    Selection.prototype.selectToIndex = function (index, clearSelection) {
+	        var anchorIndex = this._anchoredIndex || 0;
+	        var startIndex = Math.min(index, anchorIndex);
+	        var endIndex = Math.max(index, anchorIndex);
+	        this.setChangeEvents(false);
+	        if (clearSelection) {
+	            this.setAllSelected(false);
+	        }
+	        for (; startIndex <= endIndex; startIndex++) {
+	            this.setIndexSelected(startIndex, true, false);
+	        }
+	        this.setChangeEvents(true);
+	    };
+	    Selection.prototype.toggleAllSelected = function () {
+	        this.setAllSelected(!this.isAllSelected());
+	    };
+	    Selection.prototype.toggleKeySelected = function (key) {
+	        this.setKeySelected(key, !this.isKeySelected(key), true);
+	    };
+	    Selection.prototype.toggleIndexSelected = function (index) {
+	        this.setIndexSelected(index, !this.isIndexSelected(index), true);
+	    };
+	    Selection.prototype.toggleRangeSelected = function (fromIndex, count) {
+	        var isRangeSelected = this.isRangeSelected(fromIndex, count);
+	        var endIndex = fromIndex + count;
+	        this.setChangeEvents(false);
+	        for (var i = fromIndex; i < endIndex; i++) {
+	            this.setIndexSelected(i, !isRangeSelected, false);
+	        }
+	        this.setChangeEvents(true);
+	    };
+	    Selection.prototype._updateCount = function () {
+	        this.count = this.getSelectedCount();
+	        this._change();
+	    };
+	    Selection.prototype._change = function () {
+	        if (this._changeEventSuppressionCount === 0) {
+	            this._selectedItems = null;
+	            EventGroup_1.EventGroup.raise(this, interfaces_1.SELECTION_CHANGE);
+	            if (this._onSelectionChanged) {
+	                this._onSelectionChanged();
+	            }
+	        }
+	        else {
+	            this._hasChanged = true;
+	        }
+	    };
+	    return Selection;
+	}());
+	exports.Selection = Selection;
+	
+
+
+/***/ },
+/* 105 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var interfaces_1 = __webpack_require__(103);
+	var SelectionLayout = (function () {
+	    function SelectionLayout(direction) {
+	        this._direction = direction;
+	    }
+	    SelectionLayout.prototype.getItemIndexAbove = function (focusIndex, items) {
+	        return (this._direction === interfaces_1.SelectionDirection.vertical) ? Math.max(0, focusIndex - 1) : focusIndex;
+	    };
+	    SelectionLayout.prototype.getItemIndexBelow = function (focusIndex, items) {
+	        return (this._direction === interfaces_1.SelectionDirection.vertical) ? Math.min(items.length - 1, focusIndex + 1) : focusIndex;
+	    };
+	    SelectionLayout.prototype.getItemIndexLeft = function (focusIndex, items) {
+	        return (this._direction === interfaces_1.SelectionDirection.vertical) ? focusIndex : Math.max(0, focusIndex - 1);
+	    };
+	    SelectionLayout.prototype.getItemIndexRight = function (focusIndex, items) {
+	        return (this._direction === interfaces_1.SelectionDirection.vertical) ? focusIndex : Math.min(items.length - 1, focusIndex + 1);
+	    };
+	    return SelectionLayout;
+	}());
+	exports.SelectionLayout = SelectionLayout;
+	
+
+
+/***/ },
+/* 106 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var Utilities_1 = __webpack_require__(8);
+	var SelectionLayout_1 = __webpack_require__(105);
+	var interfaces_1 = __webpack_require__(103);
+	var focus_1 = __webpack_require__(41);
+	// Selection definitions:
+	//
+	// Anchor index: the point from which a range selection starts.
+	// Focus index: the point from which layout movement originates from.
+	//
+	// These two can differ. Tests:
+	//
+	// If you start at index 5
+	// Shift click to index 10
+	//    The focus is 10, the anchor is 5.
+	// If you shift click at index 0
+	//    The anchor remains at 5, the items between 0 and 5 are selected and everything else is cleared.
+	// If you click index 8
+	//    The anchor and focus are set to 8.
+	var SELECTION_DISABLED_ATTRIBUTE_NAME = 'data-selection-disabled';
+	var SELECTION_INDEX_ATTRIBUTE_NAME = 'data-selection-index';
+	var SELECTION_TOGGLE_ATTRIBUTE_NAME = 'data-selection-toggle';
+	var SELECTION_INVOKE_ATTRIBUTE_NAME = 'data-selection-invoke';
+	var SELECTALL_TOGGLE_ALL_ATTRIBUTE_NAME = 'data-selection-all-toggle';
+	var SelectionZone = (function (_super) {
+	    __extends(SelectionZone, _super);
+	    function SelectionZone() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    SelectionZone.prototype.componentDidMount = function () {
+	        var win = Utilities_1.getWindow(this.refs.root);
+	        // Track the latest modifier keys globally.
+	        this._events.on(win, 'keydown keyup', this._updateModifiers);
+	        this._events.on(win, 'click', this._tryClearOnEmptyClick);
+	    };
+	    SelectionZone.prototype.render = function () {
+	        return (React.createElement("div", __assign({ className: 'ms-SelectionZone', ref: 'root', onKeyDown: this._onKeyDown, onMouseDown: this._onMouseDown, onClick: this._onClick, onDoubleClick: this._onDoubleClick }, {
+	            onMouseDownCapture: this.ignoreNextFocus,
+	            onFocusCapture: this._onFocus
+	        }), this.props.children));
+	    };
+	    /**
+	     * In some cases, the consuming scenario requires to set focus on a row without having SelectionZone
+	     * react to the event. Note that focus events in IE <= 11 will occur asynchronously after .focus() has
+	     * been called on an element, so we need a flag to store the idea that we will bypass the "next"
+	     * focus event that occurs. This method does that.
+	     */
+	    SelectionZone.prototype.ignoreNextFocus = function () {
+	        this._shouldIgnoreFocus = true;
+	    };
+	    /**
+	     * When we focus an item, for single/multi select scenarios, we should try to select it immediately
+	     * as long as the focus did not originate from a mouse down/touch event. For those cases, we handle them
+	     * specially.
+	     */
+	    SelectionZone.prototype._onFocus = function (ev) {
+	        var target = ev.target;
+	        var _a = this.props, selection = _a.selection, selectionMode = _a.selectionMode;
+	        var isToggleModifierPressed = this._isCtrlPressed || this._isMetaPressed;
+	        if (this._shouldIgnoreFocus || selectionMode === interfaces_1.SelectionMode.none) {
+	            this._shouldIgnoreFocus = false;
+	            return;
+	        }
+	        var isToggle = this._hasAttribute(target, SELECTION_TOGGLE_ATTRIBUTE_NAME);
+	        var itemRoot = this._findItemRoot(target);
+	        if (!isToggle && itemRoot) {
+	            var index = this._getItemIndex(itemRoot);
+	            if (isToggleModifierPressed) {
+	                // set anchor only.
+	                selection.setIndexSelected(index, selection.isIndexSelected(index), true);
+	            }
+	            else {
+	                this._onItemSurfaceClick(ev, index);
+	            }
+	        }
+	    };
+	    SelectionZone.prototype._onMouseDown = function (ev) {
+	        this._updateModifiers(ev);
+	        var target = ev.target;
+	        var itemRoot = this._findItemRoot(target);
+	        while (target !== this.refs.root) {
+	            if (this._hasAttribute(target, SELECTALL_TOGGLE_ALL_ATTRIBUTE_NAME)) {
+	                break;
+	            }
+	            else if (itemRoot) {
+	                if (this._hasAttribute(target, SELECTION_TOGGLE_ATTRIBUTE_NAME)) {
+	                    break;
+	                }
+	                else if (this._hasAttribute(target, SELECTION_INVOKE_ATTRIBUTE_NAME)) {
+	                    this._onInvokeMouseDown(ev, this._getItemIndex(itemRoot));
+	                    break;
+	                }
+	                else if (target === itemRoot) {
+	                    break;
+	                }
+	            }
+	            target = Utilities_1.getParent(target);
+	        }
+	    };
+	    SelectionZone.prototype._onClick = function (ev) {
+	        this._updateModifiers(ev);
+	        var target = ev.target;
+	        var itemRoot = this._findItemRoot(target);
+	        // No-op if selection is disabled
+	        if (this._isSelectionDisabled(target)) {
+	            return;
+	        }
+	        while (target !== this.refs.root) {
+	            if (this._hasAttribute(target, SELECTALL_TOGGLE_ALL_ATTRIBUTE_NAME)) {
+	                this._onToggleAllClick(ev);
+	                break;
+	            }
+	            else if (itemRoot) {
+	                var index = this._getItemIndex(itemRoot);
+	                if (this._hasAttribute(target, SELECTION_TOGGLE_ATTRIBUTE_NAME)) {
+	                    if (this._isShiftPressed) {
+	                        this._onItemSurfaceClick(ev, index);
+	                    }
+	                    else {
+	                        this._onToggleClick(ev, index);
+	                    }
+	                    break;
+	                }
+	                else if (this._hasAttribute(target, SELECTION_INVOKE_ATTRIBUTE_NAME)) {
+	                    this._onInvokeClick(ev, index);
+	                    break;
+	                }
+	                else if (target === itemRoot) {
+	                    this._onItemSurfaceClick(ev, index);
+	                    break;
+	                }
+	            }
+	            target = Utilities_1.getParent(target);
+	        }
+	    };
+	    SelectionZone.prototype._isSelectionDisabled = function (target) {
+	        while (target !== this.refs.root) {
+	            if (this._hasAttribute(target, SELECTION_DISABLED_ATTRIBUTE_NAME)) {
+	                return true;
+	            }
+	            target = Utilities_1.getParent(target);
+	        }
+	        return false;
+	    };
+	    /**
+	     * In multi selection, if you double click within an item's root (but not within the invoke element or input elements),
+	     * we should execute the invoke handler.
+	     */
+	    SelectionZone.prototype._onDoubleClick = function (ev) {
+	        var target = ev.target;
+	        if (this._isSelectionDisabled(target)) {
+	            return;
+	        }
+	        var _a = this.props, selectionMode = _a.selectionMode, onItemInvoked = _a.onItemInvoked;
+	        var itemRoot = this._findItemRoot(target);
+	        if (itemRoot && onItemInvoked && selectionMode !== interfaces_1.SelectionMode.none && !this._isInputElement(target)) {
+	            var index = this._getItemIndex(itemRoot);
+	            while (target !== this.refs.root) {
+	                if (this._hasAttribute(target, SELECTION_TOGGLE_ATTRIBUTE_NAME) ||
+	                    this._hasAttribute(target, SELECTION_INVOKE_ATTRIBUTE_NAME)) {
+	                    break;
+	                }
+	                else if (target === itemRoot) {
+	                    this._onInvokeClick(ev, index);
+	                    break;
+	                }
+	                target = Utilities_1.getParent(target);
+	            }
+	            target = Utilities_1.getParent(target);
+	        }
+	    };
+	    SelectionZone.prototype._onKeyDown = function (ev) {
+	        this._updateModifiers(ev);
+	        var target = ev.target;
+	        if (this._isSelectionDisabled(target)) {
+	            return;
+	        }
+	        var _a = this.props, selection = _a.selection, selectionMode = _a.selectionMode;
+	        var isSelectAllKey = ev.which === Utilities_1.KeyCodes.a && (this._isCtrlPressed || this._isMetaPressed);
+	        var isClearSelectionKey = ev.which === Utilities_1.KeyCodes.escape;
+	        // Ignore key downs from input elements.
+	        if (this._isInputElement(target)) {
+	            return;
+	        }
+	        // If ctrl-a is pressed, select all (if all are not already selected.)
+	        if (isSelectAllKey && selectionMode === interfaces_1.SelectionMode.multiple && !selection.isAllSelected()) {
+	            selection.setAllSelected(true);
+	            ev.stopPropagation();
+	            ev.preventDefault();
+	            return;
+	        }
+	        // If escape is pressed, clear selection (if any are selected.)
+	        if (isClearSelectionKey && selection.getSelectedCount() > 0) {
+	            selection.setAllSelected(false);
+	            ev.stopPropagation();
+	            ev.preventDefault();
+	            return;
+	        }
+	        var itemRoot = this._findItemRoot(target);
+	        // If a key was pressed within an item, we should treat "enters" as invokes and "space" as toggle
+	        if (itemRoot) {
+	            var index = this._getItemIndex(itemRoot);
+	            while (target !== this.refs.root) {
+	                if (this._hasAttribute(target, SELECTION_TOGGLE_ATTRIBUTE_NAME)) {
+	                    // For toggle elements, assuming they are rendered as buttons, they will generate a click event,
+	                    // so we can no-op for any keydowns in this case.
+	                    break;
+	                }
+	                else if (target === itemRoot) {
+	                    if (ev.which === Utilities_1.KeyCodes.enter) {
+	                        this._onInvokeClick(ev, index);
+	                    }
+	                    else if (ev.which === Utilities_1.KeyCodes.space) {
+	                        this._onToggleClick(ev, index);
+	                    }
+	                    break;
+	                }
+	                target = Utilities_1.getParent(target);
+	            }
+	        }
+	    };
+	    SelectionZone.prototype._onToggleAllClick = function (ev) {
+	        var _a = this.props, selection = _a.selection, selectionMode = _a.selectionMode;
+	        if (selectionMode === interfaces_1.SelectionMode.multiple) {
+	            selection.toggleAllSelected();
+	            ev.stopPropagation();
+	            ev.preventDefault();
+	        }
+	    };
+	    SelectionZone.prototype._onToggleClick = function (ev, index) {
+	        var _a = this.props, selection = _a.selection, selectionMode = _a.selectionMode;
+	        if (selectionMode === interfaces_1.SelectionMode.multiple) {
+	            selection.toggleIndexSelected(index);
+	        }
+	        else if (selectionMode === interfaces_1.SelectionMode.single) {
+	            var isSelected = selection.isIndexSelected(index);
+	            selection.setChangeEvents(false);
+	            selection.setAllSelected(false);
+	            selection.setIndexSelected(index, !isSelected, true);
+	            selection.setChangeEvents(true);
+	        }
+	        else {
+	            return;
+	        }
+	        ev.stopPropagation();
+	        // NOTE: ev.preventDefault is not called for toggle clicks, because this will kill the browser behavior
+	        // for checkboxes if you use a checkbox for the toggle.
+	    };
+	    SelectionZone.prototype._onInvokeClick = function (ev, index) {
+	        var _a = this.props, selection = _a.selection, onItemInvoked = _a.onItemInvoked;
+	        if (onItemInvoked) {
+	            onItemInvoked(selection.getItems()[index], index, ev.nativeEvent);
+	            ev.preventDefault();
+	            ev.stopPropagation();
+	        }
+	    };
+	    SelectionZone.prototype._onItemSurfaceClick = function (ev, index) {
+	        var _a = this.props, selection = _a.selection, selectionMode = _a.selectionMode;
+	        var isToggleModifierPressed = this._isCtrlPressed || this._isMetaPressed;
+	        if (selectionMode === interfaces_1.SelectionMode.multiple) {
+	            if (this._isShiftPressed) {
+	                selection.selectToIndex(index, !isToggleModifierPressed);
+	            }
+	            else if (isToggleModifierPressed) {
+	                selection.toggleIndexSelected(index);
+	            }
+	            else {
+	                this._clearAndSelectIndex(index);
+	            }
+	        }
+	        else if (selectionMode === interfaces_1.SelectionMode.single) {
+	            this._clearAndSelectIndex(index);
+	        }
+	    };
+	    SelectionZone.prototype._onInvokeMouseDown = function (ev, index) {
+	        var selection = this.props.selection;
+	        // Only do work if item is not selected.
+	        if (selection.isIndexSelected(index)) {
+	            return;
+	        }
+	        this._clearAndSelectIndex(index);
+	    };
+	    SelectionZone.prototype._tryClearOnEmptyClick = function (ev) {
+	        if (this._isNonHandledClick(ev.target)) {
+	            this.props.selection.setAllSelected(false);
+	        }
+	    };
+	    SelectionZone.prototype._clearAndSelectIndex = function (index) {
+	        var selection = this.props.selection;
+	        var isAlreadySingleSelected = selection.getSelectedCount() === 1 && selection.isIndexSelected(index);
+	        if (!isAlreadySingleSelected) {
+	            selection.setChangeEvents(false);
+	            selection.setAllSelected(false);
+	            selection.setIndexSelected(index, true, true);
+	            selection.setChangeEvents(true);
+	        }
+	    };
+	    /**
+	     * We need to track the modifier key states so that when focus events occur, which do not contain
+	     * modifier states in the Event object, we know how to behave.
+	     */
+	    SelectionZone.prototype._updateModifiers = function (ev) {
+	        this._isShiftPressed = ev.shiftKey;
+	        this._isCtrlPressed = ev.ctrlKey;
+	        this._isMetaPressed = ev.metaKey;
+	    };
+	    SelectionZone.prototype._findItemRoot = function (target) {
+	        var selection = this.props.selection;
+	        while (target !== this.refs.root) {
+	            var indexValue = target.getAttribute(SELECTION_INDEX_ATTRIBUTE_NAME);
+	            var index = Number(indexValue);
+	            if (indexValue !== null && index >= 0 && index < selection.getItems().length) {
+	                break;
+	            }
+	            target = Utilities_1.getParent(target);
+	        }
+	        if (target === this.refs.root) {
+	            return undefined;
+	        }
+	        return target;
+	    };
+	    SelectionZone.prototype._getItemIndex = function (itemRoot) {
+	        return Number(itemRoot.getAttribute(SELECTION_INDEX_ATTRIBUTE_NAME));
+	    };
+	    SelectionZone.prototype._hasAttribute = function (element, attributeName) {
+	        var isToggle = false;
+	        while (!isToggle && element !== this.refs.root) {
+	            isToggle = element.getAttribute(attributeName) === 'true';
+	            element = Utilities_1.getParent(element);
+	        }
+	        return isToggle;
+	    };
+	    SelectionZone.prototype._isInputElement = function (element) {
+	        return element.tagName === 'INPUT' || element.tagName === 'TEXTAREA';
+	    };
+	    SelectionZone.prototype._isNonHandledClick = function (element) {
+	        var doc = Utilities_1.getDocument();
+	        if (doc && element) {
+	            while (element && element !== doc.documentElement) {
+	                if (focus_1.isElementTabbable(element)) {
+	                    return false;
+	                }
+	                element = Utilities_1.getParent(element);
+	            }
+	        }
+	        return true;
+	    };
+	    return SelectionZone;
+	}(Utilities_1.BaseComponent));
+	SelectionZone.defaultProps = {
+	    layout: new SelectionLayout_1.SelectionLayout(interfaces_1.SelectionDirection.vertical),
+	    isMultiSelectEnabled: true,
+	    isSelectedOnFocus: true,
+	    selectionMode: interfaces_1.SelectionMode.multiple
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "ignoreNextFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "_onFocus", null);
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "_onMouseDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "_onClick", null);
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "_onDoubleClick", null);
+	__decorate([
+	    Utilities_1.autobind
+	], SelectionZone.prototype, "_onKeyDown", null);
+	exports.SelectionZone = SelectionZone;
+	
+
+
+/***/ },
+/* 107 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var Button_1 = __webpack_require__(26);
+	var css_1 = __webpack_require__(15);
+	var BaseComponent_1 = __webpack_require__(9);
+	var Spinner_1 = __webpack_require__(95);
+	__webpack_require__(108);
+	var SuggestionsItem = (function (_super) {
+	    __extends(SuggestionsItem, _super);
+	    function SuggestionsItem() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    SuggestionsItem.prototype.render = function () {
+	        var _a = this.props, suggestionModel = _a.suggestionModel, RenderSuggestion = _a.RenderSuggestion, onClick = _a.onClick, className = _a.className;
+	        return (React.createElement(Button_1.Button, { onClick: onClick, className: css_1.css('ms-Suggestions-item', { 'is-suggested': suggestionModel.selected }, className) },
+	            React.createElement(RenderSuggestion, __assign({}, suggestionModel.item))));
+	    };
+	    return SuggestionsItem;
+	}(React.Component));
+	exports.SuggestionsItem = SuggestionsItem;
+	var Suggestions = (function (_super) {
+	    __extends(Suggestions, _super);
+	    function Suggestions(suggestionsProps) {
+	        var _this = _super.call(this, suggestionsProps) || this;
+	        _this.SuggestionsItemOfProperType = SuggestionsItem;
+	        _this._getMoreResults = _this._getMoreResults.bind(_this);
+	        return _this;
+	    }
+	    Suggestions.prototype.componentDidUpdate = function () {
+	        this.scrollSelected();
+	    };
+	    Suggestions.prototype.render = function () {
+	        var _a = this.props, suggestionsHeaderText = _a.suggestionsHeaderText, searchForMoreText = _a.searchForMoreText, className = _a.className, moreSuggestionsAvailable = _a.moreSuggestionsAvailable, noResultsFoundText = _a.noResultsFoundText, suggestions = _a.suggestions, isLoading = _a.isLoading, loadingText = _a.loadingText, onRenderNoResultFound = _a.onRenderNoResultFound;
+	        var noResults = noResultsFoundText ? function () { return React.createElement("div", { className: 'ms-Suggestions-none' }, noResultsFoundText); } : null;
+	        return (React.createElement("div", { className: css_1.css('ms-Suggestions', className ? className : '') },
+	            suggestionsHeaderText ?
+	                (React.createElement("div", { className: 'ms-Suggestions-title' }, suggestionsHeaderText)) : (null),
+	            isLoading && (React.createElement(Spinner_1.Spinner, { className: 'ms-Suggestions-spinner', label: loadingText })),
+	            (!suggestions || !suggestions.length) && !isLoading ?
+	                (onRenderNoResultFound ? onRenderNoResultFound(null, noResults) : noResults()) :
+	                this._renderSuggestions(),
+	            searchForMoreText && moreSuggestionsAvailable ?
+	                (React.createElement(Button_1.Button, { onClick: this._getMoreResults.bind(this), className: 'ms-SearchMore-button', buttonType: Button_1.ButtonType.icon, icon: 'Search', ref: this._resolveRef('_searchForMoreButton') }, searchForMoreText)) : (null)));
+	    };
+	    Suggestions.prototype.focusSearchForMoreButton = function () {
+	        if (this._searchForMoreButton) {
+	            this._searchForMoreButton.focus();
+	        }
+	    };
+	    // TODO get the element to scroll into view properly regardless of direction.
+	    Suggestions.prototype.scrollSelected = function () {
+	        if (this._selectedElement) {
+	            this._selectedElement.scrollIntoView(false);
+	        }
+	    };
+	    Suggestions.prototype._renderSuggestions = function () {
+	        var _this = this;
+	        var _a = this.props, suggestions = _a.suggestions, onRenderSuggestion = _a.onRenderSuggestion, suggestionsItemClassName = _a.suggestionsItemClassName;
+	        var TypedSuggestionsItem = this.SuggestionsItemOfProperType;
+	        return (React.createElement("div", { className: 'ms-Suggestions-container', id: 'suggestion-list', role: 'menu' }, suggestions.map(function (suggestion, index) {
+	            return React.createElement("div", { ref: _this._resolveRef(suggestion.selected ? '_selectedElement' : ''), key: index, id: 'sug-' + index, role: 'menuitem' },
+	                React.createElement(TypedSuggestionsItem, { suggestionModel: suggestion, RenderSuggestion: onRenderSuggestion, onClick: function (ev) { return _this.props.onSuggestionClick(ev, suggestion.item, index); }, className: suggestionsItemClassName }));
+	        })));
+	    };
+	    Suggestions.prototype._getMoreResults = function () {
+	        if (this.props.onGetMoreResults) {
+	            this.props.onGetMoreResults();
+	        }
+	    };
+	    return Suggestions;
+	}(BaseComponent_1.BaseComponent));
+	exports.Suggestions = Suggestions;
+	
+
+
+/***/ },
+/* 108 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-SearchMore-button{background:0 0;border:0;cursor:pointer;height:auto;text-align:center;margin:0;width:100%}.ms-SearchMore-button:hover{background-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";cursor:pointer}.ms-SearchMore-button:active,.ms-SearchMore-button:focus{background-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.ms-Suggestions{min-width:180px}.ms-Suggestions .ms-Suggestions-item{height:auto;width:100%;border:none}html[dir=ltr] .ms-Suggestions .ms-Suggestions-item{text-align:left}html[dir=rtl] .ms-Suggestions .ms-Suggestions-item{text-align:right}.ms-Suggestions .ms-Suggestions-item:hover{background:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-Suggestions .ms-Suggestions-item.is-suggested{background:" }, { "theme": "neutralQuaternary", "defaultValue": "#d0d0d0" }, { "rawString": "}.ms-Suggestions .ms-Suggestions-item.is-suggested:hover{background:" }, { "theme": "neutralQuaternaryAlt", "defaultValue": "#dadada" }, { "rawString": "}.ms-Suggestions .ms-Suggestions-title{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": ";font-size:12px;text-align:center;text-transform:uppercase;line-height:40px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-Suggestions .ms-Suggestions-container{overflow-y:auto;overflow-x:hidden;max-height:300px;border-bottom:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-Suggestions .ms-Suggestions-none{text-align:center;color:" }, { "theme": "info", "defaultValue": "#767676" }, { "rawString": ";font-size:12px;line-height:30px}.ms-Suggestions-spinner{margin:5px;text-align:center;white-space:nowrap;line-height:20px}.ms-Suggestions-spinner .ms-Spinner-circle{display:inline-block;vertical-align:middle}.ms-Suggestions-spinner .ms-Spinner-label{display:inline-block;margin:0 10px;vertical-align:middle}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 109 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var SuggestionsController = (function () {
+	    function SuggestionsController() {
+	        this.suggestions = [];
+	        this.currentIndex = -1;
+	    }
+	    SuggestionsController.prototype.updateSuggestions = function (newSuggestions) {
+	        if (newSuggestions && newSuggestions.length > 0) {
+	            this.suggestions = this._convertSuggestionsToSuggestionItems(newSuggestions);
+	            this.currentIndex = 0;
+	            this.suggestions[0].selected = true;
+	            this.currentSuggestion = this.suggestions[0];
+	        }
+	        else {
+	            this.suggestions = [];
+	            this.currentIndex = -1;
+	            this.currentSuggestion = undefined;
+	        }
+	    };
+	    /**
+	     * Increments the suggestion index and gets the next suggestion in the list.
+	     */
+	    SuggestionsController.prototype.nextSuggestion = function () {
+	        if (this.suggestions && this.suggestions.length) {
+	            if (this.currentIndex < (this.suggestions.length - 1)) {
+	                this._setSelectedSuggestion(this.currentIndex + 1);
+	                return true;
+	            }
+	            else if (this.currentIndex === (this.suggestions.length - 1)) {
+	                this._setSelectedSuggestion(0);
+	                return true;
+	            }
+	        }
+	        return false;
+	    };
+	    /**
+	     * Decrements the suggestion index and gets the previous suggestion in the list.
+	     */
+	    SuggestionsController.prototype.previousSuggestion = function () {
+	        if (this.suggestions && this.suggestions.length) {
+	            if (this.currentIndex > 0) {
+	                this._setSelectedSuggestion(this.currentIndex - 1);
+	                return true;
+	            }
+	            else if (this.currentIndex === 0) {
+	                this._setSelectedSuggestion(this.suggestions.length - 1);
+	                return true;
+	            }
+	        }
+	        return false;
+	    };
+	    SuggestionsController.prototype.getSuggestions = function () {
+	        return this.suggestions;
+	    };
+	    SuggestionsController.prototype.getCurrentItem = function () {
+	        return this.currentSuggestion;
+	    };
+	    SuggestionsController.prototype.getSuggestionAtIndex = function (index) {
+	        return this.suggestions[index];
+	    };
+	    SuggestionsController.prototype.hasSelectedSuggestion = function () {
+	        return this.currentSuggestion ? true : false;
+	    };
+	    SuggestionsController.prototype._convertSuggestionsToSuggestionItems = function (suggestions) {
+	        var converted = [];
+	        suggestions.forEach(function (suggestion) { return converted.push({ item: suggestion, selected: false }); });
+	        return converted;
+	    };
+	    SuggestionsController.prototype._setSelectedSuggestion = function (index) {
+	        if (index > this.suggestions.length - 1 || index < 0) {
+	            this.currentIndex = 0;
+	            this.currentSuggestion.selected = false;
+	            this.currentSuggestion = this.suggestions[0];
+	            this.currentSuggestion.selected = true;
+	        }
+	        else {
+	            if (this.currentIndex > -1) {
+	                this.suggestions[this.currentIndex].selected = false;
+	            }
+	            this.suggestions[index].selected = true;
+	            this.currentIndex = index;
+	            this.currentSuggestion = this.suggestions[index];
+	        }
+	    };
+	    return SuggestionsController;
+	}());
+	exports.SuggestionsController = SuggestionsController;
+	
+
+
+/***/ },
+/* 110 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var BaseComponent_1 = __webpack_require__(9);
+	var properties_1 = __webpack_require__(21);
+	var autobind_1 = __webpack_require__(14);
+	var KeyCodes_1 = __webpack_require__(12);
+	var SELECTION_FORWARD = 'forward';
+	var SELECTION_BACKWARD = 'backward';
+	var BaseAutoFill = (function (_super) {
+	    __extends(BaseAutoFill, _super);
+	    function BaseAutoFill(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this._autoFillEnabled = true;
+	        _this._value = '';
+	        _this.state = {
+	            displayValue: ''
+	        };
+	        return _this;
+	    }
+	    Object.defineProperty(BaseAutoFill.prototype, "cursorLocation", {
+	        get: function () {
+	            if (this._inputElement) {
+	                var inputElement = this._inputElement;
+	                if (inputElement.selectionDirection !== SELECTION_FORWARD) {
+	                    return inputElement.selectionEnd;
+	                }
+	                else {
+	                    return inputElement.selectionStart;
+	                }
+	            }
+	            else {
+	                return -1;
+	            }
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BaseAutoFill.prototype, "isValueSelected", {
+	        get: function () {
+	            return this.inputElement.selectionStart !== this.inputElement.selectionEnd;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BaseAutoFill.prototype, "value", {
+	        get: function () {
+	            return this._value;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BaseAutoFill.prototype, "selectionStart", {
+	        get: function () {
+	            return this._inputElement ? this._inputElement.selectionStart : -1;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BaseAutoFill.prototype, "selectionEnd", {
+	        get: function () {
+	            return this._inputElement ? this._inputElement.selectionEnd : -1;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    Object.defineProperty(BaseAutoFill.prototype, "inputElement", {
+	        get: function () {
+	            return this._inputElement;
+	        },
+	        enumerable: true,
+	        configurable: true
+	    });
+	    BaseAutoFill.prototype.componentWillReceiveProps = function (nextProps) {
+	        if (this._autoFillEnabled && this._doesTextStartWith(nextProps.suggestedDisplayValue, this._value)) {
+	            this.setState({ displayValue: nextProps.suggestedDisplayValue });
+	        }
+	    };
+	    BaseAutoFill.prototype.componentDidUpdate = function () {
+	        var value = this._value;
+	        var suggestedDisplayValue = this.props.suggestedDisplayValue;
+	        var differenceIndex = 0;
+	        if (this._autoFillEnabled && value && suggestedDisplayValue && this._doesTextStartWith(suggestedDisplayValue, value)) {
+	            while (differenceIndex < value.length && value[differenceIndex].toLocaleLowerCase() === suggestedDisplayValue[differenceIndex].toLocaleLowerCase()) {
+	                differenceIndex++;
+	            }
+	            if (differenceIndex > 0) {
+	                this._inputElement.setSelectionRange(differenceIndex, suggestedDisplayValue.length, SELECTION_BACKWARD);
+	            }
+	        }
+	    };
+	    BaseAutoFill.prototype.render = function () {
+	        var displayValue = this.state.displayValue;
+	        var nativeProps = properties_1.getNativeProps(this.props, properties_1.inputProperties);
+	        return React.createElement("input", __assign({}, nativeProps, { ref: this._resolveRef('_inputElement'), value: displayValue, autoCapitalize: 'off', autoComplete: 'off', onChange: this._onChange, onKeyDown: this._onKeyDown, onClick: this._onClick }));
+	    };
+	    BaseAutoFill.prototype.focus = function () {
+	        this._inputElement.focus();
+	    };
+	    BaseAutoFill.prototype.clear = function () {
+	        this._autoFillEnabled = true;
+	        this._updateValue('');
+	    };
+	    BaseAutoFill.prototype._onClick = function () {
+	        if (this._value && this._value !== '' && this._autoFillEnabled) {
+	            this._autoFillEnabled = false;
+	        }
+	    };
+	    BaseAutoFill.prototype._onKeyDown = function (ev) {
+	        switch (ev.which) {
+	            case KeyCodes_1.KeyCodes.backspace:
+	                this._autoFillEnabled = false;
+	                break;
+	            case KeyCodes_1.KeyCodes.left:
+	                if (this._autoFillEnabled) {
+	                    this._autoFillEnabled = false;
+	                }
+	                break;
+	            case KeyCodes_1.KeyCodes.right:
+	                if (this._autoFillEnabled) {
+	                    this._autoFillEnabled = false;
+	                }
+	                break;
+	            default:
+	                if (!this._autoFillEnabled) {
+	                    if (this.props.enableAutoFillOnKeyPress.indexOf(ev.which) !== -1) {
+	                        this._autoFillEnabled = true;
+	                    }
+	                }
+	                break;
+	        }
+	    };
+	    BaseAutoFill.prototype._onChange = function (ev) {
+	        var value = ev.target.value;
+	        if (value && ev.target.selectionStart === value.length && !this._autoFillEnabled && value.length > this._value.length) {
+	            this._autoFillEnabled = true;
+	        }
+	        this._updateValue(value);
+	    };
+	    BaseAutoFill.prototype._notifyInputChange = function (newValue) {
+	        if (this.props.onInputValueChange) {
+	            this.props.onInputValueChange(newValue);
+	        }
+	    };
+	    BaseAutoFill.prototype._updateValue = function (newValue) {
+	        var _this = this;
+	        this._value = newValue;
+	        var displayValue = newValue;
+	        if (this.props.suggestedDisplayValue &&
+	            this._doesTextStartWith(this.props.suggestedDisplayValue, displayValue)
+	            && this._autoFillEnabled) {
+	            displayValue = this.props.suggestedDisplayValue;
+	        }
+	        this.setState({
+	            displayValue: newValue
+	        }, function () { return _this._notifyInputChange(newValue); });
+	    };
+	    BaseAutoFill.prototype._doesTextStartWith = function (text, startWith) {
+	        if (!text || !startWith) {
+	            return false;
+	        }
+	        return text.toLocaleLowerCase().indexOf(startWith.toLocaleLowerCase()) === 0;
+	    };
+	    return BaseAutoFill;
+	}(BaseComponent_1.BaseComponent));
+	BaseAutoFill.defaultProps = {
+	    enableAutoFillOnKeyPress: [KeyCodes_1.KeyCodes.down, KeyCodes_1.KeyCodes.up]
+	};
+	__decorate([
+	    autobind_1.autobind
+	], BaseAutoFill.prototype, "_onClick", null);
+	__decorate([
+	    autobind_1.autobind
+	], BaseAutoFill.prototype, "_onKeyDown", null);
+	__decorate([
+	    autobind_1.autobind
+	], BaseAutoFill.prototype, "_onChange", null);
+	exports.BaseAutoFill = BaseAutoFill;
+	
+
+
+/***/ },
+/* 111 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-BasePicker-text{display:-webkit-box;display:-ms-flexbox;display:flex;-ms-flex-wrap:wrap;flex-wrap:wrap;box-sizing:border-box;border:1px solid " }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";min-width:180px;padding:1px}.ms-BasePicker-text:hover{border-color:" }, { "theme": "themeLight", "defaultValue": "#c7e0f4" }, { "rawString": "}.ms-BasePicker-text.inputFocused{border-color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-BasePicker-input{border:none;min-height:28px;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;outline:0;padding:0 6px;margin:1px}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 112 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable */
+	var React = __webpack_require__(1);
+	/* tslint:enable */
+	var Persona_1 = __webpack_require__(113);
+	var Button_1 = __webpack_require__(26);
+	var css_1 = __webpack_require__(15);
+	__webpack_require__(124);
+	exports.SelectedItemDefault = function (peoplePickerItemProps) {
+	    var item = peoplePickerItemProps.item, onRemoveItem = peoplePickerItemProps.onRemoveItem, index = peoplePickerItemProps.index, selected = peoplePickerItemProps.selected;
+	    return (React.createElement("div", { className: css_1.css('ms-PickerPersona-container', {
+	            'is-selected': selected
+	        }), "data-is-focusable": true, "data-selection-index": index },
+	        React.createElement("div", { className: 'ms-PickerItem-content' },
+	            React.createElement(Persona_1.Persona, __assign({}, item, { presence: item.presence !== undefined ? item.presence : Persona_1.PersonaPresence.none, size: Persona_1.PersonaSize.extraSmall }))),
+	        React.createElement(Button_1.Button, { onClick: function () { if (onRemoveItem) {
+	                onRemoveItem();
+	            } }, icon: 'Cancel', buttonType: Button_1.ButtonType.icon, className: 'ms-PickerItem-content', "data-is-focusable": false })));
+	};
+	
+
+
+/***/ },
+/* 113 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(114));
+	
+
+
+/***/ },
+/* 114 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(115));
+	__export(__webpack_require__(121));
+	__export(__webpack_require__(122));
+	
+
+
+/***/ },
+/* 115 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var React = __webpack_require__(1);
+	var css_1 = __webpack_require__(15);
+	var Image_1 = __webpack_require__(116);
+	var Persona_Props_1 = __webpack_require__(121);
+	var PersonaConsts_1 = __webpack_require__(122);
+	var properties_1 = __webpack_require__(21);
+	__webpack_require__(123);
+	var Persona = (function (_super) {
+	    __extends(Persona, _super);
+	    function Persona() {
+	        return _super.apply(this, arguments) || this;
+	    }
+	    Persona.prototype.render = function () {
+	        var _a = this.props, className = _a.className, size = _a.size, imageUrl = _a.imageUrl, imageInitials = _a.imageInitials, initialsColor = _a.initialsColor, presence = _a.presence, primaryText = _a.primaryText, secondaryText = _a.secondaryText, tertiaryText = _a.tertiaryText, optionalText = _a.optionalText, hidePersonaDetails = _a.hidePersonaDetails, imageShouldFadeIn = _a.imageShouldFadeIn;
+	        var presenceElement = null;
+	        if (presence !== Persona_Props_1.PersonaPresence.none) {
+	            var userPresence = Persona_Props_1.PersonaPresence[presence], statusIcon = null;
+	            switch (userPresence) {
+	                case 'online':
+	                    userPresence = 'SkypeCheck';
+	                    break;
+	                case 'away':
+	                    userPresence = 'SkypeClock';
+	                    break;
+	                case 'dnd':
+	                    userPresence = 'SkypeMinus';
+	                    break;
+	                default:
+	                    userPresence = '';
+	            }
+	            if (userPresence) {
+	                var iconClass = "ms-Persona-presenceIcon ms-Icon ms-Icon--" + userPresence;
+	                statusIcon = React.createElement("i", { className: iconClass });
+	            }
+	            presenceElement = React.createElement("div", { className: 'ms-Persona-presence' }, statusIcon);
+	        }
+	        var divProps = properties_1.getNativeProps(this.props, properties_1.divProperties);
+	        var personaDetails = React.createElement("div", { className: 'ms-Persona-details' },
+	            React.createElement("div", { className: 'ms-Persona-primaryText' }, primaryText),
+	            secondaryText ? (React.createElement("div", { className: 'ms-Persona-secondaryText' }, secondaryText)) : (null),
+	            React.createElement("div", { className: 'ms-Persona-tertiaryText' }, tertiaryText),
+	            React.createElement("div", { className: 'ms-Persona-optionalText' }, optionalText),
+	            this.props.children);
+	        return (React.createElement("div", __assign({}, divProps, { className: css_1.css('ms-Persona', className, PersonaConsts_1.PERSONA_SIZE[size], PersonaConsts_1.PERSONA_PRESENCE[presence]) }),
+	            size !== Persona_Props_1.PersonaSize.tiny && (React.createElement("div", { className: 'ms-Persona-imageArea' },
+	                React.createElement("div", { className: css_1.css('ms-Persona-initials', PersonaConsts_1.PERSONA_INITIALS_COLOR[initialsColor]) }, imageInitials),
+	                React.createElement(Image_1.Image, { className: 'ms-Persona-image', imageFit: Image_1.ImageFit.cover, src: imageUrl, shouldFadeIn: imageShouldFadeIn }))),
+	            presenceElement,
+	            (!hidePersonaDetails || (size === Persona_Props_1.PersonaSize.tiny)) && personaDetails));
+	    };
+	    return Persona;
+	}(React.Component));
+	Persona.defaultProps = {
+	    primaryText: '',
+	    size: Persona_Props_1.PersonaSize.regular,
+	    initialsColor: Persona_Props_1.PersonaInitialsColor.blue,
+	    presence: Persona_Props_1.PersonaPresence.none
+	};
+	exports.Persona = Persona;
+	
+
+
+/***/ },
+/* 116 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(117));
+	
+
+
+/***/ },
+/* 117 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(118));
+	__export(__webpack_require__(119));
+	
+
+
+/***/ },
+/* 118 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable:no-unused-variable */
+	var React = __webpack_require__(1);
+	/* tslint:enable:no-unused-variable */
+	var css_1 = __webpack_require__(15);
+	var BaseComponent_1 = __webpack_require__(9);
+	var properties_1 = __webpack_require__(21);
+	var Image_Props_1 = __webpack_require__(119);
+	__webpack_require__(120);
+	var CoverStyle;
+	(function (CoverStyle) {
+	    CoverStyle[CoverStyle["landscape"] = 0] = "landscape";
+	    CoverStyle[CoverStyle["portrait"] = 1] = "portrait";
+	})(CoverStyle = exports.CoverStyle || (exports.CoverStyle = {}));
+	exports.CoverStyleMap = (_a = {},
+	    _a[CoverStyle.landscape] = 'ms-Image-image--landscape',
+	    _a[CoverStyle.portrait] = 'ms-Image-image--portrait',
+	    _a);
+	exports.ImageFitMap = (_b = {},
+	    _b[Image_Props_1.ImageFit.center] = 'ms-Image-image--center',
+	    _b[Image_Props_1.ImageFit.contain] = 'ms-Image-image--contain',
+	    _b[Image_Props_1.ImageFit.cover] = 'ms-Image-image--cover',
+	    _b[Image_Props_1.ImageFit.none] = 'ms-Image-image--none',
+	    _b);
+	var ImageLoadState;
+	(function (ImageLoadState) {
+	    ImageLoadState[ImageLoadState["notLoaded"] = 0] = "notLoaded";
+	    ImageLoadState[ImageLoadState["loaded"] = 1] = "loaded";
+	    ImageLoadState[ImageLoadState["error"] = 2] = "error";
+	    ImageLoadState[ImageLoadState["errorLoaded"] = 3] = "errorLoaded";
+	})(ImageLoadState = exports.ImageLoadState || (exports.ImageLoadState = {}));
+	var Image = (function (_super) {
+	    __extends(Image, _super);
+	    function Image(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.state = {
+	            loadState: ImageLoadState.notLoaded
+	        };
+	        return _this;
+	    }
+	    Image.prototype.componentDidMount = function () {
+	        if (!this._evaluateImage()) {
+	            this._events.on(this._imageElement, 'load', this._evaluateImage);
+	            this._events.on(this._imageElement, 'error', this._setError);
+	        }
+	    };
+	    Image.prototype.componentWillReceiveProps = function (nextProps) {
+	        if (this.state.loadState === ImageLoadState.loaded) {
+	            var nextHeight = nextProps.height, nextWidth = nextProps.width;
+	            var _a = this.props, height = _a.height, width = _a.width;
+	            if (height !== nextHeight || width !== nextWidth) {
+	                this._computeCoverStyle(nextProps);
+	            }
+	        }
+	    };
+	    Image.prototype.render = function () {
+	        var imageProps = properties_1.getNativeProps(this.props, properties_1.imageProperties, ['width', 'height']);
+	        var _a = this.props, src = _a.src, alt = _a.alt, width = _a.width, height = _a.height, shouldFadeIn = _a.shouldFadeIn, className = _a.className, imageFit = _a.imageFit, errorSrc = _a.errorSrc, role = _a.role;
+	        var loadState = this.state.loadState;
+	        var coverStyle = this._coverStyle;
+	        var loaded = loadState === ImageLoadState.loaded || loadState === ImageLoadState.errorLoaded;
+	        var srcToDisplay = (loadState === ImageLoadState.error || loadState === ImageLoadState.errorLoaded) ? errorSrc : src;
+	        // If image dimensions aren't specified, the natural size of the image is used.
+	        return (React.createElement("div", { className: css_1.css('ms-Image', className), style: { width: width, height: height }, ref: this._resolveRef('_frameElement') },
+	            React.createElement("img", __assign({}, imageProps, { className: css_1.css('ms-Image-image', (coverStyle !== undefined) && exports.CoverStyleMap[coverStyle], (imageFit !== undefined) && exports.ImageFitMap[imageFit], {
+	                    'is-fadeIn': shouldFadeIn,
+	                    'is-notLoaded': !loaded,
+	                    'is-loaded': loaded,
+	                    'ms-u-fadeIn400': loaded && shouldFadeIn,
+	                    'is-error': loadState === ImageLoadState.error,
+	                    'ms-Image-image--scaleWidth': (imageFit === undefined && !!width && !height),
+	                    'ms-Image-image--scaleHeight': (imageFit === undefined && !width && !!height),
+	                    'ms-Image-image--scaleWidthHeight': (imageFit === undefined && !!width && !!height),
+	                }), ref: this._resolveRef('_imageElement'), src: srcToDisplay, alt: alt, role: role }))));
+	    };
+	    Image.prototype._evaluateImage = function () {
+	        var src = this.props.src;
+	        var loadState = this.state.loadState;
+	        var isLoaded = (src && this._imageElement.naturalWidth > 0 && this._imageElement.naturalHeight > 0);
+	        this._computeCoverStyle(this.props);
+	        if (isLoaded && loadState !== ImageLoadState.loaded && loadState !== ImageLoadState.errorLoaded) {
+	            this._events.off();
+	            this.setState({
+	                loadState: loadState === ImageLoadState.error ? ImageLoadState.errorLoaded : ImageLoadState.loaded
+	            });
+	        }
+	        return isLoaded;
+	    };
+	    Image.prototype._computeCoverStyle = function (props) {
+	        var imageFit = props.imageFit, width = props.width, height = props.height;
+	        if (imageFit === Image_Props_1.ImageFit.cover || imageFit === Image_Props_1.ImageFit.contain) {
+	            if (this._imageElement) {
+	                // Determine the desired ratio using the width and height props.
+	                // If those props aren't available, measure measure the frame.
+	                var desiredRatio = void 0;
+	                if (!!width && !!height) {
+	                    desiredRatio = width / height;
+	                }
+	                else {
+	                    desiredRatio = this._frameElement.clientWidth / this._frameElement.clientHeight;
+	                }
+	                // Examine the source image to determine its original ratio.
+	                var naturalRatio = this._imageElement.naturalWidth / this._imageElement.naturalHeight;
+	                // Should we crop from the top or the sides?
+	                if (naturalRatio > desiredRatio) {
+	                    this._coverStyle = CoverStyle.landscape;
+	                }
+	                else {
+	                    this._coverStyle = CoverStyle.portrait;
+	                }
+	            }
+	        }
+	    };
+	    Image.prototype._setError = function () {
+	        if (this.state.loadState !== ImageLoadState.error && this.state.loadState !== ImageLoadState.errorLoaded) {
+	            this.setState({
+	                loadState: ImageLoadState.error
+	            });
+	        }
+	    };
+	    return Image;
+	}(BaseComponent_1.BaseComponent));
+	Image.defaultProps = {
+	    shouldFadeIn: true
+	};
+	exports.Image = Image;
+	var _a, _b;
+
+
+
+/***/ },
+/* 119 */
+/***/ function(module, exports) {
+
+	"use strict";
+	/**
+	 * The possible methods that can be used to fit the image.
+	 */
+	var ImageFit;
+	(function (ImageFit) {
+	    /**
+	     * The image is not scaled. The image is centered and cropped within the content box.
+	     */
+	    ImageFit[ImageFit["center"] = 0] = "center";
+	    /**
+	     * The image is scaled to maintain its aspect ratio while being fully contained within the frame. The image will
+	     * be centered horizontally and vertically within the frame. The space in the top and bottom or in the sides of
+	     * the frame will be empty depending on the difference in aspect ratio between the image and the frame.
+	     */
+	    ImageFit[ImageFit["contain"] = 1] = "contain";
+	    /**
+	     * The image is scaled to maintain its aspect ratio while filling the frame. Portions of the image will be cropped from
+	     * the top and bottom, or from the sides, depending on the difference in aspect ratio between the image and the frame.
+	     */
+	    ImageFit[ImageFit["cover"] = 2] = "cover";
+	    /**
+	     * Neither the image nor the frame are scaled. If their sizes do not match, the image will either be cropped or the
+	     * frame will have empty space.
+	     */
+	    ImageFit[ImageFit["none"] = 3] = "none";
+	})(ImageFit = exports.ImageFit || (exports.ImageFit = {}));
+	
+
+
+/***/ },
+/* 120 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Image{overflow:hidden}.ms-Image-image{display:block;opacity:0}.ms-Image-image.is-loaded{opacity:1}.ms-Image-image--center,.ms-Image-image--contain,.ms-Image-image--cover{position:relative;top:50%}html[dir=ltr] .ms-Image-image--center,html[dir=ltr] .ms-Image-image--contain,html[dir=ltr] .ms-Image-image--cover{left:50%}html[dir=rtl] .ms-Image-image--center,html[dir=rtl] .ms-Image-image--contain,html[dir=rtl] .ms-Image-image--cover{right:50%}html[dir=ltr] .ms-Image-image--center,html[dir=ltr] .ms-Image-image--contain,html[dir=ltr] .ms-Image-image--cover{-webkit-transform:translate(-50%,-50%);transform:translate(-50%,-50%)}html[dir=rtl] .ms-Image-image--center,html[dir=rtl] .ms-Image-image--contain,html[dir=rtl] .ms-Image-image--cover{-webkit-transform:translate(50%,-50%);transform:translate(50%,-50%)}.ms-Image-image--contain.ms-Image-image--landscape{width:100%;height:auto}.ms-Image-image--contain.ms-Image-image--portrait{height:100%;width:auto}.ms-Image-image--cover.ms-Image-image--landscape{height:100%;width:auto}.ms-Image-image--cover.ms-Image-image--portrait{width:100%;height:auto}.ms-Image-image--none{height:auto;width:auto}.ms-Image-image--scaleWidthHeight{height:100%;width:100%}.ms-Image-image--scaleWidth{height:auto;width:100%}.ms-Image-image--scaleHeight{height:100%;width:auto}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 121 */
+/***/ function(module, exports) {
+
+	"use strict";
+	var PersonaSize;
+	(function (PersonaSize) {
+	    PersonaSize[PersonaSize["tiny"] = 0] = "tiny";
+	    PersonaSize[PersonaSize["extraSmall"] = 1] = "extraSmall";
+	    PersonaSize[PersonaSize["small"] = 2] = "small";
+	    PersonaSize[PersonaSize["regular"] = 3] = "regular";
+	    PersonaSize[PersonaSize["large"] = 4] = "large";
+	    PersonaSize[PersonaSize["extraLarge"] = 5] = "extraLarge";
+	})(PersonaSize = exports.PersonaSize || (exports.PersonaSize = {}));
+	var PersonaPresence;
+	(function (PersonaPresence) {
+	    PersonaPresence[PersonaPresence["none"] = 0] = "none";
+	    PersonaPresence[PersonaPresence["offline"] = 1] = "offline";
+	    PersonaPresence[PersonaPresence["online"] = 2] = "online";
+	    PersonaPresence[PersonaPresence["away"] = 3] = "away";
+	    PersonaPresence[PersonaPresence["dnd"] = 4] = "dnd";
+	    PersonaPresence[PersonaPresence["blocked"] = 5] = "blocked";
+	    PersonaPresence[PersonaPresence["busy"] = 6] = "busy";
+	})(PersonaPresence = exports.PersonaPresence || (exports.PersonaPresence = {}));
+	var PersonaInitialsColor;
+	(function (PersonaInitialsColor) {
+	    PersonaInitialsColor[PersonaInitialsColor["lightBlue"] = 0] = "lightBlue";
+	    PersonaInitialsColor[PersonaInitialsColor["blue"] = 1] = "blue";
+	    PersonaInitialsColor[PersonaInitialsColor["darkBlue"] = 2] = "darkBlue";
+	    PersonaInitialsColor[PersonaInitialsColor["teal"] = 3] = "teal";
+	    PersonaInitialsColor[PersonaInitialsColor["lightGreen"] = 4] = "lightGreen";
+	    PersonaInitialsColor[PersonaInitialsColor["green"] = 5] = "green";
+	    PersonaInitialsColor[PersonaInitialsColor["darkGreen"] = 6] = "darkGreen";
+	    PersonaInitialsColor[PersonaInitialsColor["lightPink"] = 7] = "lightPink";
+	    PersonaInitialsColor[PersonaInitialsColor["pink"] = 8] = "pink";
+	    PersonaInitialsColor[PersonaInitialsColor["magenta"] = 9] = "magenta";
+	    PersonaInitialsColor[PersonaInitialsColor["purple"] = 10] = "purple";
+	    PersonaInitialsColor[PersonaInitialsColor["black"] = 11] = "black";
+	    PersonaInitialsColor[PersonaInitialsColor["orange"] = 12] = "orange";
+	    PersonaInitialsColor[PersonaInitialsColor["red"] = 13] = "red";
+	    PersonaInitialsColor[PersonaInitialsColor["darkRed"] = 14] = "darkRed";
+	})(PersonaInitialsColor = exports.PersonaInitialsColor || (exports.PersonaInitialsColor = {}));
+	
+
+
+/***/ },
+/* 122 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var Persona_Props_1 = __webpack_require__(121);
+	exports.PERSONA_SIZE = (_a = {},
+	    _a[Persona_Props_1.PersonaSize.tiny] = 'ms-Persona--tiny',
+	    _a[Persona_Props_1.PersonaSize.extraSmall] = 'ms-Persona--xs',
+	    _a[Persona_Props_1.PersonaSize.small] = 'ms-Persona--sm',
+	    _a[Persona_Props_1.PersonaSize.regular] = '',
+	    _a[Persona_Props_1.PersonaSize.large] = 'ms-Persona--lg',
+	    _a[Persona_Props_1.PersonaSize.extraLarge] = 'ms-Persona--xl',
+	    _a);
+	exports.PERSONA_PRESENCE = (_b = {},
+	    _b[Persona_Props_1.PersonaPresence.offline] = 'ms-Persona--offline',
+	    _b[Persona_Props_1.PersonaPresence.online] = 'ms-Persona--online',
+	    _b[Persona_Props_1.PersonaPresence.away] = 'ms-Persona--away',
+	    _b[Persona_Props_1.PersonaPresence.dnd] = 'ms-Persona--dnd',
+	    _b[Persona_Props_1.PersonaPresence.blocked] = 'ms-Persona--blocked',
+	    _b[Persona_Props_1.PersonaPresence.busy] = 'ms-Persona--busy',
+	    _b);
+	exports.PERSONA_INITIALS_COLOR = (_c = {},
+	    _c[Persona_Props_1.PersonaInitialsColor.lightBlue] = 'ms-Persona-initials--lightBlue',
+	    _c[Persona_Props_1.PersonaInitialsColor.blue] = 'ms-Persona-initials--blue',
+	    _c[Persona_Props_1.PersonaInitialsColor.darkBlue] = 'ms-Persona-initials--darkBlue',
+	    _c[Persona_Props_1.PersonaInitialsColor.teal] = 'ms-Persona-initials--teal',
+	    _c[Persona_Props_1.PersonaInitialsColor.lightGreen] = 'ms-Persona-initials--lightGreen',
+	    _c[Persona_Props_1.PersonaInitialsColor.green] = 'ms-Persona-initials--green',
+	    _c[Persona_Props_1.PersonaInitialsColor.darkGreen] = 'ms-Persona-initials--darkGreen',
+	    _c[Persona_Props_1.PersonaInitialsColor.lightPink] = 'ms-Persona-initials--lightPink',
+	    _c[Persona_Props_1.PersonaInitialsColor.pink] = 'ms-Persona-initials--pink',
+	    _c[Persona_Props_1.PersonaInitialsColor.magenta] = 'ms-Persona-initials--magenta',
+	    _c[Persona_Props_1.PersonaInitialsColor.purple] = 'ms-Persona-initials--purple',
+	    _c[Persona_Props_1.PersonaInitialsColor.black] = 'ms-Persona-initials--black',
+	    _c[Persona_Props_1.PersonaInitialsColor.orange] = 'ms-Persona-initials--orange',
+	    _c[Persona_Props_1.PersonaInitialsColor.red] = 'ms-Persona-initials--red',
+	    _c[Persona_Props_1.PersonaInitialsColor.darkRed] = 'ms-Persona-initials--darkRed',
+	    _c);
+	var _a, _b, _c;
+
+
+
+/***/ },
+/* 123 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Persona{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;box-sizing:border-box;margin:0;padding:0;box-shadow:none;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-size:14px;font-weight:400;line-height:1;position:relative;height:48px;display:table;table-layout:fixed;border-collapse:separate}.ms-Persona .ms-ContextualHost{display:none}.ms-Persona-imageArea{position:absolute;overflow:hidden;text-align:center;max-width:48px;height:48px;border-radius:50%;z-index:0;width:48px;top:0}html[dir=ltr] .ms-Persona-imageArea{left:0}html[dir=rtl] .ms-Persona-imageArea{right:0}@media screen and (-ms-high-contrast:active){.ms-Persona-imageArea{border:1px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Persona-imageArea{border:1px solid " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}.ms-Persona-imageArea .ms-Image{border:0}.ms-Persona-placeholder{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";position:absolute;right:0;left:0;font-size:47px;top:9px;z-index:5}.ms-Persona-initials{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";font-size:17px;font-weight:100;line-height:48px}.ms-Persona-initials.ms-Persona-initials--lightBlue{background-color:#6BA5E7}.ms-Persona-initials.ms-Persona-initials--blue{background-color:#2D89EF}.ms-Persona-initials.ms-Persona-initials--darkBlue{background-color:#2B5797}.ms-Persona-initials.ms-Persona-initials--teal{background-color:#00ABA9}.ms-Persona-initials.ms-Persona-initials--lightGreen{background-color:#99B433}.ms-Persona-initials.ms-Persona-initials--green{background-color:#00A300}.ms-Persona-initials.ms-Persona-initials--darkGreen{background-color:#1E7145}.ms-Persona-initials.ms-Persona-initials--lightPink{background-color:#E773BD}.ms-Persona-initials.ms-Persona-initials--pink{background-color:#FF0097}.ms-Persona-initials.ms-Persona-initials--magenta{background-color:#7E3878}.ms-Persona-initials.ms-Persona-initials--purple{background-color:#603CBA}.ms-Persona-initials.ms-Persona-initials--black{background-color:#1D1D1D}.ms-Persona-initials.ms-Persona-initials--orange{background-color:#DA532C}.ms-Persona-initials.ms-Persona-initials--red{background-color:#E11}.ms-Persona-initials.ms-Persona-initials--darkRed{background-color:#B91D47}.ms-Persona-image{display:table-cell;position:absolute;top:0;width:100%;height:100%;border-radius:50%;-webkit-perspective:1px;perspective:1px}html[dir=ltr] .ms-Persona-image{margin-right:10px}html[dir=rtl] .ms-Persona-image{margin-left:10px}html[dir=ltr] .ms-Persona-image{left:0}html[dir=rtl] .ms-Persona-image{right:0}.ms-Persona-image[src=\"\"]{display:none}.ms-Persona-presence{background-color:#7FBA00;position:absolute;height:12px;width:12px;border-radius:50%;top:auto;bottom:-1px;border:2px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";text-align:center;box-sizing:content-box}html[dir=ltr] .ms-Persona-presence{left:34px}html[dir=rtl] .ms-Persona-presence{right:34px}@media screen and (-ms-high-contrast:active){.ms-Persona-presence{border-color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";box-shadow:0 0 0 1px #1AEBFF inset;color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Persona-presence{border-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-shadow:0 0 0 1px #37006E inset;color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";background-color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}.ms-Persona-presence .ms-Persona-presenceIcon{color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";font-size:8px;line-height:12px;vertical-align:top}.ms-Persona-details{padding:0 12px;vertical-align:middle;display:table-cell}html[dir=ltr] .ms-Persona-details{text-align:left}html[dir=rtl] .ms-Persona-details{text-align:right}html[dir=ltr] .ms-Persona-details{padding-left:60px}html[dir=rtl] .ms-Persona-details{padding-right:60px}.ms-Persona-optionalText,.ms-Persona-primaryText,.ms-Persona-secondaryText,.ms-Persona-tertiaryText{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%}.ms-Persona-primaryText{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";font-weight:400;font-size:17px;margin-top:-3px;line-height:1.4}.ms-Persona-optionalText,.ms-Persona-secondaryText,.ms-Persona-tertiaryText{color:" }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": ";font-weight:400;font-size:12px;white-space:nowrap;line-height:1.3}.ms-Persona-secondaryText{padding-top:3px}.ms-Persona-optionalText,.ms-Persona-tertiaryText{padding-top:5px;display:none}.ms-Persona.ms-Persona--tiny{height:30px;display:inline-block}.ms-Persona.ms-Persona--tiny .ms-Persona-imageArea{overflow:visible;background:0 0;height:0;width:0}.ms-Persona.ms-Persona--tiny .ms-Persona-presence{top:10px;border:0}html[dir=ltr] .ms-Persona.ms-Persona--tiny .ms-Persona-presence{right:auto}html[dir=rtl] .ms-Persona.ms-Persona--tiny .ms-Persona-presence{left:auto}html[dir=ltr] .ms-Persona.ms-Persona--tiny .ms-Persona-presence{left:0}html[dir=rtl] .ms-Persona.ms-Persona--tiny .ms-Persona-presence{right:0}@media screen and (-ms-high-contrast:active){.ms-Persona.ms-Persona--tiny .ms-Persona-presence{top:9px;border:1px solid " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}}@media screen and (-ms-high-contrast:black-on-white){.ms-Persona.ms-Persona--tiny .ms-Persona-presence{border:1px solid " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": "}}html[dir=ltr] .ms-Persona.ms-Persona--tiny .ms-Persona-details{padding-left:20px}html[dir=rtl] .ms-Persona.ms-Persona--tiny .ms-Persona-details{padding-right:20px}.ms-Persona.ms-Persona--tiny .ms-Persona-primaryText{font-size:14px;padding-top:9px}.ms-Persona.ms-Persona--tiny .ms-Persona-secondaryText{display:none}.ms-Persona.ms-Persona--tiny.ms-Persona--readonly{padding:0;background-color:transparent}.ms-Persona.ms-Persona--tiny.ms-Persona--readonly .ms-Persona-primaryText:after{content:';'}.ms-Persona.ms-Persona--xs{height:32px}.ms-Persona.ms-Persona--xs .ms-Persona-image,.ms-Persona.ms-Persona--xs .ms-Persona-imageArea{max-width:32px;width:32px;height:32px}.ms-Persona.ms-Persona--xs .ms-Persona-placeholder{font-size:28px;top:6px}.ms-Persona.ms-Persona--xs .ms-Persona-initials{font-size:12px;line-height:32px}html[dir=ltr] .ms-Persona.ms-Persona--xs .ms-Persona-presence{left:19px}html[dir=rtl] .ms-Persona.ms-Persona--xs .ms-Persona-presence{right:19px}html[dir=ltr] .ms-Persona.ms-Persona--xs .ms-Persona-details{padding-left:40px}html[dir=rtl] .ms-Persona.ms-Persona--xs .ms-Persona-details{padding-right:40px}.ms-Persona.ms-Persona--xs .ms-Persona-primaryText{font-size:14px;padding-top:3px}.ms-Persona.ms-Persona--xs .ms-Persona-secondaryText{display:none}.ms-Persona.ms-Persona--sm{height:40px}.ms-Persona.ms-Persona--sm .ms-Persona-image,.ms-Persona.ms-Persona--sm .ms-Persona-imageArea{max-width:40px;width:40px;height:40px}.ms-Persona.ms-Persona--sm .ms-Persona-placeholder{font-size:38px;top:5px}.ms-Persona.ms-Persona--sm .ms-Persona-initials{font-size:14px;line-height:40px}html[dir=ltr] .ms-Persona.ms-Persona--sm .ms-Persona-presence{left:27px}html[dir=rtl] .ms-Persona.ms-Persona--sm .ms-Persona-presence{right:27px}html[dir=ltr] .ms-Persona.ms-Persona--sm .ms-Persona-details{padding-left:48px}html[dir=rtl] .ms-Persona.ms-Persona--sm .ms-Persona-details{padding-right:48px}.ms-Persona.ms-Persona--sm .ms-Persona-primaryText{font-size:14px}.ms-Persona.ms-Persona--sm .ms-Persona-primaryText,.ms-Persona.ms-Persona--sm .ms-Persona-secondaryText{padding-top:1px}.ms-Persona.ms-Persona--lg{height:72px}.ms-Persona.ms-Persona--lg .ms-Persona-image,.ms-Persona.ms-Persona--lg .ms-Persona-imageArea{max-width:72px;width:72px;height:72px}.ms-Persona.ms-Persona--lg .ms-Persona-placeholder{font-size:67px;top:10px}.ms-Persona.ms-Persona--lg .ms-Persona-initials{font-size:28px;line-height:72px}.ms-Persona.ms-Persona--lg .ms-Persona-presence{height:20px;width:20px;border-width:3px}html[dir=ltr] .ms-Persona.ms-Persona--lg .ms-Persona-presence{left:49px}html[dir=rtl] .ms-Persona.ms-Persona--lg .ms-Persona-presence{right:49px}.ms-Persona.ms-Persona--lg .ms-Persona-presenceIcon{line-height:20px;font-size:14px}html[dir=ltr] .ms-Persona.ms-Persona--lg .ms-Persona-details{padding-left:84px}html[dir=rtl] .ms-Persona.ms-Persona--lg .ms-Persona-details{padding-right:84px}.ms-Persona.ms-Persona--lg .ms-Persona-secondaryText{padding-top:3px}.ms-Persona.ms-Persona--lg .ms-Persona-tertiaryText{padding-top:5px;display:block}.ms-Persona.ms-Persona--xl{height:100px}.ms-Persona.ms-Persona--xl .ms-Persona-image,.ms-Persona.ms-Persona--xl .ms-Persona-imageArea{max-width:100px;width:100px;height:100px}.ms-Persona.ms-Persona--xl .ms-Persona-placeholder{font-size:95px;top:12px}.ms-Persona.ms-Persona--xl .ms-Persona-initials{font-size:42px;line-height:100px}.ms-Persona.ms-Persona--xl .ms-Persona-presence{height:28px;width:28px;border-width:4px}html[dir=ltr] .ms-Persona.ms-Persona--xl .ms-Persona-presence{left:71px}html[dir=rtl] .ms-Persona.ms-Persona--xl .ms-Persona-presence{right:71px}.ms-Persona.ms-Persona--xl .ms-Persona-presenceIcon{line-height:28px;font-size:21px;position:relative;top:1px}html[dir=ltr] .ms-Persona.ms-Persona--xl .ms-Persona-details{padding-left:120px}html[dir=rtl] .ms-Persona.ms-Persona--xl .ms-Persona-details{padding-right:120px}.ms-Persona.ms-Persona--xl .ms-Persona-primaryText{font-size:21px;font-weight:300;margin-top:0}.ms-Persona.ms-Persona--xl .ms-Persona-secondaryText{padding-top:2px}.ms-Persona.ms-Persona--xl .ms-Persona-optionalText,.ms-Persona.ms-Persona--xl .ms-Persona-tertiaryText{padding-top:5px;display:block}.ms-Persona.ms-Persona--darkText .ms-Persona-primaryText{color:" }, { "theme": "neutralDark", "defaultValue": "#212121" }, { "rawString": "}.ms-Persona.ms-Persona--darkText .ms-Persona-optionalText,.ms-Persona.ms-Persona--darkText .ms-Persona-secondaryText,.ms-Persona.ms-Persona--darkText .ms-Persona-tertiaryText{color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": "}.ms-Persona.ms-Persona--selectable{cursor:pointer;padding:0 10px}.ms-Persona.ms-Persona--selectable:not(.ms-Persona--xl):focus,.ms-Persona.ms-Persona--selectable:not(.ms-Persona--xl):hover{background-color:" }, { "theme": "themeLighter", "defaultValue": "#deecf9" }, { "rawString": ";outline:1px solid transparent}.ms-Persona.ms-Persona--available .ms-Persona-presence{background-color:#7FBA00}.ms-Persona.ms-Persona--away .ms-Persona-presence{background-color:#FCD116}.ms-Persona.ms-Persona--away .ms-Persona-presenceIcon{position:relative}html[dir=ltr] .ms-Persona.ms-Persona--away .ms-Persona-presenceIcon{left:1px}html[dir=rtl] .ms-Persona.ms-Persona--away .ms-Persona-presenceIcon{right:1px}.ms-Persona.ms-Persona--blocked .ms-Persona-presence{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": "}.ms-Persona.ms-Persona--blocked .ms-Persona-presence::before{content:'';width:100%;height:100%;position:absolute;top:0;box-shadow:0 0 0 2px #D93B3B inset;border-radius:50%}html[dir=ltr] .ms-Persona.ms-Persona--blocked .ms-Persona-presence::before{left:0}html[dir=rtl] .ms-Persona.ms-Persona--blocked .ms-Persona-presence::before{right:0}.ms-Persona.ms-Persona--blocked .ms-Persona-presence::after{content:'';width:100%;height:2px;background-color:#D93B3B;-webkit-transform:rotate(-45deg);transform:rotate(-45deg);position:absolute;top:5px}html[dir=ltr] .ms-Persona.ms-Persona--blocked .ms-Persona-presence::after{left:0}html[dir=rtl] .ms-Persona.ms-Persona--blocked .ms-Persona-presence::after{right:0}.ms-Persona.ms-Persona--blocked.ms-Persona--lg .ms-Persona-presence::after{top:9px}.ms-Persona.ms-Persona--blocked.ms-Persona--xl .ms-Persona-presence::after{top:13px}.ms-Persona.ms-Persona--busy .ms-Persona-presence{background-color:#D93B3B}@media screen and (-ms-high-contrast:active){.ms-Persona.ms-Persona--busy .ms-Persona-presence{background-color:#1AEBFF}}@media screen and (-ms-high-contrast:black-on-white){.ms-Persona.ms-Persona--busy .ms-Persona-presence{background-color:#37006E}}.ms-Persona.ms-Persona--dnd .ms-Persona-presence{background-color:#E81123}.ms-Persona.ms-Persona--offline .ms-Persona-presence{background-color:#93ABBD}@media screen and (-ms-high-contrast:active){.ms-Persona.ms-Persona--offline .ms-Persona-presence{background-color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";box-shadow:0 0 0 1px " }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": " inset}}@media screen and (-ms-high-contrast:black-on-white){.ms-Persona.ms-Persona--offline .ms-Persona-presence{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";box-shadow:0 0 0 1px " }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": " inset}}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 124 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-PickerPersona-container{display:inline-block;vertical-align:top;background:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": ";margin:1px;vertical-align:top;white-space:nowrap;cursor:default;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.ms-PickerPersona-container::-moz-focus-inner{border:0}.ms-PickerPersona-container{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-PickerPersona-container:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}.ms-PickerPersona-container:hover{background:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": "}.ms-PickerPersona-container.is-selected{background:" }, { "theme": "neutralQuaternary", "defaultValue": "#d0d0d0" }, { "rawString": "}.ms-PickerPersona-container.is-selected:hover{background:" }, { "theme": "neutralQuaternaryAlt", "defaultValue": "#dadada" }, { "rawString": "}.ms-PickerPersona-container .ms-PickerItem-content{display:inline-block;vertical-align:middle}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 125 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable */
+	var React = __webpack_require__(1);
+	/* tslint:enable */
+	var Persona_1 = __webpack_require__(113);
+	exports.SuggestionItemNormal = function (personaProps) {
+	    return (React.createElement("div", { className: 'ms-PeoplePicker-personaContent' },
+	        React.createElement(Persona_1.Persona, __assign({}, personaProps, { presence: personaProps.presence !== undefined ? personaProps.presence : Persona_1.PersonaPresence.none, size: Persona_1.PersonaSize.small, className: 'ms-PeoplePicker-Persona' }))));
+	};
+	exports.SuggestionItemSmall = function (personaProps) {
+	    return (React.createElement("div", { className: 'ms-PeoplePicker-personaContent' },
+	        React.createElement(Persona_1.Persona, __assign({}, personaProps, { presence: personaProps.presence !== undefined ? personaProps.presence : Persona_1.PersonaPresence.none, size: Persona_1.PersonaSize.extraSmall, className: 'ms-PeoplePicker-Persona' }))));
+	};
+	
+
+
+/***/ },
+/* 126 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable */
+	var React = __webpack_require__(1);
+	var Persona_1 = __webpack_require__(113);
+	var ContextualMenu_1 = __webpack_require__(127);
+	var Button_1 = __webpack_require__(26);
+	var SelectedItemWithMenu = (function (_super) {
+	    __extends(SelectedItemWithMenu, _super);
+	    function SelectedItemWithMenu(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.onContextualMenu = _this.onContextualMenu.bind(_this);
+	        _this._onCloseContextualMenu = _this._onCloseContextualMenu.bind(_this);
+	        _this.state = { contextualMenuVisible: false };
+	        return _this;
+	    }
+	    SelectedItemWithMenu.prototype.render = function () {
+	        var _a = this.props, item = _a.item, onRemoveItem = _a.onRemoveItem;
+	        return (React.createElement("div", { className: 'ms-PickerPersona-container' },
+	            React.createElement("div", { className: 'ms-PickerItem-content' },
+	                React.createElement(Persona_1.Persona, __assign({}, item, { presence: item.presence !== undefined ? item.presence : Persona_1.PersonaPresence.none }))),
+	            React.createElement("div", { ref: 'ellipsisRef', className: 'ms-PickerItem-content' },
+	                React.createElement(Button_1.Button, { icon: 'More', buttonType: Button_1.ButtonType.icon, onClick: this.onContextualMenu })),
+	            React.createElement("div", { className: 'ms-PickerItem-content' },
+	                React.createElement(Button_1.Button, { icon: 'Cancel', buttonType: Button_1.ButtonType.icon, onClick: onRemoveItem })),
+	            this.state.contextualMenuVisible ? (React.createElement(ContextualMenu_1.ContextualMenu, { items: item.menuItems, shouldFocusOnMount: true, targetElement: this.refs.ellipsisRef, onDismiss: this._onCloseContextualMenu, directionalHint: ContextualMenu_1.DirectionalHint.bottomAutoEdge }))
+	                : null));
+	    };
+	    SelectedItemWithMenu.prototype.onContextualMenu = function (ev) {
+	        this.setState({ contextualMenuVisible: true });
+	    };
+	    SelectedItemWithMenu.prototype._onCloseContextualMenu = function (ev) {
+	        this.setState({ contextualMenuVisible: false });
+	    };
+	    return SelectedItemWithMenu;
+	}(React.Component));
+	exports.SelectedItemWithMenu = SelectedItemWithMenu;
+	
+
+
+/***/ },
+/* 127 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(128));
+	
+
+
+/***/ },
+/* 128 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(129));
+	__export(__webpack_require__(137));
+	
+
+
+/***/ },
+/* 129 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+	    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+	    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+	    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+	    return c > 3 && r && Object.defineProperty(target, key, r), r;
+	};
+	var React = __webpack_require__(1);
+	var DirectionalHint_1 = __webpack_require__(89);
+	var FocusZone_1 = __webpack_require__(78);
+	var Utilities_1 = __webpack_require__(8);
+	var Callout_1 = __webpack_require__(85);
+	var BaseComponent_1 = __webpack_require__(9);
+	var Icon_1 = __webpack_require__(130);
+	__webpack_require__(136);
+	var ContextualMenuType;
+	(function (ContextualMenuType) {
+	    ContextualMenuType[ContextualMenuType["vertical"] = 0] = "vertical";
+	    ContextualMenuType[ContextualMenuType["horizontal"] = 1] = "horizontal";
+	})(ContextualMenuType || (ContextualMenuType = {}));
+	var HorizontalAlignmentHint;
+	(function (HorizontalAlignmentHint) {
+	    HorizontalAlignmentHint[HorizontalAlignmentHint["auto"] = 0] = "auto";
+	    HorizontalAlignmentHint[HorizontalAlignmentHint["left"] = 1] = "left";
+	    HorizontalAlignmentHint[HorizontalAlignmentHint["center"] = 2] = "center";
+	    HorizontalAlignmentHint[HorizontalAlignmentHint["right"] = 3] = "right";
+	})(HorizontalAlignmentHint || (HorizontalAlignmentHint = {}));
+	var VerticalAlignmentHint;
+	(function (VerticalAlignmentHint) {
+	    VerticalAlignmentHint[VerticalAlignmentHint["top"] = 0] = "top";
+	    VerticalAlignmentHint[VerticalAlignmentHint["center"] = 1] = "center";
+	    VerticalAlignmentHint[VerticalAlignmentHint["bottom"] = 2] = "bottom";
+	})(VerticalAlignmentHint || (VerticalAlignmentHint = {}));
+	function hasSubmenuItems(item) {
+	    var submenuItems = item.subMenuProps ? item.subMenuProps.items : item.items;
+	    return !!(submenuItems && submenuItems.length);
+	}
+	exports.hasSubmenuItems = hasSubmenuItems;
+	var ContextualMenu = (function (_super) {
+	    __extends(ContextualMenu, _super);
+	    function ContextualMenu(props) {
+	        var _this = _super.call(this, props) || this;
+	        _this.state = {
+	            contextualMenuItems: null,
+	            subMenuId: Utilities_1.getId('ContextualMenu')
+	        };
+	        _this._isFocusingPreviousElement = false;
+	        _this._enterTimerId = 0;
+	        return _this;
+	    }
+	    ContextualMenu.prototype.dismiss = function (ev, dismissAll) {
+	        var onDismiss = this.props.onDismiss;
+	        if (onDismiss) {
+	            onDismiss(ev, dismissAll);
+	        }
+	    };
+	    ContextualMenu.prototype.componentWillUpdate = function (newProps) {
+	        if (newProps.targetElement !== this.props.targetElement || newProps.target !== this.props.target) {
+	            var newTarget = newProps.targetElement ? newProps.targetElement : newProps.target;
+	            this._setTargetWindowAndElement(newTarget);
+	        }
+	    };
+	    // Invoked once, both on the client and server, immediately before the initial rendering occurs.
+	    ContextualMenu.prototype.componentWillMount = function () {
+	        var target = this.props.targetElement ? this.props.targetElement : this.props.target;
+	        this._setTargetWindowAndElement(target);
+	        this._previousActiveElement = this._targetWindow ? this._targetWindow.document.activeElement : null;
+	    };
+	    // Invoked once, only on the client (not on the server), immediately after the initial rendering occurs.
+	    ContextualMenu.prototype.componentDidMount = function () {
+	        this._events.on(this._targetWindow, 'resize', this.dismiss);
+	    };
+	    // Invoked immediately before a component is unmounted from the DOM.
+	    ContextualMenu.prototype.componentWillUnmount = function () {
+	        var _this = this;
+	        if (this._isFocusingPreviousElement && this._previousActiveElement) {
+	            // This slight delay is required so that we can unwind the stack, let react try to mess with focus, and then
+	            // apply the correct focus. Without the setTimeout, we end up focusing the correct thing, and then React wants
+	            // to reset the focus back to the thing it thinks should have been focused.
+	            setTimeout(function () { return _this._previousActiveElement.focus(); }, 0);
+	        }
+	        this._events.dispose();
+	        this._async.dispose();
+	    };
+	    ContextualMenu.prototype.render = function () {
+	        var _this = this;
+	        var _a = this.props, className = _a.className, items = _a.items, isBeakVisible = _a.isBeakVisible, labelElementId = _a.labelElementId, targetElement = _a.targetElement, id = _a.id, targetPoint = _a.targetPoint, useTargetPoint = _a.useTargetPoint, beakWidth = _a.beakWidth, directionalHint = _a.directionalHint, gapSpace = _a.gapSpace, coverTarget = _a.coverTarget, ariaLabel = _a.ariaLabel, doNotLayer = _a.doNotLayer, arrowDirection = _a.arrowDirection, target = _a.target, bounds = _a.bounds;
+	        var submenuProps = this.state.submenuProps;
+	        var hasIcons = !!(items && items.some(function (item) { return !!item.icon || !!item.iconProps; }));
+	        var hasCheckmarks = !!(items && items.some(function (item) { return !!item.canCheck; }));
+	        return (React.createElement(Callout_1.Callout, { target: target, targetElement: targetElement, targetPoint: targetPoint, useTargetPoint: useTargetPoint, isBeakVisible: isBeakVisible, beakWidth: beakWidth, directionalHint: directionalHint, gapSpace: gapSpace, coverTarget: coverTarget, doNotLayer: doNotLayer, className: 'ms-ContextualMenu-Callout', setInitialFocus: true, onDismiss: this.props.onDismiss, bounds: bounds },
+	            React.createElement("div", { ref: function (host) { return _this._host = host; }, id: id, className: Utilities_1.css('ms-ContextualMenu-container', className) },
+	                (items && items.length) ? (React.createElement(FocusZone_1.FocusZone, { className: 'ms-ContextualMenu is-open', direction: arrowDirection, ariaLabelledBy: labelElementId, ref: function (focusZone) { return _this._focusZone = focusZone; }, rootProps: { role: 'menu' } },
+	                    React.createElement("ul", { className: 'ms-ContextualMenu-list is-open', onKeyDown: this._onKeyDown, "aria-label": ariaLabel }, items.map(function (item, index) { return (
+	                    // If the item name is equal to '-', a divider will be generated.
+	                    item.name === '-' ? (React.createElement("li", { role: 'separator', key: item.key || index, className: Utilities_1.css('ms-ContextualMenu-divider', item.className) })) : (React.createElement("li", { role: 'menuitem', title: item.title, key: item.key || index, className: Utilities_1.css('ms-ContextualMenu-item', item.className) }, _this._renderMenuItem(item, index, hasCheckmarks, hasIcons)))); })))) : (null),
+	                submenuProps ? (React.createElement(ContextualMenu, __assign({}, submenuProps))) : (null))));
+	    };
+	    ContextualMenu.prototype._renderMenuItem = function (item, index, hasCheckmarks, hasIcons) {
+	        if (item.onRender) {
+	            return item.onRender(item);
+	        }
+	        // If the item is disabled then it should render as the button for proper styling.
+	        if (item.href) {
+	            return this._renderAnchorMenuItem(item, index, hasCheckmarks, hasIcons);
+	        }
+	        return this._renderButtonItem(item, index, hasCheckmarks, hasIcons);
+	    };
+	    ContextualMenu.prototype._renderAnchorMenuItem = function (item, index, hasCheckmarks, hasIcons) {
+	        return (React.createElement("div", null,
+	            React.createElement("a", __assign({}, Utilities_1.getNativeProps(item, Utilities_1.anchorProperties), { href: item.href, className: Utilities_1.css('ms-ContextualMenu-link', item.isDisabled || item.disabled ? 'is-disabled' : ''), role: 'menuitem', onClick: this._onAnchorClick.bind(this, item) }),
+	                (hasIcons) ? (this._renderIcon(item)) : (null),
+	                React.createElement("span", { className: 'ms-ContextualMenu-linkText ms-fontWeight-regular' },
+	                    " ",
+	                    item.name,
+	                    " "))));
+	    };
+	    ContextualMenu.prototype._renderButtonItem = function (item, index, hasCheckmarks, hasIcons) {
+	        var _this = this;
+	        var _a = this.state, expandedMenuItemKey = _a.expandedMenuItemKey, subMenuId = _a.subMenuId;
+	        var ariaLabel = '';
+	        if (item.ariaLabel) {
+	            ariaLabel = item.ariaLabel;
+	        }
+	        else if (item.name) {
+	            ariaLabel = item.name;
+	        }
+	        var itemButtonProperties = {
+	            className: Utilities_1.css('ms-ContextualMenu-link', { 'is-expanded': (expandedMenuItemKey === item.key) }),
+	            onClick: this._onItemClick.bind(this, item),
+	            onKeyDown: hasSubmenuItems(item) ? this._onItemKeyDown.bind(this, item) : null,
+	            onMouseEnter: this._onItemMouseEnter.bind(this, item),
+	            onMouseLeave: this._onMouseLeave,
+	            onMouseDown: function (ev) { return _this._onItemMouseDown(item, ev); },
+	            disabled: item.isDisabled || item.disabled,
+	            role: 'menuitem',
+	            href: item.href,
+	            title: item.title,
+	            'aria-label': ariaLabel,
+	            'aria-haspopup': hasSubmenuItems(item) ? true : null,
+	            'aria-owns': item.key === expandedMenuItemKey ? subMenuId : null
+	        };
+	        return React.createElement('button', Utilities_1.assign({}, Utilities_1.getNativeProps(item, Utilities_1.buttonProperties), itemButtonProperties), this._renderMenuItemChildren(item, index, hasCheckmarks, hasIcons));
+	    };
+	    ContextualMenu.prototype._renderMenuItemChildren = function (item, index, hasCheckmarks, hasIcons) {
+	        var isItemChecked = item.isChecked || item.checked;
+	        return (React.createElement("div", { className: 'ms-ContextualMenu-linkContent' },
+	            (hasCheckmarks) ? (React.createElement(Icon_1.Icon, { iconName: isItemChecked ? Icon_1.IconName.CheckMark : Icon_1.IconName.CustomIcon, className: 'ms-ContextualMenu-icon', onClick: this._onItemClick.bind(this, item) })) : (null),
+	            (hasIcons) ? (this._renderIcon(item)) : (null),
+	            React.createElement("span", { className: 'ms-ContextualMenu-itemText ms-fontWeight-regular' }, item.name),
+	            hasSubmenuItems(item) ? (React.createElement(Icon_1.Icon, { className: 'ms-ContextualMenu-submenuChevron ms-Icon', iconName: Utilities_1.getRTL() ? Icon_1.IconName.ChevronLeft : Icon_1.IconName.ChevronRight })) : (null)));
+	    };
+	    ContextualMenu.prototype._renderIcon = function (item) {
+	        // Only present to allow continued use of item.icon which is deprecated.
+	        var iconProps = item.iconProps ? item.iconProps : {
+	            iconName: Icon_1.IconName.CustomIcon,
+	            className: 'ms-Icon--' + item.icon
+	        };
+	        // Use the default icon color for the known icon names
+	        var iconColorClassName = iconProps.iconName === Icon_1.IconName.None ? '' : 'ms-ContextualMenu-iconColor';
+	        var iconClassName = Utilities_1.css('ms-ContextualMenu-icon', iconColorClassName, iconProps.className);
+	        return React.createElement(Icon_1.Icon, __assign({}, iconProps, { className: iconClassName }));
+	    };
+	    ContextualMenu.prototype._onKeyDown = function (ev) {
+	        var submenuCloseKey = Utilities_1.getRTL() ? Utilities_1.KeyCodes.right : Utilities_1.KeyCodes.left;
+	        if (ev.which === Utilities_1.KeyCodes.escape
+	            || ev.which === Utilities_1.KeyCodes.tab
+	            || (ev.which === submenuCloseKey && this.props.isSubMenu && this.props.arrowDirection === FocusZone_1.FocusZoneDirection.vertical)) {
+	            // When a user presses escape, we will try to refocus the previous focused element.
+	            this._isFocusingPreviousElement = true;
+	            ev.preventDefault();
+	            ev.stopPropagation();
+	            this.dismiss(ev);
+	        }
+	    };
+	    ContextualMenu.prototype._onItemMouseEnter = function (item, ev) {
+	        var _this = this;
+	        var targetElement = ev.currentTarget;
+	        if (item.key !== this.state.expandedMenuItemKey) {
+	            if (hasSubmenuItems(item)) {
+	                this._enterTimerId = this._async.setTimeout(function () { return _this._onItemSubMenuExpand(item, targetElement); }, 500);
+	            }
+	            else {
+	                this._enterTimerId = this._async.setTimeout(function () { return _this._onSubMenuDismiss(ev); }, 500);
+	            }
+	        }
+	    };
+	    ContextualMenu.prototype._onMouseLeave = function (ev) {
+	        this._async.clearTimeout(this._enterTimerId);
+	    };
+	    ContextualMenu.prototype._onItemMouseDown = function (item, ev) {
+	        if (item.onMouseDown) {
+	            item.onMouseDown(item, ev);
+	        }
+	    };
+	    ContextualMenu.prototype._onItemClick = function (item, ev) {
+	        var items = (item.subMenuProps && item.subMenuProps.items) ? item.subMenuProps.items : item.items;
+	        if (!items || !items.length) {
+	            this._executeItemClick(item, ev);
+	        }
+	        else {
+	            if (item.key === this.state.expandedMenuItemKey) {
+	                this._onSubMenuDismiss(ev);
+	            }
+	            else {
+	                this._onItemSubMenuExpand(item, ev.currentTarget);
+	            }
+	        }
+	        ev.stopPropagation();
+	        ev.preventDefault();
+	    };
+	    ContextualMenu.prototype._onAnchorClick = function (item, ev) {
+	        this._executeItemClick(item, ev);
+	        ev.stopPropagation();
+	    };
+	    ContextualMenu.prototype._executeItemClick = function (item, ev) {
+	        if (item.onClick) {
+	            item.onClick(ev, item);
+	        }
+	        this.dismiss(ev, true);
+	    };
+	    ContextualMenu.prototype._onItemKeyDown = function (item, ev) {
+	        var openKey = Utilities_1.getRTL() ? Utilities_1.KeyCodes.left : Utilities_1.KeyCodes.right;
+	        if (ev.which === openKey) {
+	            this._onItemSubMenuExpand(item, ev.currentTarget);
+	        }
+	    };
+	    ContextualMenu.prototype._onItemSubMenuExpand = function (item, target) {
+	        if (this.state.expandedMenuItemKey !== item.key) {
+	            if (this.state.submenuProps) {
+	                this._onSubMenuDismiss();
+	            }
+	            var submenuProps = {
+	                items: item.items,
+	                target: target,
+	                onDismiss: this._onSubMenuDismiss,
+	                isSubMenu: true,
+	                id: this.state.subMenuId,
+	                shouldFocusOnMount: true,
+	                directionalHint: Utilities_1.getRTL() ? DirectionalHint_1.DirectionalHint.leftTopEdge : DirectionalHint_1.DirectionalHint.rightTopEdge,
+	                className: this.props.className,
+	                gapSpace: 0
+	            };
+	            if (item.subMenuProps) {
+	                Utilities_1.assign(submenuProps, item.subMenuProps);
+	            }
+	            this.setState({
+	                expandedMenuItemKey: item.key,
+	                submenuProps: submenuProps,
+	            });
+	        }
+	    };
+	    ContextualMenu.prototype._onSubMenuDismiss = function (ev, dismissAll) {
+	        if (dismissAll) {
+	            this.dismiss(ev, dismissAll);
+	        }
+	        else {
+	            this.setState({
+	                dismissedMenuItemKey: this.state.expandedMenuItemKey,
+	                expandedMenuItemKey: null,
+	                submenuProps: null
+	            });
+	        }
+	    };
+	    ContextualMenu.prototype._setTargetWindowAndElement = function (target) {
+	        if (target) {
+	            if (typeof target === 'string') {
+	                var currentDoc = Utilities_1.getDocument();
+	                this._target = currentDoc ? currentDoc.querySelector(target) : null;
+	                this._targetWindow = Utilities_1.getWindow();
+	            }
+	            else if (target.stopPropagation) {
+	                this._target = target;
+	                this._targetWindow = Utilities_1.getWindow(target.toElement);
+	            }
+	            else {
+	                var targetElement = target;
+	                this._target = target;
+	                this._targetWindow = Utilities_1.getWindow(targetElement);
+	            }
+	        }
+	        else {
+	            this._targetWindow = Utilities_1.getWindow();
+	        }
+	    };
+	    return ContextualMenu;
+	}(BaseComponent_1.BaseComponent));
+	// The default ContextualMenu properities have no items and beak, the default submenu direction is right and top.
+	ContextualMenu.defaultProps = {
+	    items: [],
+	    shouldFocusOnMount: true,
+	    isBeakVisible: false,
+	    gapSpace: 0,
+	    directionalHint: DirectionalHint_1.DirectionalHint.bottomAutoEdge,
+	    beakWidth: 16,
+	    arrowDirection: FocusZone_1.FocusZoneDirection.vertical,
+	};
+	__decorate([
+	    Utilities_1.autobind
+	], ContextualMenu.prototype, "dismiss", null);
+	__decorate([
+	    Utilities_1.autobind
+	], ContextualMenu.prototype, "_onKeyDown", null);
+	__decorate([
+	    Utilities_1.autobind
+	], ContextualMenu.prototype, "_onMouseLeave", null);
+	__decorate([
+	    Utilities_1.autobind
+	], ContextualMenu.prototype, "_onSubMenuDismiss", null);
+	exports.ContextualMenu = ContextualMenu;
+	
+
+
+/***/ },
+/* 130 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(131));
+	
+
+
+/***/ },
+/* 131 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	function __export(m) {
+	    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+	}
+	__export(__webpack_require__(132));
+	__export(__webpack_require__(134));
+	__export(__webpack_require__(135));
+	
+
+
+/***/ },
+/* 132 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var __assign = (this && this.__assign) || Object.assign || function(t) {
+	    for (var s, i = 1, n = arguments.length; i < n; i++) {
+	        s = arguments[i];
+	        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+	            t[p] = s[p];
+	    }
+	    return t;
+	};
+	/* tslint:disable */
+	var React = __webpack_require__(1);
+	__webpack_require__(133);
+	var IconName_1 = __webpack_require__(134);
+	var IconType_1 = __webpack_require__(135);
+	var Image_1 = __webpack_require__(118);
+	var Utilities_1 = __webpack_require__(8);
+	exports.Icon = function (props) {
+	    var customIcon = props.iconName === IconName_1.IconName.None;
+	    if (props.iconType === IconType_1.IconType.Image) {
+	        var containerClassName = Utilities_1.css('ms-Icon', 'ms-Icon-imageContainer', props.className);
+	        return (React.createElement("div", { className: containerClassName },
+	            React.createElement(Image_1.Image, __assign({}, props.imageProps))));
+	    }
+	    else {
+	        var className = Utilities_1.css('ms-Icon', customIcon ? '' : ('ms-Icon--' + IconName_1.IconName[props.iconName]), props.className);
+	        return React.createElement("i", __assign({}, Utilities_1.getNativeProps(props, Utilities_1.htmlElementProperties), { className: className }));
+	    }
+	};
+	
+
+
+/***/ },
+/* 133 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-Icon-imageContainer{overflow:hidden}.ms-Icon-Image{position:relative}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 134 */
+/***/ function(module, exports) {
+
+	"use strict";
+	// Please keep alphabetized
+	var IconName;
+	(function (IconName) {
+	    IconName[IconName["AADLogo"] = 0] = "AADLogo";
+	    IconName[IconName["Accept"] = 1] = "Accept";
+	    IconName[IconName["AccessLogo"] = 2] = "AccessLogo";
+	    IconName[IconName["Accounts"] = 3] = "Accounts";
+	    IconName[IconName["Add"] = 4] = "Add";
+	    IconName[IconName["AddEvent"] = 5] = "AddEvent";
+	    IconName[IconName["AddFavorite"] = 6] = "AddFavorite";
+	    IconName[IconName["AddFavoriteFill"] = 7] = "AddFavoriteFill";
+	    IconName[IconName["AddFriend"] = 8] = "AddFriend";
+	    IconName[IconName["AddGroup"] = 9] = "AddGroup";
+	    IconName[IconName["AddOnlineMeeting"] = 10] = "AddOnlineMeeting";
+	    IconName[IconName["AddPhone"] = 11] = "AddPhone";
+	    IconName[IconName["AddTo"] = 12] = "AddTo";
+	    IconName[IconName["Admin"] = 13] = "Admin";
+	    IconName[IconName["AdminALogo"] = 14] = "AdminALogo";
+	    IconName[IconName["AdminCLogo"] = 15] = "AdminCLogo";
+	    IconName[IconName["AdminDLogo"] = 16] = "AdminDLogo";
+	    IconName[IconName["AdminELogo"] = 17] = "AdminELogo";
+	    IconName[IconName["AdminLLogo"] = 18] = "AdminLLogo";
+	    IconName[IconName["AdminMLogo"] = 19] = "AdminMLogo";
+	    IconName[IconName["AdminOLogo"] = 20] = "AdminOLogo";
+	    IconName[IconName["AdminPLogo"] = 21] = "AdminPLogo";
+	    IconName[IconName["AdminSLogo"] = 22] = "AdminSLogo";
+	    IconName[IconName["AdminYLogo"] = 23] = "AdminYLogo";
+	    IconName[IconName["Airplane"] = 24] = "Airplane";
+	    IconName[IconName["AirTickets"] = 25] = "AirTickets";
+	    IconName[IconName["AlarmClock"] = 26] = "AlarmClock";
+	    IconName[IconName["Album"] = 27] = "Album";
+	    IconName[IconName["AlbumRemove"] = 28] = "AlbumRemove";
+	    IconName[IconName["AlchemyLogo"] = 29] = "AlchemyLogo";
+	    IconName[IconName["AlignCenter"] = 30] = "AlignCenter";
+	    IconName[IconName["AlignLeft"] = 31] = "AlignLeft";
+	    IconName[IconName["AlignRight"] = 32] = "AlignRight";
+	    IconName[IconName["AndroidLogo"] = 33] = "AndroidLogo";
+	    IconName[IconName["Annotation"] = 34] = "Annotation";
+	    IconName[IconName["AppForOfficeLogo"] = 35] = "AppForOfficeLogo";
+	    IconName[IconName["AppIconDefault"] = 36] = "AppIconDefault";
+	    IconName[IconName["Arrivals"] = 37] = "Arrivals";
+	    IconName[IconName["ArrowDownRight8"] = 38] = "ArrowDownRight8";
+	    IconName[IconName["ArrowDownRightMirrored8"] = 39] = "ArrowDownRightMirrored8";
+	    IconName[IconName["ArrowUpRight8"] = 40] = "ArrowUpRight8";
+	    IconName[IconName["ArrowUpRightMirrored8"] = 41] = "ArrowUpRightMirrored8";
+	    IconName[IconName["Articles"] = 42] = "Articles";
+	    IconName[IconName["Ascending"] = 43] = "Ascending";
+	    IconName[IconName["AssetLibrary"] = 44] = "AssetLibrary";
+	    IconName[IconName["Asterisk"] = 45] = "Asterisk";
+	    IconName[IconName["ATPLogo"] = 46] = "ATPLogo";
+	    IconName[IconName["Attach"] = 47] = "Attach";
+	    IconName[IconName["AustralianRules"] = 48] = "AustralianRules";
+	    IconName[IconName["AutoEnhanceOff"] = 49] = "AutoEnhanceOff";
+	    IconName[IconName["AutoEnhanceOn"] = 50] = "AutoEnhanceOn";
+	    IconName[IconName["AutoRacing"] = 51] = "AutoRacing";
+	    IconName[IconName["AwayStatus"] = 52] = "AwayStatus";
+	    IconName[IconName["AzureLogo"] = 53] = "AzureLogo";
+	    IconName[IconName["Back"] = 54] = "Back";
+	    IconName[IconName["BackToWindow"] = 55] = "BackToWindow";
+	    IconName[IconName["Badge"] = 56] = "Badge";
+	    IconName[IconName["Balloons"] = 57] = "Balloons";
+	    IconName[IconName["BarChart4"] = 58] = "BarChart4";
+	    IconName[IconName["BarChartHorizontal"] = 59] = "BarChartHorizontal";
+	    IconName[IconName["Baseball"] = 60] = "Baseball";
+	    IconName[IconName["BidiLtr"] = 61] = "BidiLtr";
+	    IconName[IconName["BidiRtl"] = 62] = "BidiRtl";
+	    IconName[IconName["BingLogo"] = 63] = "BingLogo";
+	    IconName[IconName["BlockContact"] = 64] = "BlockContact";
+	    IconName[IconName["Blocked"] = 65] = "Blocked";
+	    IconName[IconName["Blocked2"] = 66] = "Blocked2";
+	    IconName[IconName["BlowingSnow"] = 67] = "BlowingSnow";
+	    IconName[IconName["Boards"] = 68] = "Boards";
+	    IconName[IconName["Bold"] = 69] = "Bold";
+	    IconName[IconName["BookingsLogo"] = 70] = "BookingsLogo";
+	    IconName[IconName["Bookmarks"] = 71] = "Bookmarks";
+	    IconName[IconName["BookmarksMirrored"] = 72] = "BookmarksMirrored";
+	    IconName[IconName["BoxLogo"] = 73] = "BoxLogo";
+	    IconName[IconName["BranchFork"] = 74] = "BranchFork";
+	    IconName[IconName["Breadcrumb"] = 75] = "Breadcrumb";
+	    IconName[IconName["Brightness"] = 76] = "Brightness";
+	    IconName[IconName["Broom"] = 77] = "Broom";
+	    IconName[IconName["BufferTimeAfter"] = 78] = "BufferTimeAfter";
+	    IconName[IconName["BufferTimeBefore"] = 79] = "BufferTimeBefore";
+	    IconName[IconName["BufferTimeBoth"] = 80] = "BufferTimeBoth";
+	    IconName[IconName["BulletedList"] = 81] = "BulletedList";
+	    IconName[IconName["BulletedListMirrored"] = 82] = "BulletedListMirrored";
+	    IconName[IconName["BusSolid"] = 83] = "BusSolid";
+	    IconName[IconName["Cafe"] = 84] = "Cafe";
+	    IconName[IconName["Cake"] = 85] = "Cake";
+	    IconName[IconName["CalculatorAddition"] = 86] = "CalculatorAddition";
+	    IconName[IconName["CalculatorSubtract"] = 87] = "CalculatorSubtract";
+	    IconName[IconName["Calendar"] = 88] = "Calendar";
+	    IconName[IconName["CalendarAgenda"] = 89] = "CalendarAgenda";
+	    IconName[IconName["CalendarDay"] = 90] = "CalendarDay";
+	    IconName[IconName["CalendarMirrored"] = 91] = "CalendarMirrored";
+	    IconName[IconName["CalendarReply"] = 92] = "CalendarReply";
+	    IconName[IconName["CalendarWeek"] = 93] = "CalendarWeek";
+	    IconName[IconName["CalendarWorkWeek"] = 94] = "CalendarWorkWeek";
+	    IconName[IconName["CaloriesAdd"] = 95] = "CaloriesAdd";
+	    IconName[IconName["Camera"] = 96] = "Camera";
+	    IconName[IconName["Cancel"] = 97] = "Cancel";
+	    IconName[IconName["Car"] = 98] = "Car";
+	    IconName[IconName["CaretBottomLeftSolid8"] = 99] = "CaretBottomLeftSolid8";
+	    IconName[IconName["CaretBottomRightSolid8"] = 100] = "CaretBottomRightSolid8";
+	    IconName[IconName["CaretDown8"] = 101] = "CaretDown8";
+	    IconName[IconName["CaretDownSolid8"] = 102] = "CaretDownSolid8";
+	    IconName[IconName["CaretHollow"] = 103] = "CaretHollow";
+	    IconName[IconName["CaretHollowMirrored"] = 104] = "CaretHollowMirrored";
+	    IconName[IconName["CaretLeft8"] = 105] = "CaretLeft8";
+	    IconName[IconName["CaretLeftSolid8"] = 106] = "CaretLeftSolid8";
+	    IconName[IconName["CaretRight8"] = 107] = "CaretRight8";
+	    IconName[IconName["CaretRightSolid8"] = 108] = "CaretRightSolid8";
+	    IconName[IconName["CaretSolid"] = 109] = "CaretSolid";
+	    IconName[IconName["CaretSolidMirrored"] = 110] = "CaretSolidMirrored";
+	    IconName[IconName["CaretTopLeftSolid8"] = 111] = "CaretTopLeftSolid8";
+	    IconName[IconName["CaretTopRightSolid8"] = 112] = "CaretTopRightSolid8";
+	    IconName[IconName["CaretUp8"] = 113] = "CaretUp8";
+	    IconName[IconName["CaretUpSolid8"] = 114] = "CaretUpSolid8";
+	    IconName[IconName["Cat"] = 115] = "Cat";
+	    IconName[IconName["CellPhone"] = 116] = "CellPhone";
+	    IconName[IconName["Certificate"] = 117] = "Certificate";
+	    IconName[IconName["Chart"] = 118] = "Chart";
+	    IconName[IconName["Chat"] = 119] = "Chat";
+	    IconName[IconName["ChatInviteFriend"] = 120] = "ChatInviteFriend";
+	    IconName[IconName["Checkbox"] = 121] = "Checkbox";
+	    IconName[IconName["CheckboxComposite"] = 122] = "CheckboxComposite";
+	    IconName[IconName["CheckboxIndeterminate"] = 123] = "CheckboxIndeterminate";
+	    IconName[IconName["CheckList"] = 124] = "CheckList";
+	    IconName[IconName["CheckMark"] = 125] = "CheckMark";
+	    IconName[IconName["ChevronDown"] = 126] = "ChevronDown";
+	    IconName[IconName["ChevronDownMed"] = 127] = "ChevronDownMed";
+	    IconName[IconName["ChevronDownSmall"] = 128] = "ChevronDownSmall";
+	    IconName[IconName["ChevronLeft"] = 129] = "ChevronLeft";
+	    IconName[IconName["ChevronLeftMed"] = 130] = "ChevronLeftMed";
+	    IconName[IconName["ChevronLeftSmall"] = 131] = "ChevronLeftSmall";
+	    IconName[IconName["ChevronRight"] = 132] = "ChevronRight";
+	    IconName[IconName["ChevronRightMed"] = 133] = "ChevronRightMed";
+	    IconName[IconName["ChevronRightSmall"] = 134] = "ChevronRightSmall";
+	    IconName[IconName["ChevronUp"] = 135] = "ChevronUp";
+	    IconName[IconName["ChevronUpMed"] = 136] = "ChevronUpMed";
+	    IconName[IconName["ChevronUpSmall"] = 137] = "ChevronUpSmall";
+	    IconName[IconName["ChromeBack"] = 138] = "ChromeBack";
+	    IconName[IconName["ChromeBackMirrored"] = 139] = "ChromeBackMirrored";
+	    IconName[IconName["ChromeClose"] = 140] = "ChromeClose";
+	    IconName[IconName["ChromeMinimize"] = 141] = "ChromeMinimize";
+	    IconName[IconName["CircleFill"] = 142] = "CircleFill";
+	    IconName[IconName["CircleHalfFull"] = 143] = "CircleHalfFull";
+	    IconName[IconName["CirclePlus"] = 144] = "CirclePlus";
+	    IconName[IconName["CircleRing"] = 145] = "CircleRing";
+	    IconName[IconName["ClassNotebookLogo"] = 146] = "ClassNotebookLogo";
+	    IconName[IconName["ClassroomLogo"] = 147] = "ClassroomLogo";
+	    IconName[IconName["Clear"] = 148] = "Clear";
+	    IconName[IconName["ClearFilter"] = 149] = "ClearFilter";
+	    IconName[IconName["ClearFormatting"] = 150] = "ClearFormatting";
+	    IconName[IconName["ClearNight"] = 151] = "ClearNight";
+	    IconName[IconName["Clock"] = 152] = "Clock";
+	    IconName[IconName["ClosedCaption"] = 153] = "ClosedCaption";
+	    IconName[IconName["ClosePane"] = 154] = "ClosePane";
+	    IconName[IconName["ClosePaneMirrored"] = 155] = "ClosePaneMirrored";
+	    IconName[IconName["CloudAdd"] = 156] = "CloudAdd";
+	    IconName[IconName["CloudDownload"] = 157] = "CloudDownload";
+	    IconName[IconName["CloudUpload"] = 158] = "CloudUpload";
+	    IconName[IconName["CloudWeather"] = 159] = "CloudWeather";
+	    IconName[IconName["Cloudy"] = 160] = "Cloudy";
+	    IconName[IconName["Cocktails"] = 161] = "Cocktails";
+	    IconName[IconName["Code"] = 162] = "Code";
+	    IconName[IconName["Coffee"] = 163] = "Coffee";
+	    IconName[IconName["CollabsDBLogo"] = 164] = "CollabsDBLogo";
+	    IconName[IconName["CollapseMenu"] = 165] = "CollapseMenu";
+	    IconName[IconName["CollegeFootball"] = 166] = "CollegeFootball";
+	    IconName[IconName["CollegeHoops"] = 167] = "CollegeHoops";
+	    IconName[IconName["Color"] = 168] = "Color";
+	    IconName[IconName["Combine"] = 169] = "Combine";
+	    IconName[IconName["CompassNW"] = 170] = "CompassNW";
+	    IconName[IconName["Completed"] = 171] = "Completed";
+	    IconName[IconName["CompletedSolid"] = 172] = "CompletedSolid";
+	    IconName[IconName["Contact"] = 173] = "Contact";
+	    IconName[IconName["ContactCard"] = 174] = "ContactCard";
+	    IconName[IconName["ContactInfo"] = 175] = "ContactInfo";
+	    IconName[IconName["Contrast"] = 176] = "Contrast";
+	    IconName[IconName["Copy"] = 177] = "Copy";
+	    IconName[IconName["Cotton"] = 178] = "Cotton";
+	    IconName[IconName["Cricket"] = 179] = "Cricket";
+	    IconName[IconName["CSS"] = 180] = "CSS";
+	    IconName[IconName["CustomIcon"] = 181] = "CustomIcon";
+	    IconName[IconName["CustomList"] = 182] = "CustomList";
+	    IconName[IconName["CustomListMirrored"] = 183] = "CustomListMirrored";
+	    IconName[IconName["Cycling"] = 184] = "Cycling";
+	    IconName[IconName["DataConnectionLibrary"] = 185] = "DataConnectionLibrary";
+	    IconName[IconName["DateTime"] = 186] = "DateTime";
+	    IconName[IconName["DateTime2"] = 187] = "DateTime2";
+	    IconName[IconName["DateTimeMirrored"] = 188] = "DateTimeMirrored";
+	    IconName[IconName["DecreaseIndentLegacy"] = 189] = "DecreaseIndentLegacy";
+	    IconName[IconName["Delete"] = 190] = "Delete";
+	    IconName[IconName["DelveAnalytics"] = 191] = "DelveAnalytics";
+	    IconName[IconName["DelveAnalyticsLogo"] = 192] = "DelveAnalyticsLogo";
+	    IconName[IconName["DelveLogo"] = 193] = "DelveLogo";
+	    IconName[IconName["Descending"] = 194] = "Descending";
+	    IconName[IconName["Design"] = 195] = "Design";
+	    IconName[IconName["DeveloperTools"] = 196] = "DeveloperTools";
+	    IconName[IconName["Devices3"] = 197] = "Devices3";
+	    IconName[IconName["Devices4"] = 198] = "Devices4";
+	    IconName[IconName["Dialpad"] = 199] = "Dialpad";
+	    IconName[IconName["Dictionary"] = 200] = "Dictionary";
+	    IconName[IconName["DietPlanNotebook"] = 201] = "DietPlanNotebook";
+	    IconName[IconName["DisableUpdates"] = 202] = "DisableUpdates";
+	    IconName[IconName["Dislike"] = 203] = "Dislike";
+	    IconName[IconName["DockLeft"] = 204] = "DockLeft";
+	    IconName[IconName["DockLeftMirrored"] = 205] = "DockLeftMirrored";
+	    IconName[IconName["DockRight"] = 206] = "DockRight";
+	    IconName[IconName["DocLibrary"] = 207] = "DocLibrary";
+	    IconName[IconName["DocsLogo"] = 208] = "DocsLogo";
+	    IconName[IconName["Document"] = 209] = "Document";
+	    IconName[IconName["Documentation"] = 210] = "Documentation";
+	    IconName[IconName["DocumentReply"] = 211] = "DocumentReply";
+	    IconName[IconName["DocumentSearch"] = 212] = "DocumentSearch";
+	    IconName[IconName["DocumentSet"] = 213] = "DocumentSet";
+	    IconName[IconName["Door"] = 214] = "Door";
+	    IconName[IconName["DoubleBookmark"] = 215] = "DoubleBookmark";
+	    IconName[IconName["DoubleChevronDown"] = 216] = "DoubleChevronDown";
+	    IconName[IconName["DoubleChevronDown12"] = 217] = "DoubleChevronDown12";
+	    IconName[IconName["DoubleChevronLeft"] = 218] = "DoubleChevronLeft";
+	    IconName[IconName["DoubleChevronLeft12"] = 219] = "DoubleChevronLeft12";
+	    IconName[IconName["DoubleChevronLeftMed"] = 220] = "DoubleChevronLeftMed";
+	    IconName[IconName["DoubleChevronLeftMedMirrored"] = 221] = "DoubleChevronLeftMedMirrored";
+	    IconName[IconName["DoubleChevronRight"] = 222] = "DoubleChevronRight";
+	    IconName[IconName["DoubleChevronRight12"] = 223] = "DoubleChevronRight12";
+	    IconName[IconName["DoubleChevronUp"] = 224] = "DoubleChevronUp";
+	    IconName[IconName["DoubleChevronUp12"] = 225] = "DoubleChevronUp12";
+	    IconName[IconName["Down"] = 226] = "Down";
+	    IconName[IconName["Download"] = 227] = "Download";
+	    IconName[IconName["DRM"] = 228] = "DRM";
+	    IconName[IconName["Drop"] = 229] = "Drop";
+	    IconName[IconName["DropboxLogo"] = 230] = "DropboxLogo";
+	    IconName[IconName["Dropdown"] = 231] = "Dropdown";
+	    IconName[IconName["Duststorm"] = 232] = "Duststorm";
+	    IconName[IconName["Dynamics365Logo"] = 233] = "Dynamics365Logo";
+	    IconName[IconName["DynamicSMBLogo"] = 234] = "DynamicSMBLogo";
+	    IconName[IconName["EatDrink"] = 235] = "EatDrink";
+	    IconName[IconName["EdgeLogo"] = 236] = "EdgeLogo";
+	    IconName[IconName["Edit"] = 237] = "Edit";
+	    IconName[IconName["EditMail"] = 238] = "EditMail";
+	    IconName[IconName["EditMirrored"] = 239] = "EditMirrored";
+	    IconName[IconName["EditNote"] = 240] = "EditNote";
+	    IconName[IconName["EditPhoto"] = 241] = "EditPhoto";
+	    IconName[IconName["EditStyle"] = 242] = "EditStyle";
+	    IconName[IconName["Embed"] = 243] = "Embed";
+	    IconName[IconName["EMI"] = 244] = "EMI";
+	    IconName[IconName["Emoji"] = 245] = "Emoji";
+	    IconName[IconName["Emoji2"] = 246] = "Emoji2";
+	    IconName[IconName["EmojiDisappointed"] = 247] = "EmojiDisappointed";
+	    IconName[IconName["EmojiNeutral"] = 248] = "EmojiNeutral";
+	    IconName[IconName["EmptyRecycleBin"] = 249] = "EmptyRecycleBin";
+	    IconName[IconName["Equalizer"] = 250] = "Equalizer";
+	    IconName[IconName["EraseTool"] = 251] = "EraseTool";
+	    IconName[IconName["Error"] = 252] = "Error";
+	    IconName[IconName["ErrorBadge"] = 253] = "ErrorBadge";
+	    IconName[IconName["Event"] = 254] = "Event";
+	    IconName[IconName["EventInfo"] = 255] = "EventInfo";
+	    IconName[IconName["ExcelDocument"] = 256] = "ExcelDocument";
+	    IconName[IconName["ExcelLogo"] = 257] = "ExcelLogo";
+	    IconName[IconName["ExchangeLogo"] = 258] = "ExchangeLogo";
+	    IconName[IconName["ExpandMenu"] = 259] = "ExpandMenu";
+	    IconName[IconName["FabricAssetLibrary"] = 260] = "FabricAssetLibrary";
+	    IconName[IconName["FabricDataConnectionLibrary"] = 261] = "FabricDataConnectionLibrary";
+	    IconName[IconName["FabricDocLibrary"] = 262] = "FabricDocLibrary";
+	    IconName[IconName["FabricFolder"] = 263] = "FabricFolder";
+	    IconName[IconName["FabricFolderFill"] = 264] = "FabricFolderFill";
+	    IconName[IconName["FabricFolderSearch"] = 265] = "FabricFolderSearch";
+	    IconName[IconName["FabricFormLibrary"] = 266] = "FabricFormLibrary";
+	    IconName[IconName["FabricFormLibraryMirrored"] = 267] = "FabricFormLibraryMirrored";
+	    IconName[IconName["FabricMovetoFolder"] = 268] = "FabricMovetoFolder";
+	    IconName[IconName["FabricNewFolder"] = 269] = "FabricNewFolder";
+	    IconName[IconName["FabricOpenFolderHorizontal"] = 270] = "FabricOpenFolderHorizontal";
+	    IconName[IconName["FabricPictureLibrary"] = 271] = "FabricPictureLibrary";
+	    IconName[IconName["FabricPublicFolder"] = 272] = "FabricPublicFolder";
+	    IconName[IconName["FabricReportLibrary"] = 273] = "FabricReportLibrary";
+	    IconName[IconName["FabricReportLibraryMirrored"] = 274] = "FabricReportLibraryMirrored";
+	    IconName[IconName["FabricSyncFolder"] = 275] = "FabricSyncFolder";
+	    IconName[IconName["FabricUnsyncFolder"] = 276] = "FabricUnsyncFolder";
+	    IconName[IconName["FacebookLogo"] = 277] = "FacebookLogo";
+	    IconName[IconName["Family"] = 278] = "Family";
+	    IconName[IconName["FangBody"] = 279] = "FangBody";
+	    IconName[IconName["FavoriteList"] = 280] = "FavoriteList";
+	    IconName[IconName["FavoriteStar"] = 281] = "FavoriteStar";
+	    IconName[IconName["FavoriteStarFill"] = 282] = "FavoriteStarFill";
+	    IconName[IconName["Fax"] = 283] = "Fax";
+	    IconName[IconName["Ferry"] = 284] = "Ferry";
+	    IconName[IconName["FerrySolid"] = 285] = "FerrySolid";
+	    IconName[IconName["Filter"] = 286] = "Filter";
+	    IconName[IconName["Filters"] = 287] = "Filters";
+	    IconName[IconName["Financial"] = 288] = "Financial";
+	    IconName[IconName["Fingerprint"] = 289] = "Fingerprint";
+	    IconName[IconName["Flag"] = 290] = "Flag";
+	    IconName[IconName["FlickDown"] = 291] = "FlickDown";
+	    IconName[IconName["FlickLeft"] = 292] = "FlickLeft";
+	    IconName[IconName["FlickRight"] = 293] = "FlickRight";
+	    IconName[IconName["FlickUp"] = 294] = "FlickUp";
+	    IconName[IconName["Flow"] = 295] = "Flow";
+	    IconName[IconName["Fog"] = 296] = "Fog";
+	    IconName[IconName["Folder"] = 297] = "Folder";
+	    IconName[IconName["FolderFill"] = 298] = "FolderFill";
+	    IconName[IconName["FolderHorizontal"] = 299] = "FolderHorizontal";
+	    IconName[IconName["FolderOpen"] = 300] = "FolderOpen";
+	    IconName[IconName["FolderSearch"] = 301] = "FolderSearch";
+	    IconName[IconName["Font"] = 302] = "Font";
+	    IconName[IconName["FontColor"] = 303] = "FontColor";
+	    IconName[IconName["FontDecrease"] = 304] = "FontDecrease";
+	    IconName[IconName["FontIncrease"] = 305] = "FontIncrease";
+	    IconName[IconName["FontSize"] = 306] = "FontSize";
+	    IconName[IconName["FormLibrary"] = 307] = "FormLibrary";
+	    IconName[IconName["FormLibraryMirrored"] = 308] = "FormLibraryMirrored";
+	    IconName[IconName["Forward"] = 309] = "Forward";
+	    IconName[IconName["ForwardEvent"] = 310] = "ForwardEvent";
+	    IconName[IconName["Freezing"] = 311] = "Freezing";
+	    IconName[IconName["Frigid"] = 312] = "Frigid";
+	    IconName[IconName["FullCircleMask"] = 313] = "FullCircleMask";
+	    IconName[IconName["FullScreen"] = 314] = "FullScreen";
+	    IconName[IconName["Generate"] = 315] = "Generate";
+	    IconName[IconName["Giftbox"] = 316] = "Giftbox";
+	    IconName[IconName["GiftCard"] = 317] = "GiftCard";
+	    IconName[IconName["Glasses"] = 318] = "Glasses";
+	    IconName[IconName["Glimmer"] = 319] = "Glimmer";
+	    IconName[IconName["GlobalNavButton"] = 320] = "GlobalNavButton";
+	    IconName[IconName["Globe"] = 321] = "Globe";
+	    IconName[IconName["GlobeFavorite"] = 322] = "GlobeFavorite";
+	    IconName[IconName["Golf"] = 323] = "Golf";
+	    IconName[IconName["GoogleDriveLogo"] = 324] = "GoogleDriveLogo";
+	    IconName[IconName["GotoToday"] = 325] = "GotoToday";
+	    IconName[IconName["GripperTool"] = 326] = "GripperTool";
+	    IconName[IconName["Group"] = 327] = "Group";
+	    IconName[IconName["GroupedAscending"] = 328] = "GroupedAscending";
+	    IconName[IconName["GroupedDescending"] = 329] = "GroupedDescending";
+	    IconName[IconName["GroupedList"] = 330] = "GroupedList";
+	    IconName[IconName["HailDay"] = 331] = "HailDay";
+	    IconName[IconName["HailNight"] = 332] = "HailNight";
+	    IconName[IconName["Handwriting"] = 333] = "Handwriting";
+	    IconName[IconName["Header1"] = 334] = "Header1";
+	    IconName[IconName["Header2"] = 335] = "Header2";
+	    IconName[IconName["Header3"] = 336] = "Header3";
+	    IconName[IconName["Header4"] = 337] = "Header4";
+	    IconName[IconName["Headset"] = 338] = "Headset";
+	    IconName[IconName["Health"] = 339] = "Health";
+	    IconName[IconName["Heart"] = 340] = "Heart";
+	    IconName[IconName["HeartFill"] = 341] = "HeartFill";
+	    IconName[IconName["Help"] = 342] = "Help";
+	    IconName[IconName["HelpMirrored"] = 343] = "HelpMirrored";
+	    IconName[IconName["Hide"] = 344] = "Hide";
+	    IconName[IconName["Hide2"] = 345] = "Hide2";
+	    IconName[IconName["History"] = 346] = "History";
+	    IconName[IconName["Home"] = 347] = "Home";
+	    IconName[IconName["HomeSolid"] = 348] = "HomeSolid";
+	    IconName[IconName["Hospital"] = 349] = "Hospital";
+	    IconName[IconName["Hotel"] = 350] = "Hotel";
+	    IconName[IconName["Important"] = 351] = "Important";
+	    IconName[IconName["InboxCheck"] = 352] = "InboxCheck";
+	    IconName[IconName["IncidentTriangle"] = 353] = "IncidentTriangle";
+	    IconName[IconName["IncreaseIndentLegacy"] = 354] = "IncreaseIndentLegacy";
+	    IconName[IconName["Info"] = 355] = "Info";
+	    IconName[IconName["Info2"] = 356] = "Info2";
+	    IconName[IconName["InsertTextBox"] = 357] = "InsertTextBox";
+	    IconName[IconName["InternetSharing"] = 358] = "InternetSharing";
+	    IconName[IconName["iOSAppStoreLogo"] = 359] = "iOSAppStoreLogo";
+	    IconName[IconName["IssueTracking"] = 360] = "IssueTracking";
+	    IconName[IconName["IssueTrackingMirrored"] = 361] = "IssueTrackingMirrored";
+	    IconName[IconName["Italic"] = 362] = "Italic";
+	    IconName[IconName["JoinOnlineMeeting"] = 363] = "JoinOnlineMeeting";
+	    IconName[IconName["JS"] = 364] = "JS";
+	    IconName[IconName["Label"] = 365] = "Label";
+	    IconName[IconName["LandscapeOrientation"] = 366] = "LandscapeOrientation";
+	    IconName[IconName["LaptopSelected"] = 367] = "LaptopSelected";
+	    IconName[IconName["LargeGrid"] = 368] = "LargeGrid";
+	    IconName[IconName["Library"] = 369] = "Library";
+	    IconName[IconName["Lifesaver"] = 370] = "Lifesaver";
+	    IconName[IconName["LifesaverLock"] = 371] = "LifesaverLock";
+	    IconName[IconName["Light"] = 372] = "Light";
+	    IconName[IconName["Lightbulb"] = 373] = "Lightbulb";
+	    IconName[IconName["LightningBolt"] = 374] = "LightningBolt";
+	    IconName[IconName["Like"] = 375] = "Like";
+	    IconName[IconName["Link"] = 376] = "Link";
+	    IconName[IconName["List"] = 377] = "List";
+	    IconName[IconName["ListMirrored"] = 378] = "ListMirrored";
+	    IconName[IconName["Location"] = 379] = "Location";
+	    IconName[IconName["LocationCircle"] = 380] = "LocationCircle";
+	    IconName[IconName["LocationDot"] = 381] = "LocationDot";
+	    IconName[IconName["LocationFill"] = 382] = "LocationFill";
+	    IconName[IconName["Lock"] = 383] = "Lock";
+	    IconName[IconName["LowerBrightness"] = 384] = "LowerBrightness";
+	    IconName[IconName["LyncLogo"] = 385] = "LyncLogo";
+	    IconName[IconName["Mail"] = 386] = "Mail";
+	    IconName[IconName["MailAlert"] = 387] = "MailAlert";
+	    IconName[IconName["MailCheck"] = 388] = "MailCheck";
+	    IconName[IconName["MailFill"] = 389] = "MailFill";
+	    IconName[IconName["MailForward"] = 390] = "MailForward";
+	    IconName[IconName["MailForwardMirrored"] = 391] = "MailForwardMirrored";
+	    IconName[IconName["MailLowImportance"] = 392] = "MailLowImportance";
+	    IconName[IconName["MailPause"] = 393] = "MailPause";
+	    IconName[IconName["MailRepeat"] = 394] = "MailRepeat";
+	    IconName[IconName["MailReply"] = 395] = "MailReply";
+	    IconName[IconName["MailReplyAll"] = 396] = "MailReplyAll";
+	    IconName[IconName["MailReplyAllMirrored"] = 397] = "MailReplyAllMirrored";
+	    IconName[IconName["MailReplyMirrored"] = 398] = "MailReplyMirrored";
+	    IconName[IconName["MapDirections"] = 399] = "MapDirections";
+	    IconName[IconName["MapPin"] = 400] = "MapPin";
+	    IconName[IconName["Market"] = 401] = "Market";
+	    IconName[IconName["MarketDown"] = 402] = "MarketDown";
+	    IconName[IconName["Megaphone"] = 403] = "Megaphone";
+	    IconName[IconName["Memo"] = 404] = "Memo";
+	    IconName[IconName["Merge"] = 405] = "Merge";
+	    IconName[IconName["Message"] = 406] = "Message";
+	    IconName[IconName["MessageFill"] = 407] = "MessageFill";
+	    IconName[IconName["Microphone"] = 408] = "Microphone";
+	    IconName[IconName["MicrosoftStaffhubLogo"] = 409] = "MicrosoftStaffhubLogo";
+	    IconName[IconName["MiniLink"] = 410] = "MiniLink";
+	    IconName[IconName["MobileSelected"] = 411] = "MobileSelected";
+	    IconName[IconName["Money"] = 412] = "Money";
+	    IconName[IconName["More"] = 413] = "More";
+	    IconName[IconName["MoreSports"] = 414] = "MoreSports";
+	    IconName[IconName["Move"] = 415] = "Move";
+	    IconName[IconName["MoveToFolder"] = 416] = "MoveToFolder";
+	    IconName[IconName["MSNLogo"] = 417] = "MSNLogo";
+	    IconName[IconName["MultiSelect"] = 418] = "MultiSelect";
+	    IconName[IconName["MultiSelectMirrored"] = 419] = "MultiSelectMirrored";
+	    IconName[IconName["MusicInCollection"] = 420] = "MusicInCollection";
+	    IconName[IconName["MusicInCollectionFill"] = 421] = "MusicInCollectionFill";
+	    IconName[IconName["MusicNote"] = 422] = "MusicNote";
+	    IconName[IconName["Nav2DMapView"] = 423] = "Nav2DMapView";
+	    IconName[IconName["NewFolder"] = 424] = "NewFolder";
+	    IconName[IconName["News"] = 425] = "News";
+	    IconName[IconName["None"] = 426] = "None";
+	    IconName[IconName["NoteForward"] = 427] = "NoteForward";
+	    IconName[IconName["NotePinned"] = 428] = "NotePinned";
+	    IconName[IconName["NoteReply"] = 429] = "NoteReply";
+	    IconName[IconName["NumberedList"] = 430] = "NumberedList";
+	    IconName[IconName["NumberField"] = 431] = "NumberField";
+	    IconName[IconName["OfficeAssistantLogo"] = 432] = "OfficeAssistantLogo";
+	    IconName[IconName["OfficeFormLogo"] = 433] = "OfficeFormLogo";
+	    IconName[IconName["OfficeLogo"] = 434] = "OfficeLogo";
+	    IconName[IconName["OfficeStoreLogo"] = 435] = "OfficeStoreLogo";
+	    IconName[IconName["OfficeVideoLogo"] = 436] = "OfficeVideoLogo";
+	    IconName[IconName["OfflineOneDriveParachute"] = 437] = "OfflineOneDriveParachute";
+	    IconName[IconName["OfflineOneDriveParachuteDisabled"] = 438] = "OfflineOneDriveParachuteDisabled";
+	    IconName[IconName["OneDrive"] = 439] = "OneDrive";
+	    IconName[IconName["OneDriveAdd"] = 440] = "OneDriveAdd";
+	    IconName[IconName["OneNoteEduLogo"] = 441] = "OneNoteEduLogo";
+	    IconName[IconName["OneNoteLogo"] = 442] = "OneNoteLogo";
+	    IconName[IconName["OpenFile"] = 443] = "OpenFile";
+	    IconName[IconName["OpenFolderHorizontal"] = 444] = "OpenFolderHorizontal";
+	    IconName[IconName["OpenInNewWindow"] = 445] = "OpenInNewWindow";
+	    IconName[IconName["OpenPane"] = 446] = "OpenPane";
+	    IconName[IconName["OpenPaneMirrored"] = 447] = "OpenPaneMirrored";
+	    IconName[IconName["Org"] = 448] = "Org";
+	    IconName[IconName["OutlookLogo"] = 449] = "OutlookLogo";
+	    IconName[IconName["OutOfOffice"] = 450] = "OutOfOffice";
+	    IconName[IconName["Package"] = 451] = "Package";
+	    IconName[IconName["Page"] = 452] = "Page";
+	    IconName[IconName["PageAdd"] = 453] = "PageAdd";
+	    IconName[IconName["PageCheckedin"] = 454] = "PageCheckedin";
+	    IconName[IconName["PageCheckedOut"] = 455] = "PageCheckedOut";
+	    IconName[IconName["PageLeft"] = 456] = "PageLeft";
+	    IconName[IconName["PageRight"] = 457] = "PageRight";
+	    IconName[IconName["PageSolid"] = 458] = "PageSolid";
+	    IconName[IconName["PanoIndicator"] = 459] = "PanoIndicator";
+	    IconName[IconName["ParatureLogo"] = 460] = "ParatureLogo";
+	    IconName[IconName["PartlyCloudyDay"] = 461] = "PartlyCloudyDay";
+	    IconName[IconName["PartlyCloudyNight"] = 462] = "PartlyCloudyNight";
+	    IconName[IconName["PartyLeader"] = 463] = "PartyLeader";
+	    IconName[IconName["Pause"] = 464] = "Pause";
+	    IconName[IconName["PaymentCard"] = 465] = "PaymentCard";
+	    IconName[IconName["PC1"] = 466] = "PC1";
+	    IconName[IconName["PDF"] = 467] = "PDF";
+	    IconName[IconName["PencilReply"] = 468] = "PencilReply";
+	    IconName[IconName["People"] = 469] = "People";
+	    IconName[IconName["PeopleAdd"] = 470] = "PeopleAdd";
+	    IconName[IconName["PeopleAlert"] = 471] = "PeopleAlert";
+	    IconName[IconName["PeopleBlock"] = 472] = "PeopleBlock";
+	    IconName[IconName["PeoplePause"] = 473] = "PeoplePause";
+	    IconName[IconName["PeopleRepeat"] = 474] = "PeopleRepeat";
+	    IconName[IconName["Permissions"] = 475] = "Permissions";
+	    IconName[IconName["Phone"] = 476] = "Phone";
+	    IconName[IconName["Photo2"] = 477] = "Photo2";
+	    IconName[IconName["Photo2Add"] = 478] = "Photo2Add";
+	    IconName[IconName["Photo2Remove"] = 479] = "Photo2Remove";
+	    IconName[IconName["PhotoCollection"] = 480] = "PhotoCollection";
+	    IconName[IconName["Picture"] = 481] = "Picture";
+	    IconName[IconName["PictureLibrary"] = 482] = "PictureLibrary";
+	    IconName[IconName["PieDouble"] = 483] = "PieDouble";
+	    IconName[IconName["Pill"] = 484] = "Pill";
+	    IconName[IconName["Pin"] = 485] = "Pin";
+	    IconName[IconName["Pinned"] = 486] = "Pinned";
+	    IconName[IconName["PinnedFill"] = 487] = "PinnedFill";
+	    IconName[IconName["Planner"] = 488] = "Planner";
+	    IconName[IconName["Play"] = 489] = "Play";
+	    IconName[IconName["PlayerSettings"] = 490] = "PlayerSettings";
+	    IconName[IconName["POI"] = 491] = "POI";
+	    IconName[IconName["PostUpdate"] = 492] = "PostUpdate";
+	    IconName[IconName["PowerApps"] = 493] = "PowerApps";
+	    IconName[IconName["PowerApps2Logo"] = 494] = "PowerApps2Logo";
+	    IconName[IconName["PowerAppsLogo"] = 495] = "PowerAppsLogo";
+	    IconName[IconName["PowerBILogo"] = 496] = "PowerBILogo";
+	    IconName[IconName["PowerPointDocument"] = 497] = "PowerPointDocument";
+	    IconName[IconName["PowerPointLogo"] = 498] = "PowerPointLogo";
+	    IconName[IconName["Precipitation"] = 499] = "Precipitation";
+	    IconName[IconName["PresenceChickletVideo"] = 500] = "PresenceChickletVideo";
+	    IconName[IconName["Preview"] = 501] = "Preview";
+	    IconName[IconName["PreviewLink"] = 502] = "PreviewLink";
+	    IconName[IconName["Print"] = 503] = "Print";
+	    IconName[IconName["PrintfaxPrinterFile"] = 504] = "PrintfaxPrinterFile";
+	    IconName[IconName["Product"] = 505] = "Product";
+	    IconName[IconName["ProFootball"] = 506] = "ProFootball";
+	    IconName[IconName["ProHockey"] = 507] = "ProHockey";
+	    IconName[IconName["ProjectLogo"] = 508] = "ProjectLogo";
+	    IconName[IconName["ProtectedDocument"] = 509] = "ProtectedDocument";
+	    IconName[IconName["PublicCalendar"] = 510] = "PublicCalendar";
+	    IconName[IconName["PublicContactCard"] = 511] = "PublicContactCard";
+	    IconName[IconName["PublicEmail"] = 512] = "PublicEmail";
+	    IconName[IconName["PublicFolder"] = 513] = "PublicFolder";
+	    IconName[IconName["Puzzle"] = 514] = "Puzzle";
+	    IconName[IconName["Questionnaire"] = 515] = "Questionnaire";
+	    IconName[IconName["QuestionnaireMirrored"] = 516] = "QuestionnaireMirrored";
+	    IconName[IconName["QuickNote"] = 517] = "QuickNote";
+	    IconName[IconName["RadioBtnOn"] = 518] = "RadioBtnOn";
+	    IconName[IconName["RadioBullet"] = 519] = "RadioBullet";
+	    IconName[IconName["Rain"] = 520] = "Rain";
+	    IconName[IconName["RainShowersDay"] = 521] = "RainShowersDay";
+	    IconName[IconName["RainShowersNight"] = 522] = "RainShowersNight";
+	    IconName[IconName["RainSnow"] = 523] = "RainSnow";
+	    IconName[IconName["Read"] = 524] = "Read";
+	    IconName[IconName["ReadingMode"] = 525] = "ReadingMode";
+	    IconName[IconName["ReceiptCheck"] = 526] = "ReceiptCheck";
+	    IconName[IconName["ReceiptForward"] = 527] = "ReceiptForward";
+	    IconName[IconName["ReceiptReply"] = 528] = "ReceiptReply";
+	    IconName[IconName["Recent"] = 529] = "Recent";
+	    IconName[IconName["RecurringEvent"] = 530] = "RecurringEvent";
+	    IconName[IconName["RecurringTask"] = 531] = "RecurringTask";
+	    IconName[IconName["RecycleBin"] = 532] = "RecycleBin";
+	    IconName[IconName["RedEye"] = 533] = "RedEye";
+	    IconName[IconName["Redo"] = 534] = "Redo";
+	    IconName[IconName["Refresh"] = 535] = "Refresh";
+	    IconName[IconName["ReminderGroup"] = 536] = "ReminderGroup";
+	    IconName[IconName["Remove"] = 537] = "Remove";
+	    IconName[IconName["RemoveEvent"] = 538] = "RemoveEvent";
+	    IconName[IconName["RemoveFilter"] = 539] = "RemoveFilter";
+	    IconName[IconName["RemoveLink"] = 540] = "RemoveLink";
+	    IconName[IconName["RemoveOccurrence"] = 541] = "RemoveOccurrence";
+	    IconName[IconName["Rename"] = 542] = "Rename";
+	    IconName[IconName["ReopenPages"] = 543] = "ReopenPages";
+	    IconName[IconName["Repair"] = 544] = "Repair";
+	    IconName[IconName["Reply"] = 545] = "Reply";
+	    IconName[IconName["ReplyAll"] = 546] = "ReplyAll";
+	    IconName[IconName["ReplyAllAlt"] = 547] = "ReplyAllAlt";
+	    IconName[IconName["ReplyAllMirrored"] = 548] = "ReplyAllMirrored";
+	    IconName[IconName["ReplyAlt"] = 549] = "ReplyAlt";
+	    IconName[IconName["ReplyMirrored"] = 550] = "ReplyMirrored";
+	    IconName[IconName["ReportLibrary"] = 551] = "ReportLibrary";
+	    IconName[IconName["ReportLibraryMirrored"] = 552] = "ReportLibraryMirrored";
+	    IconName[IconName["ReturnToSession"] = 553] = "ReturnToSession";
+	    IconName[IconName["RevToggleKey"] = 554] = "RevToggleKey";
+	    IconName[IconName["Ribbon"] = 555] = "Ribbon";
+	    IconName[IconName["RightDoubleQuote"] = 556] = "RightDoubleQuote";
+	    IconName[IconName["Ringer"] = 557] = "Ringer";
+	    IconName[IconName["Room"] = 558] = "Room";
+	    IconName[IconName["Rotate"] = 559] = "Rotate";
+	    IconName[IconName["Rugby"] = 560] = "Rugby";
+	    IconName[IconName["Running"] = 561] = "Running";
+	    IconName[IconName["Sad"] = 562] = "Sad";
+	    IconName[IconName["Save"] = 563] = "Save";
+	    IconName[IconName["SaveAs"] = 564] = "SaveAs";
+	    IconName[IconName["Search"] = 565] = "Search";
+	    IconName[IconName["Section"] = 566] = "Section";
+	    IconName[IconName["Sections"] = 567] = "Sections";
+	    IconName[IconName["SecurityGroup"] = 568] = "SecurityGroup";
+	    IconName[IconName["Send"] = 569] = "Send";
+	    IconName[IconName["SendMirrored"] = 570] = "SendMirrored";
+	    IconName[IconName["SetAction"] = 571] = "SetAction";
+	    IconName[IconName["Settings"] = 572] = "Settings";
+	    IconName[IconName["Share"] = 573] = "Share";
+	    IconName[IconName["ShareiOS"] = 574] = "ShareiOS";
+	    IconName[IconName["SharepointLogo"] = 575] = "SharepointLogo";
+	    IconName[IconName["Shield"] = 576] = "Shield";
+	    IconName[IconName["Shop"] = 577] = "Shop";
+	    IconName[IconName["ShoppingCart"] = 578] = "ShoppingCart";
+	    IconName[IconName["ShowResults"] = 579] = "ShowResults";
+	    IconName[IconName["ShowResultsMirrored"] = 580] = "ShowResultsMirrored";
+	    IconName[IconName["SidePanel"] = 581] = "SidePanel";
+	    IconName[IconName["SingleBookmark"] = 582] = "SingleBookmark";
+	    IconName[IconName["SIPMove"] = 583] = "SIPMove";
+	    IconName[IconName["SkypeCheck"] = 584] = "SkypeCheck";
+	    IconName[IconName["SkypeCircleCheck"] = 585] = "SkypeCircleCheck";
+	    IconName[IconName["SkypeCircleClock"] = 586] = "SkypeCircleClock";
+	    IconName[IconName["SkypeCircleMinus"] = 587] = "SkypeCircleMinus";
+	    IconName[IconName["SkypeClock"] = 588] = "SkypeClock";
+	    IconName[IconName["SkypeLogo"] = 589] = "SkypeLogo";
+	    IconName[IconName["SkypeMessage"] = 590] = "SkypeMessage";
+	    IconName[IconName["SkypeMinus"] = 591] = "SkypeMinus";
+	    IconName[IconName["SliderThumb"] = 592] = "SliderThumb";
+	    IconName[IconName["Snow"] = 593] = "Snow";
+	    IconName[IconName["SnowShowerDay"] = 594] = "SnowShowerDay";
+	    IconName[IconName["SnowShowerNight"] = 595] = "SnowShowerNight";
+	    IconName[IconName["Soccer"] = 596] = "Soccer";
+	    IconName[IconName["SocialListeningLogo"] = 597] = "SocialListeningLogo";
+	    IconName[IconName["Sort"] = 598] = "Sort";
+	    IconName[IconName["SortDown"] = 599] = "SortDown";
+	    IconName[IconName["SortLines"] = 600] = "SortLines";
+	    IconName[IconName["SortUp"] = 601] = "SortUp";
+	    IconName[IconName["Speakers"] = 602] = "Speakers";
+	    IconName[IconName["SpeedHigh"] = 603] = "SpeedHigh";
+	    IconName[IconName["Split"] = 604] = "Split";
+	    IconName[IconName["Squalls"] = 605] = "Squalls";
+	    IconName[IconName["StackIndicator"] = 606] = "StackIndicator";
+	    IconName[IconName["Starburst"] = 607] = "Starburst";
+	    IconName[IconName["StatusErrorFull"] = 608] = "StatusErrorFull";
+	    IconName[IconName["StatusTriangle"] = 609] = "StatusTriangle";
+	    IconName[IconName["StockDown"] = 610] = "StockDown";
+	    IconName[IconName["StockUp"] = 611] = "StockUp";
+	    IconName[IconName["Stopwatch"] = 612] = "Stopwatch";
+	    IconName[IconName["StoreLogo"] = 613] = "StoreLogo";
+	    IconName[IconName["StoreLogoMed"] = 614] = "StoreLogoMed";
+	    IconName[IconName["Strikethrough"] = 615] = "Strikethrough";
+	    IconName[IconName["Subscribe"] = 616] = "Subscribe";
+	    IconName[IconName["Subscript"] = 617] = "Subscript";
+	    IconName[IconName["Suitcase"] = 618] = "Suitcase";
+	    IconName[IconName["SunAdd"] = 619] = "SunAdd";
+	    IconName[IconName["Sunny"] = 620] = "Sunny";
+	    IconName[IconName["SunQuestionMark"] = 621] = "SunQuestionMark";
+	    IconName[IconName["Superscript"] = 622] = "Superscript";
+	    IconName[IconName["SwayLogo"] = 623] = "SwayLogo";
+	    IconName[IconName["Switch"] = 624] = "Switch";
+	    IconName[IconName["SwitcherStartEnd"] = 625] = "SwitcherStartEnd";
+	    IconName[IconName["Sync"] = 626] = "Sync";
+	    IconName[IconName["SyncFolder"] = 627] = "SyncFolder";
+	    IconName[IconName["SyncToPC"] = 628] = "SyncToPC";
+	    IconName[IconName["System"] = 629] = "System";
+	    IconName[IconName["Tab"] = 630] = "Tab";
+	    IconName[IconName["Table"] = 631] = "Table";
+	    IconName[IconName["Tablet"] = 632] = "Tablet";
+	    IconName[IconName["TabletSelected"] = 633] = "TabletSelected";
+	    IconName[IconName["Tag"] = 634] = "Tag";
+	    IconName[IconName["TaskManager"] = 635] = "TaskManager";
+	    IconName[IconName["TaskManagerMirrored"] = 636] = "TaskManagerMirrored";
+	    IconName[IconName["Teamwork"] = 637] = "Teamwork";
+	    IconName[IconName["TemporaryUser"] = 638] = "TemporaryUser";
+	    IconName[IconName["Tennis"] = 639] = "Tennis";
+	    IconName[IconName["TextBox"] = 640] = "TextBox";
+	    IconName[IconName["TextField"] = 641] = "TextField";
+	    IconName[IconName["ThumbnailView"] = 642] = "ThumbnailView";
+	    IconName[IconName["ThumbnailViewMirrored"] = 643] = "ThumbnailViewMirrored";
+	    IconName[IconName["Thunderstorms"] = 644] = "Thunderstorms";
+	    IconName[IconName["Ticket"] = 645] = "Ticket";
+	    IconName[IconName["Tiles"] = 646] = "Tiles";
+	    IconName[IconName["Tiles2"] = 647] = "Tiles2";
+	    IconName[IconName["Timeline"] = 648] = "Timeline";
+	    IconName[IconName["Timer"] = 649] = "Timer";
+	    IconName[IconName["ToggleBorder"] = 650] = "ToggleBorder";
+	    IconName[IconName["ToggleFilled"] = 651] = "ToggleFilled";
+	    IconName[IconName["ToggleThumb"] = 652] = "ToggleThumb";
+	    IconName[IconName["Touch"] = 653] = "Touch";
+	    IconName[IconName["TouchPointer"] = 654] = "TouchPointer";
+	    IconName[IconName["Train"] = 655] = "Train";
+	    IconName[IconName["TrainSolid"] = 656] = "TrainSolid";
+	    IconName[IconName["TransferCall"] = 657] = "TransferCall";
+	    IconName[IconName["TriangleDown12"] = 658] = "TriangleDown12";
+	    IconName[IconName["TriangleLeft12"] = 659] = "TriangleLeft12";
+	    IconName[IconName["TriangleRight12"] = 660] = "TriangleRight12";
+	    IconName[IconName["TriangleSolidDown12"] = 661] = "TriangleSolidDown12";
+	    IconName[IconName["TriangleSolidLeft12"] = 662] = "TriangleSolidLeft12";
+	    IconName[IconName["TriangleSolidRight12"] = 663] = "TriangleSolidRight12";
+	    IconName[IconName["TriangleSolidUp12"] = 664] = "TriangleSolidUp12";
+	    IconName[IconName["TriangleUp12"] = 665] = "TriangleUp12";
+	    IconName[IconName["Trophy"] = 666] = "Trophy";
+	    IconName[IconName["TurnRight"] = 667] = "TurnRight";
+	    IconName[IconName["TVMonitor"] = 668] = "TVMonitor";
+	    IconName[IconName["TVMonitorSelected"] = 669] = "TVMonitorSelected";
+	    IconName[IconName["Underline"] = 670] = "Underline";
+	    IconName[IconName["Undo"] = 671] = "Undo";
+	    IconName[IconName["Unfavorite"] = 672] = "Unfavorite";
+	    IconName[IconName["UnknownCall"] = 673] = "UnknownCall";
+	    IconName[IconName["Unlock"] = 674] = "Unlock";
+	    IconName[IconName["Unpin"] = 675] = "Unpin";
+	    IconName[IconName["Unsubscribe"] = 676] = "Unsubscribe";
+	    IconName[IconName["UnsyncFolder"] = 677] = "UnsyncFolder";
+	    IconName[IconName["Up"] = 678] = "Up";
+	    IconName[IconName["Upload"] = 679] = "Upload";
+	    IconName[IconName["Video"] = 680] = "Video";
+	    IconName[IconName["VideoSolid"] = 681] = "VideoSolid";
+	    IconName[IconName["View"] = 682] = "View";
+	    IconName[IconName["ViewAll"] = 683] = "ViewAll";
+	    IconName[IconName["ViewAll2"] = 684] = "ViewAll2";
+	    IconName[IconName["VisioLogo"] = 685] = "VisioLogo";
+	    IconName[IconName["VoicemailForward"] = 686] = "VoicemailForward";
+	    IconName[IconName["VoicemailReply"] = 687] = "VoicemailReply";
+	    IconName[IconName["Volume0"] = 688] = "Volume0";
+	    IconName[IconName["Volume1"] = 689] = "Volume1";
+	    IconName[IconName["Volume2"] = 690] = "Volume2";
+	    IconName[IconName["Volume3"] = 691] = "Volume3";
+	    IconName[IconName["VolumeDisabled"] = 692] = "VolumeDisabled";
+	    IconName[IconName["Waffle"] = 693] = "Waffle";
+	    IconName[IconName["Warning"] = 694] = "Warning";
+	    IconName[IconName["Website"] = 695] = "Website";
+	    IconName[IconName["Weights"] = 696] = "Weights";
+	    IconName[IconName["WindDirection"] = 697] = "WindDirection";
+	    IconName[IconName["WindowsLogo"] = 698] = "WindowsLogo";
+	    IconName[IconName["WipePhone"] = 699] = "WipePhone";
+	    IconName[IconName["WordDocument"] = 700] = "WordDocument";
+	    IconName[IconName["WordLogo"] = 701] = "WordLogo";
+	    IconName[IconName["Work"] = 702] = "Work";
+	    IconName[IconName["WorkFlow"] = 703] = "WorkFlow";
+	    IconName[IconName["WorldClock"] = 704] = "WorldClock";
+	    IconName[IconName["YammerLogo"] = 705] = "YammerLogo";
+	    IconName[IconName["Zoom"] = 706] = "Zoom";
+	    IconName[IconName["ZoomIn"] = 707] = "ZoomIn";
+	    IconName[IconName["ZoomOut"] = 708] = "ZoomOut";
+	})(IconName = exports.IconName || (exports.IconName = {}));
+	
+
+
+/***/ },
+/* 135 */
+/***/ function(module, exports) {
+
+	"use strict";
+	// Please keep alphabetized
+	var IconType;
+	(function (IconType) {
+	    IconType[IconType["Default"] = 0] = "Default";
+	    IconType[IconType["Image"] = 1] = "Image";
+	})(IconType = exports.IconType || (exports.IconType = {}));
+	
+
+
+/***/ },
+/* 136 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-ContextualMenu{background-color:" }, { "theme": "white", "defaultValue": "#ffffff" }, { "rawString": ";min-width:180px}.ms-ContextualMenu-list{list-style-type:none;margin:0;padding:0;line-height:0}.ms-ContextualMenu-item{font-family:\"Segoe UI WestEuropean\",\"Segoe UI\",-apple-system,BlinkMacSystemFont,Roboto,\"Helvetica Neue\",sans-serif;-webkit-font-smoothing:antialiased;font-size:14px;font-weight:400;color:" }, { "theme": "neutralPrimary", "defaultValue": "#333333" }, { "rawString": ";height:36px;position:relative;box-sizing:border-box}.ms-ContextualMenu-link{font:inherit;color:inherit;background:0 0;border:none;width:100%;height:36px;line-height:36px;display:block;cursor:pointer;padding:0 6px}.ms-ContextualMenu-link::-moz-focus-inner{border:0}.ms-ContextualMenu-link{outline:transparent;position:relative}.ms-Fabric.is-focusVisible .ms-ContextualMenu-link:focus:after{content:'';position:absolute;top:0;right:0;bottom:0;left:0;pointer-events:none;border:1px solid " }, { "theme": "neutralSecondary", "defaultValue": "#666666" }, { "rawString": "}html[dir=ltr] .ms-ContextualMenu-link{text-align:left}html[dir=rtl] .ms-ContextualMenu-link{text-align:right}.ms-ContextualMenu-link:hover:not([disabled]){background:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": "}.ms-ContextualMenu-link.is-disabled,.ms-ContextualMenu-link[disabled]{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": ";cursor:default;pointer-events:none}.ms-ContextualMenu-link.is-disabled .ms-ContextualMenu-icon,.ms-ContextualMenu-link[disabled] .ms-ContextualMenu-icon{color:" }, { "theme": "neutralTertiaryAlt", "defaultValue": "#c8c8c8" }, { "rawString": "}.is-focusVisible .ms-ContextualMenu-link:focus{background:" }, { "theme": "neutralLighter", "defaultValue": "#f4f4f4" }, { "rawString": "}.ms-ContextualMenu-link.is-expanded,.ms-ContextualMenu-link.is-expanded:hover{background:" }, { "theme": "neutralQuaternaryAlt", "defaultValue": "#dadada" }, { "rawString": ";color:" }, { "theme": "black", "defaultValue": "#000000" }, { "rawString": ";font-weight:600}a.ms-ContextualMenu-link{padding:0 6px;text-rendering:auto;color:inherit;letter-spacing:normal;word-spacing:normal;text-transform:none;text-indent:0;text-shadow:none;box-sizing:border-box}.ms-ContextualMenu-linkContent{white-space:nowrap;height:inherit;display:-webkit-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-ms-flex-align:center;align-items:center;max-width:100%}.ms-ContextualMenu-divider{display:block;height:1px;background-color:" }, { "theme": "neutralLight", "defaultValue": "#eaeaea" }, { "rawString": ";position:relative}.ms-ContextualMenu-icon{display:inline-block;min-height:1px;max-height:36px;width:14px;margin:0 4px;vertical-align:middle;-ms-flex-negative:0;flex-shrink:0}.ms-ContextualMenu-iconColor{color:" }, { "theme": "themePrimary", "defaultValue": "#0078d7" }, { "rawString": "}.ms-ContextualMenu-itemText{margin:0 4px;vertical-align:middle;display:inline-block;-webkit-box-flex:1;-ms-flex-positive:1;flex-grow:1;text-overflow:ellipsis;overflow:hidden;white-space:nowrap}.ms-ContextualMenu-linkText{margin:0 4px;display:inline-block;vertical-align:top;white-space:nowrap}.ms-ContextualMenu-submenuChevron{height:36px;line-height:36px;text-align:center;font-size:10px;display:inline-block;vertical-align:middle;-ms-flex-negative:0;flex-shrink:0}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 137 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var DirectionalHint_1 = __webpack_require__(89);
+	exports.DirectionalHint = DirectionalHint_1.DirectionalHint;
+	
+
+
+/***/ },
+/* 138 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* tslint:disable */
+	var load_themed_styles_1 = __webpack_require__(31);
+	load_themed_styles_1.loadStyles([{ "rawString": ".ms-PickerPersona-Container{display:inline-block}.ms-Picker-MenuItem.ms-result-content{display:table-row}.ms-Picker-MenuItem.ms-result-content .ms-result-item{display:table-cell;vertical-align:bottom}.ms-PeoplePicker-Persona{width:180px}.ms-PeoplePicker-Persona .ms-Persona-details{width:100%}.ms-PeoplePicker .ms-BasePicker-text{min-height:40px}" }]);
+	/* tslint:enable */ 
+	
+
+
+/***/ },
+/* 139 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7239,12 +10566,13 @@
 
 
 /***/ },
-/* 101 */
+/* 140 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	const fetch = __webpack_require__(102);
-	const es6_promise_1 = __webpack_require__(104);
+	const fetch = __webpack_require__(141);
+	const es6_promise_1 = __webpack_require__(143);
+	const FakeUsers_1 = __webpack_require__(145);
 	class DiscussionService {
 	    constructor() {
 	        this.ParseCreateDiscussionResultJson = (json) => {
@@ -7303,24 +10631,85 @@
 	            Id: json.Id,
 	        };
 	    }
+	    // TODO : PoC only. In a real app this would do a HTTP call into SP. This code and the code it calls all comes from the Fabric React source code.
+	    UserSearch(text, currentPersonas, limitResults) {
+	        var peopleList = this.GetPeopleList();
+	        let filteredPersonas = this.FilterPersonasByText(peopleList, text);
+	        filteredPersonas = this.RemoveDuplicates(filteredPersonas, currentPersonas);
+	        filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
+	        return new es6_promise_1.Promise((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 2000));
+	    }
+	    RemoveDuplicates(personas, possibleDupes) {
+	        return personas.filter(persona => !this.ListContainsPersona(persona, possibleDupes));
+	    }
+	    ListContainsPersona(persona, personas) {
+	        if (!personas || !personas.length || personas.length === 0) {
+	            return false;
+	        }
+	        return personas.filter(item => item.primaryText === persona.primaryText).length > 0;
+	    }
+	    FilterPersonasByText(peopleList, filterText) {
+	        return peopleList.filter(item => this.DoesTextStartWith(item.primaryText, filterText));
+	    }
+	    DoesTextStartWith(text, filterText) {
+	        return text.toLowerCase().indexOf(filterText.toLowerCase()) === 0;
+	    }
+	    GetPeopleList() {
+	        var peopleList = [];
+	        let contextualMenuItems = [
+	            {
+	                key: 'newItem',
+	                icon: 'circlePlus',
+	                name: 'New'
+	            },
+	            {
+	                key: 'upload',
+	                icon: 'upload',
+	                name: 'Upload'
+	            },
+	            {
+	                key: 'divider_1',
+	                name: '-',
+	            },
+	            {
+	                key: 'rename',
+	                name: 'Rename'
+	            },
+	            {
+	                key: 'properties',
+	                name: 'Properties'
+	            },
+	            {
+	                key: 'disabled',
+	                name: 'Disabled item',
+	                disabled: true
+	            }
+	        ];
+	        FakeUsers_1.people.forEach((persona) => {
+	            let target = {};
+	            Object.assign(target, persona, { menuItems: contextualMenuItems });
+	            peopleList.push(target);
+	        });
+	        return peopleList;
+	    }
 	}
 	exports.DiscussionService = DiscussionService;
 
 
 /***/ },
-/* 102 */
+/* 141 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// the whatwg-fetch polyfill installs the fetch() function
 	// on the global object (window or self)
 	//
 	// Return that as the export for use in Webpack, Browserify etc.
-	__webpack_require__(103);
+	__webpack_require__(142);
 	module.exports = self.fetch.bind(self);
 
 
 /***/ },
-/* 103 */
+/* 142 */
 /***/ function(module, exports) {
 
 	(function(self) {
@@ -7784,7 +11173,7 @@
 
 
 /***/ },
-/* 104 */
+/* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var require;/* WEBPACK VAR INJECTION */(function(process, global) {/*!
@@ -7923,7 +11312,7 @@
 	function attemptVertx() {
 	  try {
 	    var r = require;
-	    var vertx = __webpack_require__(105);
+	    var vertx = __webpack_require__(144);
 	    vertxNext = vertx.runOnLoop || vertx.runOnContext;
 	    return useVertxTimer();
 	  } catch (e) {
@@ -8947,10 +12336,236 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(19), (function() { return this; }())))
 
 /***/ },
-/* 105 */
+/* 144 */
 /***/ function(module, exports) {
 
 	/* (ignored) */
+
+/***/ },
+/* 145 */
+/***/ function(module, exports) {
+
+	"use strict";
+	// These are from Fabric React source.
+	exports.people = [
+	    {
+	        key: 0,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'PV',
+	        primaryText: 'Annie Lindqvist',
+	        secondaryText: 'Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 1,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'AR',
+	        primaryText: 'Aaron Reid',
+	        secondaryText: 'Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 2,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'AL',
+	        primaryText: 'Alex Lundberg',
+	        secondaryText: 'Software Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 3,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'RK',
+	        primaryText: 'Roko Kolar',
+	        secondaryText: 'Financial Analyst',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 4,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'CB',
+	        primaryText: 'Christian Bergqvist',
+	        secondaryText: 'Sr. Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 5,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Valentina Lovric',
+	        secondaryText: 'Design Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 6,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Maor Sharett',
+	        secondaryText: 'UX Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 7,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'PV',
+	        primaryText: 'Anny Lindqvist',
+	        secondaryText: 'Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 8,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'AR',
+	        primaryText: 'Aron Reid',
+	        secondaryText: 'Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 9,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'AL',
+	        primaryText: 'Alix Lundberg',
+	        secondaryText: 'Software Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 10,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'RK',
+	        primaryText: 'Roko Kular',
+	        secondaryText: 'Financial Analyst',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 11,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'CB',
+	        primaryText: 'Christian Bergqvest',
+	        secondaryText: 'Sr. Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 12,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Valintina Lovric',
+	        secondaryText: 'Design Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 13,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Maor Sharet',
+	        secondaryText: 'UX Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 14,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Anny Lindqvest',
+	        secondaryText: 'SDE',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 15,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Alix Lunberg',
+	        secondaryText: 'SE',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 16,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Annie Lindqvest',
+	        secondaryText: 'SDET',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 17,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Alixander Lundberg',
+	        secondaryText: 'Senior Manager of SDET',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 18,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Anny Lundqvist',
+	        secondaryText: 'Junior Manager of Software',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 13,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Maor Shorett',
+	        secondaryText: 'UX Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 12,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Valentina Lovrics',
+	        secondaryText: 'Design Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 13,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Maor Sharet',
+	        secondaryText: 'UX Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 12,
+	        imageUrl: './images/persona-female.png',
+	        imageInitials: 'VL',
+	        primaryText: 'Valentina Lovrecs',
+	        secondaryText: 'Design Developer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	    {
+	        key: 13,
+	        imageUrl: './images/persona-male.png',
+	        imageInitials: 'MS',
+	        primaryText: 'Maor Sharitt',
+	        secondaryText: 'UX Designer',
+	        tertiaryText: 'In a meeting',
+	        optionalText: 'Available at 4:00pm'
+	    },
+	];
+
 
 /***/ }
 /******/ ]);

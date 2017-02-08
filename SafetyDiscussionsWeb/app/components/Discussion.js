@@ -6,6 +6,8 @@ const DatePicker_1 = require('office-ui-fabric-react/lib/DatePicker');
 const Dialog_1 = require('office-ui-fabric-react/lib/Dialog');
 const MessageBar_1 = require('office-ui-fabric-react/lib/MessageBar');
 const Spinner_1 = require('office-ui-fabric-react/lib/Spinner');
+const PeoplePicker_1 = require('office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePicker');
+const Label_1 = require('office-ui-fabric-react/lib/Label');
 const SafetyDiscussion_1 = require('../models/SafetyDiscussion');
 const DiscussionService_1 = require('../services/DiscussionService');
 (function (FormMode) {
@@ -85,14 +87,26 @@ class Discussion extends React.Component {
                     React.createElement("br", null)), 
             !this.state.IsSaving &&
                 React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(date, null, null, null, null), value: this.state.Discussion.DateISO}), 
-            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving}), 
+            React.createElement(Label_1.Label, null, "Discussed With"), 
+            React.createElement(PeoplePicker_1.NormalPeoplePicker, {onResolveSuggestions: this.OnFilterChanged.bind(this), getTextFromItem: (persona) => persona.primaryText, pickerSuggestionsProps: {
+                suggestionsHeaderText: 'Suggested People',
+                noResultsFoundText: 'No results found',
+                loadingText: 'Loading'
+            }, className: 'ms-PeoplePicker', key: 'normal'}), 
+            React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving}), 
             this.state.IsSaving &&
                 React.createElement(Spinner_1.Spinner, {label: 'Saving discussion...'}), 
             React.createElement(Dialog_1.DialogFooter, null, 
                 React.createElement(Button_1.Button, {buttonType: Button_1.ButtonType.primary, onClick: this.Save.bind(this), disabled: this.state.IsSaving}, "Save"), 
                 React.createElement(Button_1.Button, {onClick: this.props.DialogClose}, "Cancel"))));
+    }
+    OnFilterChanged(filterText, currentPersonas, limitResults) {
+        if (filterText) {
+            let service = new DiscussionService_1.DiscussionService();
+            return service.UserSearch(filterText, currentPersonas, limitResults);
+        }
     }
     Validate() {
         let valid = true;

@@ -1,6 +1,11 @@
 ﻿import { SafetyDiscussion } from '../models/SafetyDiscussion';
 import * as fetch from 'isomorphic-fetch';
 import { Promise } from 'es6-promise';
+import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import { IContextualMenuItem } from 'office-ui-fabric-react/lib/ContextualMenu';
+import { people } from './FakeUsers';
+import { IPersonaWithMenu } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePickerItems/PeoplePickerItem.Props';
+
 
 export class DiscussionService {
 
@@ -90,6 +95,82 @@ export class DiscussionService {
             Id: json.Id,
         }
     }
+
+    // TODO : PoC only. In a real app this would do a HTTP call into SP. This code and the code it calls all comes from the Fabric React source code.
+    public UserSearch(text: string, currentPersonas: IPersonaProps[], limitResults?: number): Promise<IPersonaProps> {
+
+        var peopleList = this.GetPeopleList();
+        let filteredPersonas: IPersonaProps[] = this.FilterPersonasByText(peopleList, text);
+        filteredPersonas = this.RemoveDuplicates(filteredPersonas, currentPersonas);
+        filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
+
+        return new Promise<IPersonaProps[]>((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 2000));
+    }
+
+    private RemoveDuplicates(personas: IPersonaProps[], possibleDupes: IPersonaProps[]) {
+        return personas.filter(persona => !this.ListContainsPersona(persona, possibleDupes));
+    }
+
+    private ListContainsPersona(persona: IPersonaProps, personas: IPersonaProps[]) {
+        if (!personas || !personas.length || personas.length === 0) {
+            return false;
+        }
+        return personas.filter(item => item.primaryText === persona.primaryText).length > 0;
+    }
+
+    private FilterPersonasByText(peopleList: any[], filterText: string): IPersonaProps[] {
+        return peopleList.filter(item => this.DoesTextStartWith(item.primaryText, filterText));
+    }
+
+    private DoesTextStartWith(text: string, filterText: string): boolean {
+        return text.toLowerCase().indexOf(filterText.toLowerCase()) === 0;
+    }
+
+    private GetPeopleList(): any[] {
+
+        var peopleList: any[] = [];
+
+        let contextualMenuItems: IContextualMenuItem[] = [
+            {
+                key: 'newItem',
+                icon: 'circlePlus',
+                name: 'New'
+            },
+            {
+                key: 'upload',
+                icon: 'upload',
+                name: 'Upload'
+            },
+            {
+                key: 'divider_1',
+                name: '-',
+            },
+            {
+                key: 'rename',
+                name: 'Rename'
+            },
+            {
+                key: 'properties',
+                name: 'Properties'
+            },
+            {
+                key: 'disabled',
+                name: 'Disabled item',
+                disabled: true
+            }
+        ];
+
+        people.forEach((persona: IPersonaProps) => {
+            let target: IPersonaWithMenu = {};
+
+            Object.assign(target, persona, { menuItems: contextualMenuItems });
+            peopleList.push(target);
+        });
+
+        return peopleList;
+
+    }
+
 
 
 }

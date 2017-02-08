@@ -1,12 +1,17 @@
 ﻿import * as React from "react";
 import * as ReactDOM from 'react-dom';
 
+import { Promise } from 'es6-promise';
+
 import { Button, ButtonType } from 'office-ui-fabric-react/lib/Button';
 import { TextField } from 'office-ui-fabric-react/lib/TextField';
 import { DatePicker } from 'office-ui-fabric-react/lib/DatePicker';
 import { DialogFooter } from 'office-ui-fabric-react/lib/Dialog';
 import { MessageBar, MessageBarType } from 'office-ui-fabric-react/lib/MessageBar';
 import { Spinner, SpinnerType } from 'office-ui-fabric-react/lib/Spinner';
+import { NormalPeoplePicker } from 'office-ui-fabric-react/lib/components/pickers/PeoplePicker/PeoplePicker';
+import { IPersonaProps } from 'office-ui-fabric-react/lib/Persona';
+import { Label } from 'office-ui-fabric-react/lib/Label';
 
 import { SafetyDiscussion } from '../models/SafetyDiscussion';
 import { DiscussionService } from '../services/DiscussionService';
@@ -140,14 +145,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                         value={this.state.Discussion.DateISO} // This is a required workaround to stop the field from getting cleared out when state updates.
                         />
                 }
-                <TextField
-                    label='Location'
-                    required={true}
-                    placeholder='Enter location'
-                    onChanged={this.OnLocationChanged.bind(this)}
-                    disabled={this.state.IsSaving}
-                    />
-
+               
                 <TextField
                     label='Subject'
                     required={true}
@@ -157,6 +155,38 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                     onChanged={this.OnSubjectChanged.bind(this)}
                     disabled={this.state.IsSaving}
                     />
+
+                <Label>Discussed With</Label>
+
+
+                <NormalPeoplePicker
+                    onResolveSuggestions={this.OnFilterChanged.bind(this)}
+
+                    getTextFromItem={(persona: IPersonaProps) => persona.primaryText}
+
+                    pickerSuggestionsProps={{
+                        suggestionsHeaderText: 'Suggested People',
+                        noResultsFoundText: 'No results found',
+                        loadingText: 'Loading'
+                    }}
+
+                    className={'ms-PeoplePicker'}
+
+                    key={'normal'}
+
+                    />
+
+
+                <TextField
+                    label='Location'
+                    required={true}
+                    placeholder='Enter location'
+                    onChanged={this.OnLocationChanged.bind(this)}
+                    disabled={this.state.IsSaving}
+                    />
+
+
+
 
                 <TextField
                     label='Outcome'
@@ -191,6 +221,13 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         );
     }
 
+
+    private OnFilterChanged(filterText: string, currentPersonas: IPersonaProps[], limitResults?: number): Promise<IPersonaProps> {
+        if (filterText) {
+            let service: DiscussionService = new DiscussionService();
+            return service.UserSearch(filterText, currentPersonas, limitResults);
+        }
+    }
 
 
     private Validate():boolean {

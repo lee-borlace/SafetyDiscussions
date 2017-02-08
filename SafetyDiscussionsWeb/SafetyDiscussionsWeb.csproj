@@ -252,6 +252,7 @@
     <TypeScriptCompile Include="app\components\DiscussionListItem.tsx" />
     <TypeScriptCompile Include="app\components\SafetyDiscussions.tsx" />
     <TypeScriptCompile Include="app\services\DiscussionService.ts" />
+    <TypeScriptCompile Include="app\services\FakeUsers.ts" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -36,6 +36,7 @@ Reactive considerations addressed as follows :
   - Elastic server-side components not addressed in this proof of concept.
 
 Being a proof of concept, several simplifications :
+  - People picker in discussion dialog only returns mocked values and doesn't save the result. Real app would call into SP to resolve users.
   - Haven't implemented clicking an existing item to view it, but would re-use Discussion.tsx in display mode for that. When loading it would read the full data from SP, showing a spinner while it does so.
   - React components directly manage their own state. A real application would use Redux to manage state in response to actions.
   - No unit / integration / end-to-end tests. In reality there would be unit tests around React components, service layer etc.
