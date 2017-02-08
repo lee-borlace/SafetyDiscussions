@@ -40,13 +40,7 @@ gulp.task('copy-from-node-module-files', function () {
                 'node_modules/react/dist/react.js',
                 'node_modules/react/dist/react.min.js',
                 'node_modules/react-dom/dist/react-dom.js',
-                'node_modules/react-dom/dist/react-dom.min.js',
-                'node_modules/redux/dist/redux.js',
-                'node_modules/redux/dist/redux.min.js',
-                'node_modules/react-redux/dist/react-redux.js',
-                'node_modules/react-redux/dist/react-redux.min.js',
-                'node_modules/redux-thunk/dist/redux-thunk.js',
-                'node_modules/redux-thunk/dist/redux-thunk.min.js'
+                'node_modules/react-dom/dist/react-dom.min.js'
             ]
         )
         .pipe(gulp.dest('Scripts', { overwrite: true }));

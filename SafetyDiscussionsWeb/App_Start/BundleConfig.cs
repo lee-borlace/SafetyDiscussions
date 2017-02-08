@@ -14,10 +14,7 @@ namespace SafetyDiscussionsWeb
 
             bundles.Add(new ScriptBundle("~/bundles/react").Include(
                "~/Scripts/react.js",
-               "~/Scripts/react-dom.js",
-               "~/Scripts/redux.js",
-               "~/Scripts/redux-thunk.js",
-               "~/Scripts/react-redux.js"
+               "~/Scripts/react-dom.js"
            ));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're

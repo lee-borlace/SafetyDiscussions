@@ -35,6 +35,7 @@ Reactive considerations addressed as follows :
   - Elastic server-side components not addressed in this proof of concept.
 
 Being a proof of concept, several simplifications :
+  - Haven't implemented clicking an existing item to view it, but would re-use Discussion.tsx in display mode for that. When loading it would read the full data from SP, showing a spinner while it does so.
   - React components directly manage their own state. A real application would use Redux to manage state in response to actions.
   - No unit / integration / end-to-end tests. In reality there would be unit tests around React components, service layer etc.
   - Discussion location is single line of text. Beyond proof of concept would use managed metadata.
@@ -48,7 +49,7 @@ Being a proof of concept, several simplifications :
 Other decisions :
 - Web app not a Windows Universal, iPad iOS app etc.
 - JS generated from Typescript for maximum maintainability and limiting bugs.
-- SharePoint add-in rather than general Office 365 add-in as it is easy to provision required list.
+- SharePoint add-in rather than general Office 365 add-in as it is easy to provision required list for PoC.
 
 
 
@@ -81,5 +82,6 @@ Some Node modules can have an issue with the possibly older version of Node whic
 3. Open the .SLN file.
 4. Configure the *Site URL* property of the SafetyDiscussions project to point to a SharePoint Online site. Enter credentials when prompted.
 5. Press Control + F5 to build the solution, deploy it to the SharePoint site and run it from localhost.
+6. Trust it when prompted by SharePoint Online.
 
 
