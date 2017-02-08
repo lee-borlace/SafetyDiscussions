@@ -60,6 +60,8 @@ Other decisions :
 
 ## Globally-Installed NPM Packages
 - gulp
+- node-sass
+- gulp-sass
 
 ## Visual Studio
 ### Required Add-Ins
@@ -69,18 +71,15 @@ Other decisions :
 ### Node
 Some Node modules can have an issue with the possibly older version of Node which Visual Studio uses by default. To get past this, in Visual Studio go to *Tools > Options > Projects and Solutions > External Web Tools* and re-order so that $(PATH) comes first. This will mean it will use the installed version of Node rather than what ships with Visual Studio (assuming you have Node in your path!)
 
-# Building the Solution
-1. Open a Node command prompt at\SafetyDiscussions\SafetyDiscussionsWeb.
-2. Run `npm install`.
-3. Open the .SLN file.
-4. Build it.
-
 # Known Issues
 - Fabric UI DatePicker appears to have several bugs which I've not searched for workarounds for yet.
   - Doesn't let you disable it, so we hide it where we would usually disable it.
 
-# TODO
+# Building / Debugging the Solution 
+1. Open a Node command prompt at\SafetyDiscussions\SafetyDiscussionsWeb.
+2. Run `npm install`.
+3. Open the .SLN file.
+4. Configure the *Site URL* property of the SafetyDiscussions project to point to a SharePoint Online site. Enter credentials when prompted.
+5. Press Control + F5 to build the solution, deploy it to the SharePoint site and run it from localhost.
 
 
-# Bugs
-- Time offsets for dates are not being correctly passed between client and server.
