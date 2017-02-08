@@ -84,7 +84,7 @@ class Discussion extends React.Component {
                     React.createElement(MessageBar_1.MessageBar, {messageBarType: MessageBar_1.MessageBarType.error}, "Sorry, there was a problem saving your data. Please refresh the page and try again."), 
                     React.createElement("br", null)), 
             !this.state.IsSaving &&
-                React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null), value: this.state.Discussion.DateISO}), 
+                React.createElement(DatePicker_1.DatePicker, {label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(date, null, null, null, null), value: this.state.Discussion.DateISO}), 
             React.createElement(TextField_1.TextField, {label: 'Location', required: true, placeholder: 'Enter location', onChanged: this.OnLocationChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving}), 
             React.createElement(TextField_1.TextField, {label: 'Outcome', required: true, multiline: true, resizable: false, placeholder: 'Enter outcome', onChanged: this.OnOutcomeChanged.bind(this), disabled: this.state.IsSaving}), 
@@ -131,23 +131,20 @@ class Discussion extends React.Component {
         }
     }
     OnDateChanged(date) {
-        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
+        this.UpdatePropertiesOfDiscussion(date, null, null, null, null);
     }
     OnLocationChanged(text) {
-        this.UpdatePropertiesOfDiscussion(null, null, text, null, null, null);
+        this.UpdatePropertiesOfDiscussion(null, text, null, null, null);
     }
     OnSubjectChanged(text) {
-        this.UpdatePropertiesOfDiscussion(null, null, null, null, text, null);
+        this.UpdatePropertiesOfDiscussion(null, null, null, text, null);
     }
     OnOutcomeChanged(text) {
-        this.UpdatePropertiesOfDiscussion(null, null, null, null, null, text);
+        this.UpdatePropertiesOfDiscussion(null, null, null, null, text);
     }
-    UpdatePropertiesOfDiscussion(observer, discussionDate, discussionLocation, discussedWith, subject, outcomes) {
+    UpdatePropertiesOfDiscussion(discussionDate, discussionLocation, discussedWith, subject, outcomes) {
         this.setState(function (prevState, props) {
             let updatedDiscussion = this.CloneDiscussion(prevState.Discussion);
-            if (observer) {
-                updatedDiscussion.Observer = observer;
-            }
             if (discussionDate) {
                 updatedDiscussion.DateISO = discussionDate;
             }
@@ -170,7 +167,6 @@ class Discussion extends React.Component {
     }
     CloneDiscussion(discussion) {
         return {
-            Observer: discussion.Observer,
             DateISO: discussion.DateISO,
             DiscussionLocation: discussion.DiscussionLocation,
             DiscussedWith: discussion.DiscussedWith,

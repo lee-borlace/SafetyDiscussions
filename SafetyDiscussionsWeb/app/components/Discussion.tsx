@@ -136,7 +136,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                         label='Discussion Date'
                         placeholder='Enter date of discussion'
                         strings={DayPickerStrings}
-                        onSelectDate={date => this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null)}
+                        onSelectDate={date => this.UpdatePropertiesOfDiscussion(date, null, null, null, null)}
                         value={this.state.Discussion.DateISO} // This is a required workaround to stop the field from getting cleared out when state updates.
                         />
                 }
@@ -249,24 +249,23 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
 
 
     private OnDateChanged(date: Date) {
-        this.UpdatePropertiesOfDiscussion(null, date, null, null, null, null);
+        this.UpdatePropertiesOfDiscussion(date, null, null, null, null);
     }
 
     private OnLocationChanged(text: string) {
-        this.UpdatePropertiesOfDiscussion(null, null, text, null, null, null);
+        this.UpdatePropertiesOfDiscussion(null, text, null, null, null);
     }
 
     private OnSubjectChanged(text: string) {
-        this.UpdatePropertiesOfDiscussion(null, null, null, null, text, null);
+        this.UpdatePropertiesOfDiscussion(null, null, null, text, null);
     }
 
     private OnOutcomeChanged(text: string) {
-        this.UpdatePropertiesOfDiscussion(null, null, null, null, null, text);
+        this.UpdatePropertiesOfDiscussion(null, null, null, null, text);
     }
 
 
     private UpdatePropertiesOfDiscussion(
-        observer?: string,
         discussionDate?: Date,
         discussionLocation?: string,
         discussedWith?: string,
@@ -276,10 +275,6 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
         this.setState(function (prevState, props) {
 
             let updatedDiscussion: SafetyDiscussion = this.CloneDiscussion(prevState.Discussion);
-
-            if (observer) {
-                updatedDiscussion.Observer = observer;
-            }
 
             if (discussionDate) {
                 updatedDiscussion.DateISO = discussionDate;
@@ -313,7 +308,6 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
     private CloneDiscussion(discussion: SafetyDiscussion): SafetyDiscussion {
 
         return {
-            Observer: discussion.Observer,
             DateISO: discussion.DateISO,
             DiscussionLocation: discussion.DiscussionLocation,
             DiscussedWith: discussion.DiscussedWith,

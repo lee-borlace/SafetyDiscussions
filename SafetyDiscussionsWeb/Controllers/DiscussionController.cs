@@ -88,7 +88,6 @@ namespace SafetyDiscussionsWeb.Controllers
                                 </OrderBy>
                             </Query>
                             <ViewFields>
-                                <FieldRef Name=""Observer"" />
                                 <FieldRef Name=""DiscussionLocation"" />
                                 <FieldRef Name=""DiscussedWith"" />
                                 <FieldRef Name=""Subject"" />
@@ -106,7 +105,6 @@ namespace SafetyDiscussionsWeb.Controllers
                     clientContext.Load(
                         itemCollection, 
                         items => items.Take(10).Include( // TODO : In a real app instead of taking 10 there would be a smarter mechanism e.g. paging
-                            i => i["Observer"],
                             i => i["DiscussionLocation"],
                             i => i["DiscussedWith"],
                             i => i["Subject"],
@@ -132,7 +130,6 @@ namespace SafetyDiscussionsWeb.Controllers
         {
             return new SafetyDiscussion
             {
-                Observer = item["Observer"]?.ToString(),
                 DiscussionLocation = item["DiscussionLocation"]?.ToString(),
                 DiscussedWith = item["DiscussedWith"]?.ToString(),
                 Subject = item["Subject"]?.ToString(),

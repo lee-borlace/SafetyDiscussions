@@ -82,7 +82,6 @@ export class DiscussionService {
 
     private ParseJsonToDiscussion(json: any): SafetyDiscussion {
         return {
-            Observer: json.Observer,
             DateISO: json.DateISO,
             DiscussionLocation: json.DiscussionLocation,
             DiscussedWith: json.DiscussedWith,

@@ -51,7 +51,6 @@ class DiscussionService {
     }
     ParseJsonToDiscussion(json) {
         return {
-            Observer: json.Observer,
             DateISO: json.DateISO,
             DiscussionLocation: json.DiscussionLocation,
             DiscussedWith: json.DiscussedWith,

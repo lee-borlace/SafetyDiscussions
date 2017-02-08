@@ -18,6 +18,7 @@ It should also allow the employee to view a list of previous discussions they ha
 - SharePoint Online not on-premises
 - Outcome and location are text fields
 - ES6-compatible browser e.g. latest Chrome / IE / Firefox
+- Observer is not explicitly recorded, it's just the Created By field in SharePoint.
 
 # Design Decisions
 Reactive considerations addressed as follows :

@@ -9,8 +9,6 @@ namespace SafetyDiscussionsWeb.Models
 {
     public class SafetyDiscussion
     {
-        public string Observer { get; set; }
-
         public string DateISO { get; set; }
 
         public DateTime? Date
