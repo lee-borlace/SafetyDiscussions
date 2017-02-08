@@ -4349,7 +4349,9 @@
 	            !this.state.IsSaving &&
 	                React.createElement(DatePicker_1.DatePicker, { label: 'Discussion Date', placeholder: 'Enter date of discussion', strings: DayPickerStrings, onSelectDate: date => this.UpdatePropertiesOfDiscussion(date, null, null, null, null), value: this.state.Discussion.DateISO }),
 	            React.createElement(TextField_1.TextField, { label: 'Subject', required: true, multiline: true, resizable: false, placeholder: 'Enter subject', onChanged: this.OnSubjectChanged.bind(this), disabled: this.state.IsSaving }),
-	            React.createElement(Label_1.Label, null, "Discussed With"),
+	            React.createElement(Label_1.Label, null,
+	                "Discussed With ",
+	                React.createElement("span", { className: "ms-fontSize-xs" }, "(Dummy data only, not persisted, try \"Alex\" or \"Annie\")")),
 	            React.createElement(PeoplePicker_1.NormalPeoplePicker, { onResolveSuggestions: this.OnFilterChanged.bind(this), getTextFromItem: (persona) => persona.primaryText, pickerSuggestionsProps: {
 	                    suggestionsHeaderText: 'Suggested People',
 	                    noResultsFoundText: 'No results found',
@@ -4367,6 +4369,9 @@
 	        if (filterText) {
 	            let service = new DiscussionService_1.DiscussionService();
 	            return service.UserSearch(filterText, currentPersonas, limitResults);
+	        }
+	        else {
+	            return [];
 	        }
 	    }
 	    Validate() {
@@ -10637,7 +10642,7 @@
 	        let filteredPersonas = this.FilterPersonasByText(peopleList, text);
 	        filteredPersonas = this.RemoveDuplicates(filteredPersonas, currentPersonas);
 	        filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
-	        return new es6_promise_1.Promise((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 2000));
+	        return new es6_promise_1.Promise((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 500));
 	    }
 	    RemoveDuplicates(personas, possibleDupes) {
 	        return personas.filter(persona => !this.ListContainsPersona(persona, possibleDupes));

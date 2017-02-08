@@ -16,7 +16,7 @@ It should also allow the employee to view a list of previous discussions they ha
 
 # Assumptions
 - SharePoint Online not on-premises
-- Outcome and location are text fields
+- Outcome and location are text fields (for simplified PoC)
 - ES6-compatible browser e.g. latest Chrome / IE / Firefox
 - Observer is not explicitly recorded, it's just the Created By field in SharePoint.
 
@@ -36,12 +36,12 @@ Reactive considerations addressed as follows :
   - Elastic server-side components not addressed in this proof of concept.
 
 Being a proof of concept, several simplifications :
-  - People picker in discussion dialog only returns mocked values and doesn't save the result. Real app would call into SP to resolve users.
+  - People picker in discussion dialog only returns mocked values via a service which returns a promise, and doesn't save the result. Real app would call into SP to resolve users.
   - Haven't implemented clicking an existing item to view it, but would re-use Discussion.tsx in display mode for that. When loading it would read the full data from SP, showing a spinner while it does so.
   - React components directly manage their own state. A real application would use Redux to manage state in response to actions.
   - No unit / integration / end-to-end tests. In reality there would be unit tests around React components, service layer etc.
   - Discussion location is single line of text. Beyond proof of concept would use managed metadata.
-  - The app writes to a list in the app web. Real app would create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
+  - The app writes to a list in the app web. Real app could create list in host web for easier access to data, rather than having to work out the URL of the list in the app web and navigating directly to it.
   - Hard-coded services in Typescript would be mockable / injectible interfaces in a real product.
   - Skipped a lot of code comments that would usually be present.
   - Would usually use Unity for dependency injection in MVC but have hard-coded for PoC.

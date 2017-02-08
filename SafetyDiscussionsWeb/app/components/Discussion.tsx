@@ -156,7 +156,7 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
                     disabled={this.state.IsSaving}
                     />
 
-                <Label>Discussed With</Label>
+                <Label>Discussed With <span className="ms-fontSize-xs">(Dummy data only, not persisted, try "Alex" or "Annie")</span></Label>
 
 
                 <NormalPeoplePicker
@@ -222,10 +222,13 @@ export class Discussion extends React.Component<IDiscussionProps, IDiscussionSta
     }
 
 
-    private OnFilterChanged(filterText: string, currentPersonas: IPersonaProps[], limitResults?: number): Promise<IPersonaProps> {
+    private OnFilterChanged(filterText: string, currentPersonas: IPersonaProps[], limitResults?: number): Promise<IPersonaProps[]> | IPersonaProps[]  {
         if (filterText) {
             let service: DiscussionService = new DiscussionService();
             return service.UserSearch(filterText, currentPersonas, limitResults);
+        }
+        else {
+            return [];
         }
     }
 

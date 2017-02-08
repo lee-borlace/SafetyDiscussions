@@ -104,7 +104,7 @@ export class DiscussionService {
         filteredPersonas = this.RemoveDuplicates(filteredPersonas, currentPersonas);
         filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
 
-        return new Promise<IPersonaProps[]>((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 2000));
+        return new Promise<IPersonaProps[]>((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 500));
     }
 
     private RemoveDuplicates(personas: IPersonaProps[], possibleDupes: IPersonaProps[]) {
