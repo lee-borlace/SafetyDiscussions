@@ -1,7 +1,7 @@
 "use strict";
-const fetch = require('isomorphic-fetch');
-const es6_promise_1 = require('es6-promise');
-const FakeUsers_1 = require('./FakeUsers');
+const fetch = require("isomorphic-fetch");
+const es6_promise_1 = require("es6-promise");
+const FakeUsers_1 = require("./FakeUsers");
 class DiscussionService {
     constructor() {
         this.ParseCreateDiscussionResultJson = (json) => {
@@ -66,7 +66,7 @@ class DiscussionService {
         let filteredPersonas = this.FilterPersonasByText(peopleList, text);
         filteredPersonas = this.RemoveDuplicates(filteredPersonas, currentPersonas);
         filteredPersonas = limitResults ? filteredPersonas.splice(0, limitResults) : filteredPersonas;
-        return new es6_promise_1.Promise((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 2000));
+        return new es6_promise_1.Promise((resolve, reject) => setTimeout(() => resolve(filteredPersonas), 500));
     }
     RemoveDuplicates(personas, possibleDupes) {
         return personas.filter(persona => !this.ListContainsPersona(persona, possibleDupes));

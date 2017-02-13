@@ -14,7 +14,8 @@
     "office-ui-fabric-core": "^5.1.0",
     "office-ui-fabric-react": "^0.84.0",
     "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react-dom": "^15.4.2",
+    "typescript": "^2.1.6"
   },
   "devDependencies": {
     "@types/isomorphic-fetch": "0.0.31",
@@ -37,7 +38,6 @@
     "source-map-loader": "^0.1.5",
     "style-loader": "^0.13.1",
     "tslint": "^4.2.0",
-    "typescript": "^2.1.4",
     "webpack": "^1.14.0",
     "webpack-merge": "^2.0.0"
   }

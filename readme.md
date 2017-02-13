@@ -60,6 +60,7 @@ Other decisions :
 - Office 365 user account with access to SharePoint Online
 - SharePoint Online Team Site to deploy to
 - Node JS
+- TypeScript 2.0 - https://www.microsoft.com/en-us/download/details.aspx?id=48593 / `npm -install typescript -g`
 
 ## Globally-Installed NPM Packages
 - gulp
